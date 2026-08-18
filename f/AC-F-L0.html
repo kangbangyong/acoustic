@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-F-L0 — 방진매트 시공</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab:#8E8C84;--slab-bg:#EDEBE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.tb-v.warn{color:var(--stop)}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+.draw-wrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;align-items:start}
+@media(max-width:760px){.draw-wrap{grid-template-columns:1fr}}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:34%;color:var(--ink-2);font-weight:400}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav">
+  <a class="acnav-home" href="../index.html">← AC 목록</a>
+  <span class="acnav-code">AC-F-L0</span>
+  <span class="acnav-move">
+    <span class="off">←</span>
+    <a href="AC-F-L1.html">L1 →</a>
+  </span>
+</div>
+
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-F-L0</div>
+      <div class="tb-name">방진매트 시공</div>
+      <div class="tb-en">Impact attenuation mat / not sound insulation</div>
+    </div>
+    <div class="tb-meta">
+      <div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">바닥 Floor</span></div>
+      <div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">0</span></div>
+      <div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">25 mm</span></div>
+      <div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v warn">차음 아님</span></div>
+      <div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">&mdash;</span></div>
+      <div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">단면 &amp; 구조 비교</span></div>
+    <div class="sec-body">
+      <div class="draw-wrap">
+        <div>
+          <div class="draw">
+            <svg viewBox="-56 0 396 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="레벨 0 단면. 슬래브 위에 방진매트 25T 한 층만 있고 그 위에는 라프트가 없어 질량-스프링-질량 계가 성립하지 않는다.">
+              <text x="130" y="34" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#8E8C84">위에 아무것도 없음</text>
+              <line x1="130" y1="44" x2="130" y2="72" stroke="#8E8C84" stroke-width="1" stroke-dasharray="3 3"/>
+              <rect x="40" y="78" width="220" height="58" fill="#E6EFEC" stroke="#2F6E62" stroke-width="1"/>
+              <text x="150" y="103" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="13.5" font-weight="600" fill="#1C4A41">방진매트 25T</text>
+              <text x="150" y="122" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#2F6E62">고무 · 탄성재</text>
+              <rect x="40" y="136" width="220" height="56" fill="#EDEBE5" stroke="#8E8C84" stroke-width="1"/>
+              <text x="150" y="168" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#5A5852">구조 슬래브</text>
+              <path d="M -6 40 L -14 40 L -14 78 L -6 78" fill="none" stroke="#9E3324" stroke-width="1"/>
+              <text x="-24" y="59" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 59)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#9E3324">라프트 없음</text>
+              <path d="M -6 78 L -14 78 L -14 136 L -6 136" fill="none" stroke="#2F6E62" stroke-width="1"/>
+              <text x="-24" y="107" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 107)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#2F6E62">방진층</text>
+              <path d="M -6 136 L -14 136 L -14 192 L -6 192" fill="none" stroke="#8E8C84" stroke-width="1"/>
+              <text x="-24" y="164" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 164)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#8E8C84">하부 질량</text>
+              <text x="150" y="222" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="500" fill="#9E3324">충격 완화만 · 차음 없음</text>
+            </svg>
+          </div>
+          <div class="draw-cap">AC-F-L0</div>
+        </div>
+        <div>
+          <div class="draw">
+            <svg viewBox="-56 0 396 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="레벨 2 이상 부유구조 단면. 슬래브 위 방진층, 그 위에 상부 라프트가 얹혀 질량-스프링-질량 계를 이룬다.">
+              <rect x="40" y="34" width="220" height="56" fill="#E7EAF2" stroke="#3E4A6B" stroke-width="1"/>
+              <text x="150" y="58" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="13.5" font-weight="600" fill="#2B3450">상부 라프트</text>
+              <text x="150" y="77" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3E4A6B">합판 · 석고 질량층</text>
+              <rect x="40" y="90" width="220" height="46" fill="#E6EFEC" stroke="#2F6E62" stroke-width="1"/>
+              <text x="150" y="109" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="13.5" font-weight="600" fill="#1C4A41">방진층</text>
+              <text x="150" y="126" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#2F6E62">스프링 역할</text>
+              <rect x="40" y="136" width="220" height="56" fill="#EDEBE5" stroke="#8E8C84" stroke-width="1"/>
+              <text x="150" y="168" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#5A5852">구조 슬래브</text>
+              <path d="M -6 34 L -14 34 L -14 90 L -6 90" fill="none" stroke="#3E4A6B" stroke-width="1"/>
+              <text x="-24" y="62" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 62)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#3E4A6B">라프트</text>
+              <text x="-38" y="62" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 62)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#3E4A6B">M₂</text>
+              <path d="M -6 90 L -14 90 L -14 136 L -6 136" fill="none" stroke="#2F6E62" stroke-width="1"/>
+              <text x="-24" y="113" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 113)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#2F6E62">방진층</text>
+              <text x="-38" y="113" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 113)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#2F6E62">S</text>
+              <path d="M -6 136 L -14 136 L -14 192 L -6 192" fill="none" stroke="#8E8C84" stroke-width="1"/>
+              <text x="-24" y="164" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 164)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#8E8C84">하부 질량</text>
+              <text x="-38" y="164" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 164)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#8E8C84">M₁</text>
+              <text x="150" y="222" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="500" fill="#2F6E62">질량 – 스프링 – 질량 성립</text>
+            </svg>
+          </div>
+          <div class="draw-cap">AC-F-L2 이상 (참고)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">명칭</td><td class="v">방진매트 시공</td></tr>
+          <tr><td class="k">총 두께</td><td class="v">25T (옵션 15 / 50T)</td></tr>
+          <tr><td class="k">구성</td><td class="v">방진매트 단일층</td></tr>
+          <tr><td class="k">하지</td><td class="v">슬래브 직접</td></tr>
+          <tr><td class="k">부착</td><td class="v">무접착 맞댐 (옵션: 이음부 테이프)</td></tr>
+          <tr><td class="k">층고 손실</td><td class="v">25 mm</td></tr>
+          <tr><td class="k">하중</td><td class="v">약 25~35 kg/㎡</td></tr>
+          <tr><td class="k">대응</td><td class="v">충격 완화 · 바닥 보호 · 관절 보호</td></tr>
+          <tr class="warn-row"><td class="k">비대응</td><td class="v">음악 · 악기 · 스피커 소리 전부</td></tr>
+          <tr><td class="k">적용</td><td class="v">짐, 요가원, 놀이방, 다목적실</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">자재</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td class="v">방진매트 (롤형)</td><td>25T</td><td>이음 최소 · 대면적 유리</td></tr>
+          <tr><td class="v">방진매트 (블럭형)</td><td>25T · 1m × 1m</td><td>부분 교체 가능</td></tr>
+          <tr><td class="v">옵션</td><td>15T / 50T</td><td>50T는 중량물 낙하 구역</td></tr>
+          <tr><td class="v">이음부 테이프</td><td>&mdash;</td><td>옵션</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th style="width:44px">No</th><th>작업</th><th>확인사항</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="v">슬래브 청소</td><td>이물질 · 돌출부 제거</td></tr>
+          <tr><td class="num">2</td><td class="v">평탄도 확인</td><td>3m당 ±3mm 초과 시 레벨링 선행</td></tr>
+          <tr><td class="num">3</td><td class="v">매트 가배치</td><td>이음선 위치 확인</td></tr>
+          <tr><td class="num">4</td><td class="v">재단</td><td>벽면 3~5mm 여유 확보</td></tr>
+          <tr><td class="num">5</td><td class="v">정식 포설</td><td>이음부 밀착 맞댐</td></tr>
+          <tr><td class="num">6</td><td class="v">이음부 처리</td><td>테이프 (옵션)</td></tr>
+          <tr><td class="num">7</td><td class="v">청소 · 검수</td><td>들뜸 · 벌어짐 확인</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-body">
+      <ul class="notes">
+        <li><span class="mk">01</span><span><strong>평탄도</strong> — 불량 시 들뜸 및 이음부 벌어짐 발생. 레벨링은 별도 견적 항목으로 분리한다.</span></li>
+        <li><span class="mk">02</span><span><strong>자재 양생</strong> — 롤형은 시공 24시간 전 펼쳐두어 말림을 해소한다.</span></li>
+        <li><span class="mk">03</span><span><strong>이음부</strong> — 밀착 맞댐. 겹치거나 벌어지지 않도록 한다.</span></li>
+        <li><span class="mk">04</span><span><strong>신축 여유</strong> — 벽면과 3~5mm 이격. 온도 변화에 따른 신축을 흡수한다.</span></li>
+        <li><span class="mk">05</span><span><strong>중량물 구역</strong> — 프리웨이트존 등 중량물 낙하 구역은 50T를 별도 적용한다.</span></li>
+        <li><span class="mk">06</span><span><strong>이동 방지</strong> — 무접착 시공 시 이동 가능. 필요 시 모서리 · 출입구만 부분 접착한다.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body">
+      <ul class="stop-list">
+        <li><span class="a">접착제 전면 도포</span><span class="b">철거 시 슬래브 손상</span></li>
+        <li><span class="a">매트 위 라프트 시공</span><span class="b">해당 시 AC-F-L1 이상 적용</span></li>
+        <li><span class="a">방음 목적 적용</span><span class="b">공기전달음 차단 불가 — 견적서 명기 필수</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-F-L0 &nbsp;/&nbsp; REV A</span>
+    <span>내부 견적 · 시공 기준 자료</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

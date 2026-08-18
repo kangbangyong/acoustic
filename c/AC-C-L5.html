@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-C-L5 — 이중 천장 방진형 · 마감판 상향</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --joist:#7A5B34;--joist-bg:#F1E9DC;
+  --damp:#8A5A2B;--damp-bg:#F4EBE0;
+  --gg:#3F7A3A;--gg-bg:#E7F1E5;
+  --xps:#B0537A;--xps-bg:#F7E8EF;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab:#8E8C84;--slab-bg:#EDEBE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.tb-v.warn{color:var(--stop)}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+.draw-wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:800px){.draw-wrap{grid-template-columns:1fr}}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:34%;color:var(--ink-2)}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
+tr.total td{border-top:1px solid var(--rule);font-weight:600}
+tr.opt td{background:var(--xps-bg)}
+tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:var(--damp)}
+.flag.gg{border-color:var(--gg);background:var(--gg-bg);color:#2C4F29}
+.flag.gg b{color:var(--gg)}
+.flag.opt{border-color:#B0537A;background:var(--xps-bg);color:#7A2B4C}
+.flag.opt b{color:#8E3A5F}
+.flag.warn{border-color:var(--stop);background:var(--stop-bg);color:#6E2418}
+.flag.warn b{color:var(--stop)}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav">
+  <a class="acnav-home" href="../index.html">← AC 목록</a>
+  <span class="acnav-code">AC-C-L5</span>
+  <span class="acnav-move">
+    <a href="AC-C-L4.html">← L4</a>
+    <span class="off">→</span>
+  </span>
+</div>
+
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-C-L5</div>
+      <div class="tb-name">이중 천장 방진형 · 마감판 상향</div>
+      <div class="tb-en">Isolated double ceiling / mass-loaded</div>
+    </div>
+    <div class="tb-meta"><div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">천장 Ceiling</span></div><div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">5</span></div><div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">369 + 설비층</span></div><div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (AC-A 상한)</span></div><div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-M · AC-B</span></div><div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">단면 &amp; 등급 원리</span></div>
+    <div class="sec-body">
+      <div class="draw-wrap">
+        <div>
+          <div class="draw"><svg viewBox="-62 0 482 222" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-C-L5 단면. L4와 동일한 구조에 하부 마감판 사이 돌차음판 4T를 삽입한다."><rect x="30" y="18" width="250" height="15" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="25.5" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">슬래브</text><rect x="30" y="33" width="250" height="24" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="40.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">설비층 (실측)</text><text x="155.0" y="52.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 · 배관 MD</text><rect x="30" y="57" width="250" height="12" fill="#F4EBE0" stroke="#8A5A2B" stroke-width=".8"/><text x="155" y="63" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#5C3C1B" font-family="IBM Plex Sans KR,sans-serif">방진행거</text><rect x="30" y="69" width="250" height="24" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="76.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">상부 천장틀 2×4</text><text x="155.0" y="88.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 50T</text><rect x="30" y="93" width="250" height="11" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="98.5" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><rect x="30" y="104" width="250" height="18" fill="#FFFFFF" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="113.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">이격층 50</text><rect x="30" y="122" width="250" height="32" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="133.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">하부 박스빔 춤 140</text><text x="155.0" y="145.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 100T</text><rect x="30" y="154" width="250" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="159.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">일반석고 9.5T</text><rect x="30" y="164" width="250" height="6" fill="#E7F1E5" stroke="#3F7A3A" stroke-width=".8"/><text x="155.0" y="167.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">그린글루</text><rect x="30" y="170" width="250" height="8" fill="#F7E8EF" stroke="#B0537A" stroke-width=".8"/><text x="155.0" y="174.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">돌차음판 4T</text><rect x="30" y="178" width="250" height="12" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="184.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><line x1="280" y1="45" x2="288" y2="45" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="45" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">덕트 · 소방 설비</text><line x1="280" y1="81" x2="288" y2="81" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="81" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">L4와 구조 동일</text><line x1="280" y1="113" x2="288" y2="113" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="113" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">설계 상한 — 변경 없음</text><line x1="280" y1="174" x2="288" y2="174" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="174" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">L5 진입점 — 마감판 상향</text><line x1="280" y1="184" x2="288" y2="184" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="184" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">면밀도 약 26.5 kg/㎡</text><line x1="8" y1="57" x2="8" y2="190" stroke="#8E8C84" stroke-width=".6"/><line x1="3" y1="57" x2="13" y2="57" stroke="#8E8C84" stroke-width=".6"/><line x1="3" y1="190" x2="13" y2="190" stroke="#8E8C84" stroke-width=".6"/><text x="0" y="123.5" text-anchor="end" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Mono,monospace">369</text><line x1="30" y1="204" x2="280" y2="204" stroke="#D5D2C9" stroke-width=".6" stroke-dasharray="3 3"/><text x="155.0" y="216" text-anchor="middle" font-size="8" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">실내</text></svg></div>
+          <div class="draw-cap">AC-C-L5 SECTION — MASS LOADED</div>
+        </div>
+        <div><p style="font-size:13.5px;line-height:1.7">L5는 <strong>구조가 L4와 완전히 동일하다.</strong> 이격층과 충진재가 설계 상한에 도달해 f₀를 더 내릴 수단이 남아 있지 않으므로, 남은 변수는 질량뿐이다.</p>
+<div class="flag gg"><b>곡선을 위로 올리는 단계</b> — L4까지가 차음 곡선을 저역 쪽으로 밀어내는 단계였다면, L5는 곡선 전체를 위로 올린다. 돌차음판 4T로 면밀도가 약 32% 증가하며 전 대역 2~3dB 상승한다. 저역 한계선은 변하지 않는다.</div>
+<div class="flag opt"><b>AC-A의 천장 상한</b> — 이 이상의 성능이 요구되면 AC-B(박스인박스) 영역이다. 천장이 벽 · 바닥과 함께 완전히 독립된 구조체를 이루는 별개의 공학 영역이 된다.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
+    <div class="sec-body"><table><tbody><tr><td class="k">명칭</td><td class="v">이중 천장 방진형 · 마감판 상향</td></tr><tr><td class="k">소요 천장고</td><td class="v">369 mm + 설비층 실측</td></tr><tr><td class="k">구성</td><td class="v">L4 구조 동일 + 하부 마감판에 돌차음판 4T 삽입</td></tr><tr><td class="k">구조</td><td class="v">L4와 완전 동일 — 이격 50 · 충진재 100T (설계 상한)</td></tr><tr><td class="k">상부 접합</td><td class="v">방진행거</td></tr><tr><td class="k">마감판</td><td class="v">일반석고 9.5T + 그린글루 + 돌차음판 4T + 차음석고 12.5T</td></tr><tr><td class="k">마감판 면밀도</td><td class="v">약 26.5 kg/㎡ (L4 약 20 kg/㎡)</td></tr><tr><td class="k">L4 대비</td><td class="v">전 대역 2~3 dB 상승</td></tr><tr><td class="k">대응</td><td class="v">AC-A 직접 시공법의 천장 상한</td></tr><tr><td class="k">상위 영역</td><td class="v">AC-B (박스인박스)</td></tr><tr><td class="k">적용</td><td class="v">전문 녹음실 · 고사양 홈시어터 · 다중 사용 합주실</td></tr></tbody></table></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">설계 근거</span></div>
+    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>구조는 L4와 완전히 동일하다.</strong> 이격층과 충진재가 설계 상한에 도달해 f₀를 더 내릴 수단이 남아 있지 않으므로, 남은 변수는 질량뿐이다. 구조에 차이를 두지 않는 것이 원칙이다.</span></li><li><span class="mk">02</span><span><strong>차음 곡선의 관점</strong> — L4까지가 곡선을 저역 쪽으로 밀어내는 단계였다면 L5는 곡선 전체를 위로 올리는 단계다. 돌차음판 4T로 마감판 면밀도가 약 20kg/㎡에서 26.5kg/㎡로 32% 증가하며 전 대역 2~3dB 상승한다. 저역 한계선(f₀)은 변하지 않는다.</span></li><li><span class="mk">03</span><span><strong>적층 위치</strong> — 돌차음판은 그린글루 위, 차음석고 아래에 삽입한다. AC-W L5와 동일한 샌드위치 구성이며, 실내 측 최종면은 마감 하지로서의 안정성을 위해 차음석고를 유지한다.</span></li><li><span class="mk">04</span><span><strong>AC-A의 천장 상한</strong> — 이 이상의 성능이 요구되면 AC-B(박스인박스) 영역이다. 천장이 벽 · 바닥과 함께 완전히 독립된 구조체를 이루는 별개의 공학 영역이 된다.</span></li></ul></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">자재</span></div>
+    <div class="sec-body"><table>
+      <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
+      <tbody><tr><td class="k">방진행거</td><td class="mono">실하중 대역 선정</td><td>마감판 자중 증가 반영</td></tr><tr><td class="k">상부 천장틀</td><td class="mono">2×4 (38×89)</td><td>방진행거 매달림</td></tr><tr><td class="k">하부 천장틀</td><td class="mono">제작 박스빔 춤 140</td><td>L4와 동일</td></tr><tr><td class="k">충진재</td><td class="mono">50T / 100T</td><td>상부 / 하부</td></tr><tr><td class="k">차음석고보드</td><td class="mono">12.5T</td><td>상부 천장 폐합</td></tr><tr><td class="k">일반석고보드</td><td class="mono">9.5T</td><td>하부 마감 1층</td></tr><tr><td class="k">그린글루</td><td class="mono">—</td><td>일반석고 위</td></tr><tr><td class="k">돌차음판</td><td class="mono">4T · 자체 점착 타입</td><td>그린글루 위 — L5 진입점</td></tr><tr><td class="k">차음석고보드</td><td class="mono">12.5T</td><td>최종 마감면</td></tr><tr><td class="k">점검구</td><td class="mono">이중 구성</td><td>상 · 하부 각각</td></tr><tr><td class="k">흡음 플렉시블</td><td class="mono">내면 타공형</td><td>디퓨저 직전</td></tr><tr><td class="k">탄성 실란트</td><td class="mono">—</td><td>기밀 폐합</td></tr></tbody></table>
+      <div class="flag"><b>충진재</b> — 미네랄울 48K 보드형 표준. 벽 · 천장 자재 통합을 위해 폴리에스터 흡음단열재(KS F 5660) 50T 40K 대체를 검토 중이며, 저역(125 · 250Hz) 흡음률 비교 데이터 확보 후 확정한다. 인허가 시설(학원 · 어린이집 · 다중이용업소)은 화재 규정상 미네랄울을 유지한다.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-body"><table>
+      <thead><tr><th>No</th><th>작업</th><th>확인사항</th></tr></thead>
+      <tbody><tr><td class="num">1~11</td><td class="v">L4와 동일</td><td>설비 실측 ~ 하부 충진재 100T</td></tr><tr><td class="num">12</td><td class="v">일반석고 9.5T</td><td>이음선 부재 위</td></tr><tr><td class="num">13</td><td class="v">그린글루 도포</td><td>15분 내 다음 공정 · 3~4㎡ 분할</td></tr><tr><td class="num">14</td><td class="v">돌차음판 4T 부착</td><td>이형지 20~30cm씩 벗기며 밀착</td></tr><tr><td class="num">15</td><td class="v">차음석고 12.5T</td><td>이음선 하부와 엇갈림</td></tr><tr><td class="num">16</td><td class="v">디퓨저 · 조명 · 연변 실링</td><td>전 관통부 확인</td></tr></tbody></table></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>적층 순서 준수</strong> — 일반석고 → 그린글루 → 돌차음판 → 차음석고. 순서가 바뀌면 감쇠층이 기능하지 않는다.</span></li><li><span class="mk">02</span><span><strong>이음부 엇갈림</strong> — 돌차음판 이음부는 하부 석고 이음부와 엇갈리게 배치한다.</span></li><li><span class="mk">03</span><span><strong>마감판 자중 증가</strong> — L4 대비 약 6.5kg/㎡ 증가한다. 방진행거 하중 대역을 재확인한다.</span></li><li><span class="mk">04</span><span><strong>돌차음판 4T 표준</strong> — 두께 변형 없음. 2T는 질량 1.8배 차이로 실익이 없다.</span></li><li><span class="mk">05</span><span><strong>피스 길이 재산정</strong> — 마감판 총 두께가 증가하므로 피스 길이를 조정한다.</span></li><li><span class="mk">06</span><span><strong>그린글루 시간 관리</strong> — 도포 후 15분 내 압착. 완전 성능 약 30일 후.</span></li><li><span class="mk">07</span><span><strong>L4 · L5 구조 동일</strong> — 구조에 차이를 두지 않는다. 구조 상향으로 성능을 올리려면 AC-B를 검토한다.</span></li></ul></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body"><ul class="stop-list"><li><span class="a">적층 순서 변경</span><span class="b">감쇠층 기능 상실</span></li><li><span class="a">돌차음판 2T 대체</span><span class="b">질량 1.8배 차이 — 4T 표준 유지</span></li><li><span class="a">구조 상향 시도</span><span class="b">설계 상한 도달 — AC-B 영역</span></li><li><span class="a">마감판 자중 미반영 행거 선정</span><span class="b">하중 대역 이탈</span></li><li><span class="a">강결 행거 병용</span><span class="b">구조적 단락</span></li><li><span class="a">일반 알루미늄 점검구</span><span class="b">기밀선 단절</span></li></ul></div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-C-L5 &nbsp;/&nbsp; REV A</span>
+    <span>내부 견적 · 시공 기준 자료</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

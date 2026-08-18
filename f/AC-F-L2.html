@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-F-L2 — 표준 부유바닥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --gyp:#6B4A7A;--gyp-bg:#EEE7F2;
+  --damp:#8A5A2B;--damp-bg:#F4EBE0;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab-bg:#EDEBE5;--slab:#8E8C84;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.tb-v.warn{color:var(--stop)}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+.draw-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:800px){.draw-wrap{grid-template-columns:1fr}}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:34%;color:var(--ink-2)}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
+tr.total td{border-top:1px solid var(--rule);font-weight:600}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:var(--damp)}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+tr.opt td{background:#F7E8EF}
+tr.opt td.k{color:#7A2B4C}
+tr.opt td.v{color:#7A2B4C;font-weight:600}
+.optbox{border:1px solid #B0537A;background:#F7E8EF;padding:13px 16px;
+  font-size:13px;color:#7A2B4C;margin-top:16px;line-height:1.6}
+.optbox b{color:#8E3A5F}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav">
+  <a class="acnav-home" href="../index.html">← AC 목록</a>
+  <span class="acnav-code">AC-F-L2</span>
+  <span class="acnav-move">
+    <a href="AC-F-L1.html">← L1</a>
+    <a href="AC-F-L3.html">L3 →</a>
+  </span>
+</div>
+
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-F-L2</div>
+      <div class="tb-name">표준 부유바닥</div>
+      <div class="tb-en">Standard floating floor / mineral wool</div>
+    </div>
+    <div class="tb-meta">
+      <div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">바닥 Floor</span></div>
+      <div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">2</span></div>
+      <div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">94~97 mm</span></div>
+      <div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음</span></div>
+      <div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-J-01</span></div>
+      <div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">단면 &amp; 체결 상세</span></div>
+    <div class="sec-body">
+      <div class="draw-wrap">
+        <div>
+          <div class="draw">
+            <svg viewBox="-56 0 476 326" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-F-L2 단면. 슬래브 위 미네랄울 80K 50T, 하부 합판 12T, 차음석고보드 12.5T, 돌차음판 4T, 상부 합판 12T, 마감재 순으로 구성되며 나사는 하부 합판 안에서 멈춘다.">
+              <text x="150" y="22" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#9E3324">나사 38mm · 미네랄울 관통 금지</text>
+              <line x1="140" y1="30" x2="122" y2="52" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="3 3"/>
+              <rect x="30" y="46" width="250" height="10" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+              <rect x="30" y="56" width="250" height="28" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x="30" y="84" width="250" height="10" fill="#F4EBE0" stroke="#8A5A2B" stroke-width=".8"/>
+              <rect x="30" y="94" width="250" height="29" fill="#EEE7F2" stroke="#6B4A7A" stroke-width=".8"/>
+              <rect x="30" y="123" width="250" height="28" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x="30" y="151" width="250" height="76" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/>
+              <rect x="30" y="227" width="250" height="14" fill="#F7E8EF" stroke="#B0537A" stroke-width=".8" stroke-dasharray="4 2"/>
+              <rect x="30" y="241" width="250" height="36" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+              <line x1="30" y1="241" x2="280" y2="241" stroke="#8A5A2B" stroke-width="1.6" stroke-dasharray="5 3"/>
+              <rect x="112" y="52" width="18" height="5" rx="2" fill="#5F5E5A"/>
+              <rect x="118" y="56" width="5" height="86" rx="2" fill="#5F5E5A"/>
+              <line x1="282" y1="51" x2="292" y2="51" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="54" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">마감 3~6T</text>
+              <line x1="282" y1="70" x2="292" y2="70" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="73" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">합판 12T</text>
+              <line x1="282" y1="89" x2="292" y2="89" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="92" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">돌차음판 4T</text>
+              <line x1="282" y1="108" x2="292" y2="108" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="111" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#4A3454">차음석고 12.5T</text>
+              <line x1="282" y1="137" x2="292" y2="137" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="140" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">합판 12T</text>
+              <line x1="282" y1="182" x2="292" y2="182" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="181" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" font-weight="600" fill="#1C4A41">미네랄울 80K</text>
+              <text x="297" y="196" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" fill="#2F6E62">50T · 불연</text>
+              <line x1="282" y1="230" x2="292" y2="230" stroke="#B0537A" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="230" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" font-weight="600" fill="#7A2B4C">아이소핑크 20T</text>
+              <text x="297" y="243" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#B0537A">(옵션)</text>
+              <line x1="282" y1="256" x2="292" y2="256" stroke="#8A5A2B" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="256" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" fill="#8A5A2B">PE 방습필름</text>
+              <line x1="282" y1="272" x2="292" y2="272" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="272" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">구조 슬래브</text>
+              <text x="150" y="298" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">라프트 약 40 kg/㎡ · 총 94~97mm</text>
+              <text x="150" y="315" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" fill="#B0537A">옵션 적용 시 114~117mm</text>
+            
+              <path d="M -6 46 L -14 46 L -14 151 L -6 151" fill="none" stroke="#3E4A6B" stroke-width="1"/>
+              <text x="-24" y="98.5" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 98.5)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#3E4A6B">라프트</text>
+              <text x="-38" y="98.5" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 98.5)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#3E4A6B">M₂ · 약 40 kg/㎡</text>
+              <path d="M -6 151 L -14 151 L -14 227 L -6 227" fill="none" stroke="#2F6E62" stroke-width="1"/>
+              <text x="-24" y="189.0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 189.0)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#2F6E62">방진층</text>
+              <text x="-38" y="189.0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 189.0)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#2F6E62">S</text>
+              <path d="M -6 227 L -14 227 L -14 277 L -6 277" fill="none" stroke="#8E8C84" stroke-width="1"/>
+              <text x="-24" y="252.0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 252.0)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#8E8C84">하부 질량</text>
+              <text x="-38" y="252.0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 252.0)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#8E8C84">M₁</text>
+              </svg>
+          </div>
+          <div class="draw-cap">AC-F-L2 단면</div>
+        </div>
+        <div>
+          <div class="draw">
+            <svg viewBox="0 0 340 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="나사 길이 계산. 상부 합판 12, 돌차음판 4, 차음석고 12.5 합 28.5밀리를 지나 하부 합판에 9.5밀리 물린다.">
+              <text x="170" y="26" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600" fill="#1C1C1A">나사 길이 계산</text>
+              <line x1="40" y1="46" x2="300" y2="46" stroke="#D5D2C9" stroke-width="1"/>
+              <text x="52" y="72" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#5A5852">상부 합판</text>
+              <text x="288" y="72" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12.5" fill="#1C1C1A">12 mm</text>
+              <text x="52" y="96" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#5A5852">돌차음판</text>
+              <text x="288" y="96" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12.5" fill="#1C1C1A">4 mm</text>
+              <text x="52" y="120" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#5A5852">차음석고보드</text>
+              <text x="288" y="120" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12.5" fill="#1C1C1A">12.5 mm</text>
+              <line x1="40" y1="134" x2="300" y2="134" stroke="#D5D2C9" stroke-width="1"/>
+              <text x="52" y="158" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#5A5852">통과 두께</text>
+              <text x="288" y="158" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12.5" font-weight="600" fill="#1C1C1A">28.5 mm</text>
+              <rect x="40" y="176" width="260" height="42" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8" rx="4"/>
+              <text x="52" y="193" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#1C4A41">나사 38mm 사용 시</text>
+              <text x="52" y="210" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#2F6E62">하부 합판에 9.5mm 물림 · 여유 2.5mm</text>
+              <rect x="40" y="228" width="260" height="42" fill="#F6E9E6" stroke="#9E3324" stroke-width=".8" rx="4"/>
+              <text x="52" y="245" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#9E3324">나사 41mm 이상 사용 시</text>
+              <text x="52" y="262" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#6E2418">하부 합판 관통 · 미네랄울 손상</text>
+              <text x="170" y="290" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">38mm만 현장 반입 · 예비 32mm</text>
+            </svg>
+          </div>
+          <div class="draw-cap">체결 검토</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">명칭</td><td class="v">표준 부유바닥</td></tr>
+          <tr><td class="k">총 두께</td><td class="v">94~97 mm</td></tr>
+          <tr><td class="k">구성</td><td class="v">미네랄울 50T + 합판 12T + 차음석고 12.5T + 돌차음판 4T + 합판 12T + 마감</td></tr>
+          <tr><td class="k">방진층</td><td class="v">미네랄울 보온판 80K 50T (KCC 또는 벽산)</td></tr>
+          <tr><td class="k">라프트 면밀도</td><td class="v">약 40 kg/㎡</td></tr>
+          <tr><td class="k">체결</td><td class="v">돌차음판 자체 점착 + 목공본드 + 나사 38mm, 200~250mm 간격</td></tr>
+          <tr><td class="k">층고 손실</td><td class="v">94~97 mm</td></tr>
+          <tr><td class="k">대응</td><td class="v">말소리 · 일반 음악 · 성악 · 관악 · 현악</td></tr>
+          <tr class="warn-row"><td class="k">비대응</td><td class="v">드럼 · 앰프 · 서브우퍼 · 야간 저역</td></tr>
+          <tr class="opt"><td class="k">지하 · 습기 옵션</td><td class="v">슬래브 상부 아이소핑크(XPS) 20T 설치 — PE 방습필름 대체. 총 두께 +20mm</td></tr>
+          <tr><td class="k">적용</td><td class="v">강의실, 회의실, 성악 · 관악 학원, 소규모 연습실</td></tr>
+          <tr><td class="k">조건부 적용</td><td class="v">피아노 — 하중분산판 병용 필수. 다수 배치 시 L3 권장</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">라프트 면밀도 산출</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>층</th><th>두께</th><th>개략 면밀도</th></tr></thead>
+        <tbody>
+          <tr><td class="v">합판 (상부)</td><td class="mono">12T</td><td class="mono">7.2 kg/㎡</td></tr>
+          <tr><td class="v">돌차음판</td><td class="mono">4T</td><td class="mono">7.5 kg/㎡</td></tr>
+          <tr><td class="v">차음석고보드</td><td class="mono">12.5T</td><td class="mono">13.0 kg/㎡</td></tr>
+          <tr><td class="v">합판 (하부)</td><td class="mono">12T</td><td class="mono">7.2 kg/㎡</td></tr>
+          <tr><td class="v">마감재</td><td class="mono">3~6T</td><td class="mono">약 5 kg/㎡</td></tr>
+          <tr class="total"><td class="v">합계</td><td class="mono">—</td><td class="mono">약 40 kg/㎡</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>L1 대비.</b> 라프트 면밀도 22 → 40 kg/㎡ (약 1.8배). 차음석고보드 1겹 추가가 전체 증가분의 대부분을 차지한다. 질량법칙상 전 대역 약 5dB 상승에 해당하며, 이것이 L1 → L2의 결정적 차이다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">방진층 성능 데이터</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>항목</th><th>값</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td class="v">밀도</td><td class="mono">80 kg/㎥</td><td>—</td></tr>
+          <tr><td class="v">두께</td><td class="mono">50 mm</td><td>—</td></tr>
+          <tr><td class="v">압축강도 CS(10)</td><td class="mono">10 kPa 이상</td><td>제조사 데이터시트 확인 필요</td></tr>
+          <tr><td class="v">열전도율 (20℃)</td><td class="mono">0.040 W/m·K 이하</td><td>—</td></tr>
+          <tr><td class="v">불연 등급</td><td class="mono">불연재</td><td>성적서 확보 — 상업공간 필수</td></tr>
+          <tr class="warn-row"><td class="v">동탄성계수</td><td class="mono">데이터 없음</td><td>보온판 계열 — 바닥 완충재 인증 대상 아님</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>자재 성격에 관한 주의.</b> 미네랄울 80K 보온판은 배관 · 탱크 · 기계실 보온용으로 출시되는 제품군이며, 공동주택 바닥 완충재 인증 품목이 아니다. 건식 부유바닥에서는 업계 관행적으로 사용되고 물리적으로 유효하나, <b>견적서에 동탄성계수 성적서를 첨부할 수 없다.</b> 대외 자료에는 밀도 · 두께 · 불연 등급만 표기한다.
+      </div>
+      <div class="optbox">
+        <b>지하 · 습기 · 결로 우려 현장.</b> 슬래브 상부에 <b>아이소핑크(XPS) 20T</b>를 설치하고 이음부를 테이프로 밀봉한다. PE 방습필름을 대체하며, 판재이므로 시공 중 손상 위험이 없고 단열 효과로 결로를 억제한다. XPS는 압축강도 150~300 kPa로 면하중(약 3.5 kPa)의 40~85배이므로 <b>방진층이 아니라 하부 질량(슬래브의 연장)으로 취급</b>하며, 방진 성능은 미네랄울이 그대로 담당한다. 총 두께 +20mm. 착공 전 함수율 확인(1m×1m 비닐 밀봉 24~48시간, 결로 시 시공 보류) 필수. 불연 요구 현장은 준불연 XPS를 적용한다.
+      </div>
+
+      <ul class="notes" style="margin-top:16px">
+        <li><span class="mk">※</span><span>대리점 요청 자료 — 제품 데이터시트(CS(10) · 밀도 · 열전도율), 불연 성적서, 판 규격</span></li>
+        <li><span class="mk">※</span><span>벽산 총판 라이트필 031-604-3000 / KCC 대리점</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">하중 검토</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>항목</th><th>값</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td class="v">라프트 자중</td><td class="mono">0.4 kPa</td><td>40 kg/㎡</td></tr>
+          <tr><td class="v">활하중</td><td class="mono">2.0 kPa</td><td>일반</td></tr>
+          <tr><td class="v">여유</td><td class="mono">1.0 kPa</td><td>가구 · 장비</td></tr>
+          <tr class="total"><td class="v">면하중 계</td><td class="mono">약 3.4 kPa</td><td>CS(10) 대비 안전율 약 3배</td></tr>
+          <tr><td class="v">예상 침하</td><td class="mono">약 1.7 mm</td><td>변형률 3.4%</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>점하중이 실제 위험이다.</b> 그랜드피아노 다리 1개(약 100kg, 접지 5㎠)는 약 200 kPa로, 면하중의 60배에 달한다. 하부 합판 12T가 1차 분산판 역할을 하나 중량물 구역은 별도 보강이 필요하다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">자재</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td class="v">미네랄울 보온판</td><td>80K · 50T</td><td>KCC 또는 벽산. 불연</td></tr>
+          <tr><td class="v">— 중량물 구역</td><td>120K · 50T</td><td>두께 동일 유지</td></tr>
+          <tr><td class="v">합판</td><td>12T</td><td>2겹 (하부 · 상부)</td></tr>
+          <tr><td class="v">차음석고보드</td><td>12.5T</td><td>1겹</td></tr>
+          <tr><td class="v">돌차음판</td><td>4T · 자체 점착 타입</td><td>전 등급 4T 통일</td></tr>
+          <tr><td class="v">목공본드</td><td>—</td><td>상부 합판 전면 도포</td></tr>
+          <tr><td class="v">나사</td><td>38mm (예비 32mm)</td><td>41mm 이상 반입 금지</td></tr>
+          <tr><td class="v">PE 방습필름</td><td>—</td><td>슬래브 상부. 겹침 100mm</td></tr>
+          <tr class="opt"><td class="v">아이소핑크 (XPS)</td><td>20T</td><td>지하·습기 현장. PE 필름 대체</td></tr>
+          <tr><td class="v">마감재</td><td>데코타일 3T / 카페트 6T</td><td>카페트가 경량충격음에 유리</td></tr>
+          <tr><td class="v">탄성 실란트</td><td>—</td><td>연변부. 경화형 퍼티 금지</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th style="width:44px">No</th><th>작업</th><th>확인사항</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="v">슬래브 청소</td><td>이물질 · 돌출부 제거</td></tr>
+          <tr><td class="num">2</td><td class="v">평탄도 확인</td><td>3m당 ±3mm 초과 시 레벨링 선행</td></tr>
+          <tr><td class="num">3</td><td class="v">PE 방습필름</td><td>겹침 100mm · 벽면 올림 / <strong>지하·습기 시 XPS 20T</strong></td></tr>
+          <tr><td class="num">4</td><td class="v">미네랄울 포설</td><td>압축 금지 · 이음부 밀착만</td></tr>
+          <tr><td class="num">5</td><td class="v">연변 세워 올림</td><td>마감면 위 10mm까지 (AC-J-01)</td></tr>
+          <tr><td class="num">6</td><td class="v">중량물 구역 보강</td><td>120K 교체 또는 하부 합판 2겹</td></tr>
+          <tr><td class="num">7</td><td class="v">하부 합판 12T</td><td>이 시점부터 합판 위로만 이동</td></tr>
+          <tr><td class="num">8</td><td class="v">차음석고보드 12.5T</td><td>이음선 합판과 엇갈림 300mm 이상</td></tr>
+          <tr><td class="num">9</td><td class="v">돌차음판 4T 부착</td><td>이형지 20~30cm씩 벗기며 밀착</td></tr>
+          <tr><td class="num">10</td><td class="v">본드 도포 · 상부 합판</td><td>3~4㎡씩 구간 분할 시공</td></tr>
+          <tr><td class="num">11</td><td class="v">나사 체결</td><td>38mm · 200~250mm · 첫 10개 뒷면 확인</td></tr>
+          <tr><td class="num">12</td><td class="v">마감재</td><td>데코타일 / 카페트</td></tr>
+          <tr><td class="num">13</td><td class="v">연변 정리 · 실란트</td><td>튀어나온 미네랄울 커터 정리</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">08</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-body">
+      <ul class="notes">
+        <li><span class="mk">01</span><span><strong>나사 길이</strong> — 38mm 표준, 예비 32mm. <strong>현장에 38mm만 반입</strong>한다. 41mm 이상은 하부 합판을 관통해 미네랄울을 손상시킨다. 시공 시작 시 첫 10개는 하부 합판 뒷면을 확인한다.</span></li>
+        <li><span class="mk">02</span><span><strong>미네랄울 압축 금지</strong> — 50T를 그대로 50T로 유지한다. 이음부는 밀착만 하고 억지로 밀어 넣지 않는다. 시공 중 자재를 미네랄울 위에 적재하지 않는다.</span></li>
+        <li><span class="mk">03</span><span><strong>보행 관리</strong> — 미네랄울 위를 직접 밟지 않는다. 하부 합판을 순차 포설하며 그 위로 이동한다.</span></li>
+        <li><span class="mk">04</span><span><strong>이음선 엇갈림</strong> — 합판과 석고보드의 이음선을 300mm 이상 어긋나게 배치한다. 석고 1겹이므로 이음부가 그대로 취약부가 된다.</span></li>
+        <li><span class="mk">05</span><span><strong>중량물 하중 관리</strong> — 피아노 · 앰프스택 · 서버랙 등 점하중 구역은 하부 합판 2겹 보강 또는 120K 구역 교체. 두께는 반드시 동일 유지. 피아노는 별도 하중분산판(합판 18T 이상, 접지면보다 사방 100mm 이상) 병용.</span></li>
+        <li><span class="mk">06</span><span><strong>방습층</strong> — 무기섬유는 습기에 취약하다. 슬래브 상부 PE 필름을 생략하지 않는다.</span></li>
+        <li><span class="mk">07</span><span><strong>연변 이격</strong> — 라프트 5개 층 전부가 벽 · 기둥 · 문틀에 닿지 않아야 한다. 걸레받이는 라프트에만 고정한다.</span></li>
+        <li><span class="mk">08</span><span><strong>관통부</strong> — 배관 · 전기가 라프트를 관통하면 방진 슬리브 + 실란트 처리. 설계 단계에서 관통을 없애는 것이 우선이다.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">09</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body">
+      <ul class="stop-list">
+        <li><span class="a">41mm 이상 나사</span><span class="b">하부 합판 관통 · 방진 무효화</span></li>
+        <li><span class="a">미네랄울 압축 시공</span><span class="b">동적강성 급등 · 방진 성능 상실</span></li>
+        <li><span class="a">미네랄울 직접 보행 · 적재</span><span class="b">국부 압착</span></li>
+        <li><span class="a">연변 이격 생략</span><span class="b">측면전달음 발생</span></li>
+        <li><span class="a">슬래브 앵커 고정</span><span class="b">부유 구조 무효화</span></li>
+        <li><span class="a">중량물 직치</span><span class="b">점하중 압착 — 하중분산판 필수</span></li>
+        <li><span class="a">저역 음원 현장 적용</span><span class="b">드럼 · 앰프 · 서브우퍼는 L4 이상</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-F-L2 &nbsp;/&nbsp; REV A</span>
+    <span>내부 견적 · 시공 기준 자료</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-C-L3 — 이중 천장형</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --joist:#7A5B34;--joist-bg:#F1E9DC;
+  --damp:#8A5A2B;--damp-bg:#F4EBE0;
+  --gg:#3F7A3A;--gg-bg:#E7F1E5;
+  --xps:#B0537A;--xps-bg:#F7E8EF;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab:#8E8C84;--slab-bg:#EDEBE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.tb-v.warn{color:var(--stop)}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+.draw-wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:800px){.draw-wrap{grid-template-columns:1fr}}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:34%;color:var(--ink-2)}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
+tr.total td{border-top:1px solid var(--rule);font-weight:600}
+tr.opt td{background:var(--xps-bg)}
+tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:var(--damp)}
+.flag.gg{border-color:var(--gg);background:var(--gg-bg);color:#2C4F29}
+.flag.gg b{color:var(--gg)}
+.flag.opt{border-color:#B0537A;background:var(--xps-bg);color:#7A2B4C}
+.flag.opt b{color:#8E3A5F}
+.flag.warn{border-color:var(--stop);background:var(--stop-bg);color:#6E2418}
+.flag.warn b{color:var(--stop)}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav">
+  <a class="acnav-home" href="../index.html">← AC 목록</a>
+  <span class="acnav-code">AC-C-L3</span>
+  <span class="acnav-move">
+    <a href="AC-C-L2.html">← L2</a>
+    <a href="AC-C-L4.html">L4 →</a>
+  </span>
+</div>
+
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-C-L3</div>
+      <div class="tb-name">이중 천장형</div>
+      <div class="tb-en">Double ceiling / plenum closure</div>
+    </div>
+    <div class="tb-meta"><div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">천장 Ceiling</span></div><div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">3</span></div><div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">292.5 + 설비층</span></div><div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (우회 차단)</span></div><div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-M · AC-J-06</span></div><div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">단면 &amp; 등급 원리</span></div>
+    <div class="sec-body">
+      <div class="draw-wrap">
+        <div>
+          <div class="draw"><svg viewBox="-62 0 482 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-C-L3 단면. 설비층 아래 구체를 연장하는 상부 천장과 이격층 30을 두고 하부 천장을 구성한다."><rect x="30" y="20" width="250" height="16" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="28.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">슬래브</text><rect x="30" y="36" width="250" height="26" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="44.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">설비층 (실측)</text><text x="155.0" y="56.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 · 배관 MD</text><rect x="30" y="62" width="250" height="26" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="70.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">상부 천장틀 2×4</text><text x="155.0" y="82.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 50T</text><rect x="30" y="88" width="250" height="11" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="93.5" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><rect x="30" y="99" width="250" height="14" fill="#FFFFFF" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="106.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">이격층 30 · 비움</text><rect x="30" y="113" width="250" height="26" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="121.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">하부 천장틀 2×4</text><text x="155.0" y="133.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 50T</text><rect x="30" y="139" width="250" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="144.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">일반석고 9.5T</text><rect x="30" y="149" width="250" height="6" fill="#E7F1E5" stroke="#3F7A3A" stroke-width=".8"/><text x="155.0" y="152.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">그린글루</text><rect x="30" y="155" width="250" height="12" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="161.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><rect x="56" y="36" width="42" height="131" fill="none" stroke="#B0537A" stroke-width="1.1" stroke-dasharray="4 3"/><text x="77" y="180" text-anchor="middle" font-size="7.5" fill="#B0537A" font-family="IBM Plex Sans KR,sans-serif">이중 점검구</text><line x1="280" y1="49" x2="288" y2="49" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="49" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">덕트 · 스프링클러 통과</text><line x1="280" y1="75" x2="288" y2="75" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="75" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">상부 천장 — 구체 연장</text><line x1="280" y1="94" x2="288" y2="94" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="94" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">기밀 폐합이 성능 좌우</text><line x1="280" y1="126" x2="288" y2="126" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="126" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">하부 천장 — 벽 지지</text><line x1="280" y1="161" x2="288" y2="161" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="161" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">코인시던스 딥 보완</text><line x1="8" y1="62" x2="8" y2="167" stroke="#8E8C84" stroke-width=".6"/><line x1="3" y1="62" x2="13" y2="62" stroke="#8E8C84" stroke-width=".6"/><line x1="3" y1="167" x2="13" y2="167" stroke="#8E8C84" stroke-width=".6"/><text x="0" y="114.5" text-anchor="end" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Mono,monospace">292.5</text><line x1="30" y1="181" x2="280" y2="181" stroke="#D5D2C9" stroke-width=".6" stroke-dasharray="3 3"/><text x="155.0" y="193" text-anchor="middle" font-size="8" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">실내</text></svg></div>
+          <div class="draw-cap">AC-C-L3 SECTION — DOUBLE CEILING</div>
+        </div>
+        <div><p style="font-size:13.5px;line-height:1.7">상부 천장의 목적은 차음이 아니라 <strong>실 경계의 재설정</strong>이다. 상가는 칸막이벽이 슬래브까지 올라가지 않아 천장 속 플레넘이 인접 호실과 통해 있는 경우가 많으며, 이것이 상가 방음 실패의 대표 원인이다.</p>
+<div class="flag warn"><b>기밀이 성능을 좌우</b> — 벽체 접합부 연속 실링, 덕트 · 배관 · 행거 관통부 슬리브 폐합이 전제다. 하나라도 열리면 이 층 전체가 무의미해진다. 마감 후 확인이 불가능하므로 폐합 시점에 검수한다.</div>
+<div class="flag gg"><b>그린글루 진입</b> — 감쇠는 구조 전달이 끊긴 뒤에야 유효하다. 이중 천장으로 구조가 분리된 이 등급에서 비로소 조건이 성립한다. 주 효과는 석고보드 코인시던스 딥(2~3kHz) 보완이며 저역에는 작용하지 않는다.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
+    <div class="sec-body"><table><tbody><tr><td class="k">명칭</td><td class="v">이중 천장형 (설비층 폐합)</td></tr><tr><td class="k">소요 천장고</td><td class="v">292.5 mm + 설비층 실측</td></tr><tr><td class="k">구성</td><td class="v">설비층 + 상부 천장(구체 연장) + 이격층 30 + 하부 천장 + 마감판</td></tr><tr><td class="k">설비층</td><td class="v">실측 · 통상 200~300 mm · 충진재 채움 · 배관 주위 MD</td></tr><tr><td class="k">상부 천장</td><td class="v">천장틀 2×4 + 충진재 50T + 차음석고 12.5T · 슬래브 매달림</td></tr><tr><td class="k">이격층</td><td class="v">30 mm · 비움</td></tr><tr><td class="k">하부 천장</td><td class="v">천장틀 2×4 + 충진재 50T · 벽 지지</td></tr><tr><td class="k">마감판</td><td class="v">일반석고 9.5T + 그린글루 + 차음석고 12.5T</td></tr><tr><td class="k">스팬 한계</td><td class="v">2×4 3m / 박스빔 5m / 초과 시 부분 방진행거</td></tr><tr><td class="k">대응</td><td class="v">공기음 전 대역 + 인접 호실 천장 우회 차단</td></tr><tr><td class="k">비대응</td><td class="v">상부 충격음 (상부 천장 강결 — L4 검토)</td></tr><tr><td class="k">적용</td><td class="v">상가 · 업무공간 · 학원 · 스튜디오</td></tr></tbody></table></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">설계 근거</span></div>
+    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>상부 천장은 차음층이 아니라 실 경계다.</strong> 상가는 칸막이벽이 슬래브까지 올라가지 않아 천장 속 플레넘이 인접 호실과 통해 있는 경우가 많다. 상부 천장은 슬래브가 하지 못하는 경계 역할을 대신한다.</span></li><li><span class="mk">02</span><span><strong>실간 벽 폐합이 선행 조건이다.</strong> 천장으로만 막고 벽이 슬래브까지 올라가지 않으면 우회 경로가 그대로 남는다. 착공 전 벽 폐합 여부를 먼저 확인한다.</span></li><li><span class="mk">03</span><span><strong>삼중 구성의 완화</strong> — 판이 셋이므로 이론상 저역에 불리하나, 설비층과 이격층을 서로 다른 깊이로 두어 공진 대역을 분산한다. 설비층은 실측 물량에 따르고 이격층은 30mm로 고정한다.</span></li><li><span class="mk">04</span><span><strong>이격층은 비운다.</strong> 상 · 하부 캐비티가 흡음을 담당하므로 이격층 충진은 불필요하며, 하부 천장 시공 후 접근이 불가능해 시공도 성립하지 않는다.</span></li></ul></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">자재</span></div>
+    <div class="sec-body"><table>
+      <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
+      <tbody><tr><td class="k">상부 천장틀</td><td class="mono">2×4 (38×89)</td><td>슬래브 매달림</td></tr><tr><td class="k">하부 천장틀</td><td class="mono">2×4 (38×89)</td><td>@450 · 벽 지지</td></tr><tr><td class="k">— 대안</td><td class="mono">제작 박스빔</td><td>스팬 3m 초과 시</td></tr><tr><td class="k">충진재</td><td class="mono">50T</td><td>상부 · 하부 각각</td></tr><tr><td class="k">충진재 (설비층)</td><td class="mono">실측 두께</td><td>덕트 주변 MD 감쌈</td></tr><tr><td class="k">차음석고보드</td><td class="mono">12.5T</td><td>상부 천장 폐합 1겹</td></tr><tr><td class="k">일반석고보드</td><td class="mono">9.5T</td><td>하부 마감 1층</td></tr><tr><td class="k">그린글루</td><td class="mono">—</td><td>하부 마감판 2겹 사이 · 약 0.6~0.8 튜브/㎡</td></tr><tr><td class="k">차음석고보드</td><td class="mono">12.5T</td><td>하부 최종 마감면</td></tr><tr><td class="k">방진행거</td><td class="mono">—</td><td>하부 천장 스팬 초과 시 부분 적용</td></tr><tr><td class="k">점검구</td><td class="mono">이중 구성</td><td>상 · 하부 각각 · 가스켓 압착</td></tr><tr><td class="k">흡음 플렉시블</td><td class="mono">내면 타공형</td><td>디퓨저 직전 1~2m</td></tr><tr><td class="k">탄성 실란트</td><td class="mono">—</td><td>기밀 폐합 전용</td></tr></tbody></table>
+      <div class="flag"><b>충진재</b> — 미네랄울 48K 보드형 표준. 벽 · 천장 자재 통합을 위해 폴리에스터 흡음단열재(KS F 5660) 50T 40K 대체를 검토 중이며, 저역(125 · 250Hz) 흡음률 비교 데이터 확보 후 확정한다. 인허가 시설(학원 · 어린이집 · 다중이용업소)은 화재 규정상 미네랄울을 유지한다.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-body"><table>
+      <thead><tr><th>No</th><th>작업</th><th>확인사항</th></tr></thead>
+      <tbody><tr><td class="num">1</td><td class="v">기존 천장 철거 · 설비 실측</td><td>덕트 · 스프링클러 · 감지기 레벨</td></tr><tr><td class="num">2</td><td class="v">실간 벽 구체 폐합 확인</td><td>벽이 슬래브까지 올라갔는지 선행 확인</td></tr><tr><td class="num">3</td><td class="v">상부 천장틀 설치</td><td>슬래브 매달림 · 설비 간섭 회피</td></tr><tr><td class="num">4</td><td class="v">설비층 충진</td><td>충진재 채움 · 배관 주위 MD · 헤드 주변 개방</td></tr><tr><td class="num">5</td><td class="v">상부 천장 충진재 50T</td><td>캐비티 밀실</td></tr><tr><td class="num">6</td><td class="v">상부 차음석고 12.5T</td><td>연속 폐합 · 이음부 밀착</td></tr><tr><td class="num">7</td><td class="v">상부 기밀 처리</td><td>벽체 접합부 · 관통부 슬리브 + 실링</td></tr><tr><td class="num">8</td><td class="v">4웨이 박스 · 점검구 개구</td><td>상부 천장 동등 사양 박스</td></tr><tr><td class="num">9</td><td class="v">하부 천장틀 설치</td><td>이격 30 확보 · 벽 지지</td></tr><tr><td class="num">10</td><td class="v">하부 충진재 50T</td><td>캐비티 밀실</td></tr><tr><td class="num">11</td><td class="v">일반석고 9.5T</td><td>이음선 천장틀 위</td></tr><tr><td class="num">12</td><td class="v">그린글루 도포</td><td>15분 내 다음 공정 · 3~4㎡ 분할</td></tr><tr><td class="num">13</td><td class="v">차음석고 12.5T</td><td>즉시 압착 · 이음선 엇갈림</td></tr><tr><td class="num">14</td><td class="v">디퓨저 · 조명 관통부</td><td>박스 폐합 · 흡음 플렉시블</td></tr><tr><td class="num">15</td><td class="v">연변 · 관통부 실링</td><td>전 접합부 확인</td></tr></tbody></table></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>상부 천장 기밀이 전부</strong> — 이 층의 목적은 폐합이다. 벽체 접합부 · 관통부 중 하나라도 열리면 층 전체가 무의미해진다. 마감 후 확인이 불가능하므로 폐합 시점에 검수한다.</span></li><li><span class="mk">02</span><span><strong>실간 벽 선행 확인</strong> — 천장으로만 막고 벽이 슬래브까지 올라가지 않으면 우회 경로가 남는다.</span></li><li><span class="mk">03</span><span><strong>점검구 이중 구성</strong> — 상 · 하부 천장을 각각 관통하는 이중 점검구로 각 층의 기밀선을 개별 유지한다. 일반 알루미늄 점검구는 그 자리가 곧 구멍이 된다.</span></li><li><span class="mk">04</span><span><strong>4웨이 매입부 박스</strong> — 본체 상부를 상부 천장 동등 사양 박스로 감싸 기밀선을 우회시킨다. 본체 · 드레인 펌프는 하지 직결 금지.</span></li><li><span class="mk">05</span><span><strong>덕트 처리</strong> — 흡음 플렉시블(내면 타공형)을 디퓨저 직전 1~2m 완만한 곡선으로 배치한다. 일반 알루미늄 플렉시블은 흡음 기능이 없고 표면 방사음이 오히려 증가한다.</span></li><li><span class="mk">06</span><span><strong>디퓨저 유속</strong> — 토출 유속 2m/s 이하가 되도록 크기 · 개수를 산정한다. 소음은 유속의 6제곱에 비례한다. 디퓨저 직전 댐퍼는 설치하지 않는다.</span></li><li><span class="mk">07</span><span><strong>위생배관 감쌈</strong> — 배수관은 그 자체가 소음원이다. 차음시트 밀착 감쌈 + 충진재 외피 + 박스 폐합의 3중 처리.</span></li><li><span class="mk">08</span><span><strong>소방 요건 협의</strong> — 스프링클러 헤드 주변 · 감지기 직상부는 충진에서 제외한다. 착공 전 소방 감리와 협의한다.</span></li><li><span class="mk">09</span><span><strong>그린글루 시간 관리</strong> — 도포 후 15분 내 압착. 완전 성능은 약 30일 후 발현.</span></li></ul></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body"><ul class="stop-list"><li><span class="a">상부 천장 기밀 미처리</span><span class="b">폐합 목적 상실 — 층 전체 무의미</span></li><li><span class="a">일반 알루미늄 점검구</span><span class="b">기밀선 단절 — 이중 점검구 필수</span></li><li><span class="a">일반 플렉시블 덕트</span><span class="b">흡음 기능 없음 · 표면 방사음 증가</span></li><li><span class="a">노즐형 디퓨저</span><span class="b">고유속 전제 제품 — 방음실 부적합</span></li><li><span class="a">디퓨저 직전 댐퍼</span><span class="b">난류 소음 직접 방사</span></li><li><span class="a">정식 소음기 후속 삽입</span><span class="b">정압 손실 50~150Pa — 기시공 현장 적용 금지</span></li><li><span class="a">이격층 충진</span><span class="b">시공 성립 불가 — 상 · 하부 캐비티가 흡음 담당</span></li><li><span class="a">실간 벽 미폐합 상태 시공</span><span class="b">천장 우회 경로 잔존</span></li><li><span class="a">강결 행거 병용</span><span class="b">구조적 단락</span></li></ul></div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-C-L3 &nbsp;/&nbsp; REV A</span>
+    <span>내부 견적 · 시공 기준 자료</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

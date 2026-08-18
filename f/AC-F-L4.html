@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-F-L4 — 방진고무 장선 부유바닥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --joist:#7A5B34;--joist-bg:#F1E9DC;
+  --damp:#8A5A2B;--damp-bg:#F4EBE0;
+  --gg:#3F7A3A;--gg-bg:#E7F1E5;
+  --xps:#B0537A;--xps-bg:#F7E8EF;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab:#8E8C84;--slab-bg:#EDEBE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.tb-v.warn{color:var(--stop)}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+.draw-wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:800px){.draw-wrap{grid-template-columns:1fr}}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:34%;color:var(--ink-2)}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
+tr.total td{border-top:1px solid var(--rule);font-weight:600}
+tr.opt td{background:var(--xps-bg)}
+tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.est td.mono{color:var(--ink-3)}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:var(--damp)}
+.flag.gg{border-color:var(--gg);background:var(--gg-bg);color:#2C4F29}
+.flag.gg b{color:var(--gg)}
+.flag.opt{border-color:#B0537A;background:var(--xps-bg);color:#7A2B4C}
+.flag.opt b{color:#8E3A5F}
+.flag.warn{border-color:var(--stop);background:var(--stop-bg);color:#6E2418}
+.flag.warn b{color:var(--stop)}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav">
+  <a class="acnav-home" href="../index.html">← AC 목록</a>
+  <span class="acnav-code">AC-F-L4</span>
+  <span class="acnav-move">
+    <a href="AC-F-L3.html">← L3</a>
+    <a href="AC-F-L5.html">L5 →</a>
+  </span>
+</div>
+
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-F-L4</div>
+      <div class="tb-name">방진고무 장선 부유바닥</div>
+      <div class="tb-en">Resilient-mount joist system / low f₀</div>
+    </div>
+    <div class="tb-meta">
+      <div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">바닥 Floor</span></div>
+      <div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">4</span></div>
+      <div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">125~130 mm</span></div>
+      <div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (저역 대응)</span></div>
+      <div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-J-01</span></div>
+      <div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">단면 &amp; 공법 전환</span></div>
+    <div class="sec-body">
+      <div class="draw-wrap">
+        <div>
+          <div class="draw">
+            <svg viewBox="-56 0 476 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-F-L4 단면. 슬래브 위 방진고무 십자패드 25T가 투바이 각재를 점지지하고, 공동에 충진재를 채운 뒤 합판 12T 두 겹 사이에 그린글루를 넣고 상부에 돌차음판과 마감재를 올린다.">
+              <rect x="30" y="46" width="250" height="10" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+              <rect x="30" y="56" width="250" height="10" fill="#F4EBE0" stroke="#8A5A2B" stroke-width=".8"/>
+              <rect x="30" y="66" width="250" height="28" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x="30" y="94" width="250" height="5" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/>
+              <rect x="30" y="99" width="250" height="28" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+
+              <rect x="30" y="127" width="250" height="70" fill="#FBF7F0" stroke="#7A5B34" stroke-width=".6"/>
+              <rect x="38" y="127" width="26" height="70" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+              <rect x="142" y="127" width="26" height="70" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+              <rect x="246" y="127" width="26" height="70" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+              <rect x="68" y="139" width="70" height="50" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".6" stroke-dasharray="3 2"/>
+              <rect x="172" y="139" width="70" height="50" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".6" stroke-dasharray="3 2"/>
+              <text x="103" y="167" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#2F6E62">충진재</text>
+              <text x="207" y="167" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#2F6E62">충진재</text>
+
+              <rect x="34" y="197" width="34" height="18" fill="#2F6E62" stroke="#1C4A41" stroke-width=".8" rx="2"/>
+              <rect x="138" y="197" width="34" height="18" fill="#2F6E62" stroke="#1C4A41" stroke-width=".8" rx="2"/>
+              <rect x="242" y="197" width="34" height="18" fill="#2F6E62" stroke="#1C4A41" stroke-width=".8" rx="2"/>
+              <rect x="30" y="215" width="250" height="36" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+              <line x1="30" y1="215" x2="280" y2="215" stroke="#8A5A2B" stroke-width="1.6" stroke-dasharray="5 3"/>
+              
+              <line x1="282" y1="51" x2="292" y2="51" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="54" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">마감 3~8T</text>
+              <line x1="282" y1="61" x2="292" y2="61" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="70" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8A5A2B">돌차음판 4T</text>
+              <line x1="282" y1="80" x2="292" y2="80" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="86" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">합판 12T</text>
+              <line x1="282" y1="96" x2="292" y2="96" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="102" font-family="IBM Plex Sans KR,sans-serif" font-size="11" font-weight="600" fill="#3F7A3A">그린글루</text>
+              <line x1="282" y1="113" x2="292" y2="113" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="118" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">합판 12T</text>
+              <line x1="282" y1="150" x2="292" y2="150" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="150" font-family="IBM Plex Sans KR,sans-serif" font-size="11" font-weight="600" fill="#7A5B34">투바이 각재</text>
+              <text x="297" y="164" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#7A5B34">69T · 400 간격</text>
+              <line x1="282" y1="200" x2="292" y2="200" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="198" font-family="IBM Plex Sans KR,sans-serif" font-size="11" font-weight="600" fill="#1C4A41">방진고무 25T</text>
+              <text x="297" y="211" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#2F6E62">십자형 75×110</text>
+              <line x1="282" y1="224" x2="292" y2="224" stroke="#8A5A2B" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="227" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" fill="#8A5A2B">PE 방습필름</text>
+              <line x1="282" y1="247" x2="292" y2="247" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="250" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">구조 슬래브</text>
+
+              <path d="M -6 46 L -14 46 L -14 127 L -6 127" fill="none" stroke="#3E4A6B" stroke-width="1"/>
+              <text x="-24" y="86" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 86)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#3E4A6B">데크</text>
+              <text x="-38" y="86" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 86)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#3E4A6B">M₂ · 약 26 kg/㎡</text>
+              <path d="M -6 127 L -14 127 L -14 215 L -6 215" fill="none" stroke="#2F6E62" stroke-width="1"/>
+              <text x="-24" y="171" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 171)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#2F6E62">장선 + 방진층</text>
+              <text x="-38" y="171" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 171)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#2F6E62">S</text>
+              <path d="M -6 215 L -14 215 L -14 251 L -6 251" fill="none" stroke="#8E8C84" stroke-width="1"/>
+              <text x="-24" y="240" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 240)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#8E8C84">하부 질량</text>
+              <text x="-38" y="240" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 240)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#8E8C84">M₁</text>
+
+              <text x="155" y="292" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">데크 약 26 kg/㎡ · 총 125~130mm</text>
+            </svg>
+          </div>
+          <div class="draw-cap">AC-F-L4 단면</div>
+        </div>
+        <div>
+          <div class="draw">
+            <svg viewBox="0 0 340 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="전면부설과 점지지의 면압 비교. 같은 하중을 좁은 패드에 집중시켜 고무가 설계 작동 구간까지 눌리게 한다.">
+              <text x="170" y="26" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600" fill="#1C1C1A">왜 점지지인가 — 면압 비교</text>
+              <line x1="30" y1="44" x2="310" y2="44" stroke="#D5D2C9" stroke-width="1"/>
+
+              <text x="40" y="70" font-family="IBM Plex Sans KR,sans-serif" font-size="12" fill="#5A5852">면하중 (동일)</text>
+              <text x="300" y="70" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12.5" fill="#1C1C1A">약 3.4 kPa</text>
+
+              <rect x="30" y="86" width="280" height="72" fill="#F6E9E6" stroke="#9E3324" stroke-width=".8" rx="4"/>
+              <text x="42" y="106" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#9E3324">전면 부설 (L2 · L3)</text>
+              <text x="42" y="124" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#6E2418">지지면적비 100% · 면압 3.4 kPa</text>
+              <text x="42" y="142" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#6E2418">거의 눌리지 않음 → f₀ 약 87 Hz</text>
+
+              <rect x="30" y="170" width="280" height="90" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8" rx="4"/>
+              <text x="42" y="190" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#1C4A41">점지지 (L4 · L5)</text>
+              <text x="42" y="208" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#2F6E62">패드 75×110 · 각재 400 간격</text>
+              <text x="42" y="226" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#2F6E62">지지면적비 약 3% · 면압 약 100 kPa</text>
+              <text x="42" y="244" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" font-weight="600" fill="#1C4A41">설계 구간까지 압축 → f₀ 약 15~20 Hz</text>
+
+              <text x="170" y="284" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">같은 하중을 약 30배로 집중시켜</text>
+              <text x="170" y="300" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">고무를 스프링으로 작동시키는 구조</text>
+              <text x="170" y="320" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#9E3324">※ f₀는 추정치 — 제조사 처짐 데이터 미확보</text>
+            </svg>
+          </div>
+          <div class="draw-cap">공법 전환 근거</div>
+        </div>
+      </div>
+      <div class="flag">
+        <b>L3 → L4는 자재 상향이 아니라 공법 전환이다.</b> L1~L3는 라프트 질량을 키워 중고역을 막는 노선이며, 질량을 2배로 늘려도 차음량은 약 6dB만 오르는 수확체감 구조다. L4는 노선을 바꿔 <b>f₀ 자체를 끌어내린다.</b> 저역은 질량이 아니라 f₀가 지배하므로, 드럼 · 앰프 · 서브우퍼 대응은 이 지점부터 가능해진다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">명칭</td><td class="v">방진고무 장선 부유바닥</td></tr>
+          <tr><td class="k">총 두께</td><td class="v">125~130 mm</td></tr>
+          <tr><td class="k">구성</td><td class="v">방진고무 25T + 투바이 각재 69T(충진 50T) + 합판 12T + 그린글루 + 합판 12T + 돌차음판 4T + 마감</td></tr>
+          <tr><td class="k">방진층</td><td class="v">십자형 탄성고무 25(T)×75×110 · 각재 하부 점지지</td></tr>
+          <tr><td class="k">장선</td><td class="v">투바이 각재 69T · 400mm 간격</td></tr>
+          <tr><td class="k">공동 충진</td><td class="v">압축마블스펀지 50T 또는 롤충진재 24K 50T</td></tr>
+          <tr><td class="k">제진층</td><td class="v">그린글루 (합판 2겹 사이) + 돌차음판 4T</td></tr>
+          <tr><td class="k">데크 면밀도</td><td class="v">약 26 kg/㎡</td></tr>
+          <tr><td class="k">체결</td><td class="v">목공본드 + 나사 32mm (합판→합판) / 각재 고정 나사 별도</td></tr>
+          <tr><td class="k">층고 손실</td><td class="v">125~130 mm</td></tr>
+          <tr><td class="k">대응</td><td class="v">댄스 · 소형 스튜디오 · 앰프 · 중저역 전반</td></tr>
+          <tr class="warn-row"><td class="k">비대응</td><td class="v">야간 드럼 · 대출력 서브우퍼 (L5 검토)</td></tr>
+          <tr><td class="k">적용</td><td class="v">댄스학원, 소형 스튜디오, 밴드 연습실, 태권도장</td></tr>
+          <tr class="opt"><td class="k">습기 내성</td><td class="v">우수 — 방진고무 무흡수 + 공동 통풍. 지하 현장 별도 방습 사양 불필요</td></tr>
+        </tbody>
+      </table>
+      <div class="flag opt">
+        <b>장선 공법은 습기에 강하다 — 별도 방습 사양이 불필요하다.</b> 방진고무는 흡수가 거의 없어 젖어도 물성이 변하지 않고, 각재가 슬래브에서 25mm 떠 있어 목재가 습기에 직접 닿지 않는다. 무엇보다 장선 사이 69mm 공동이 통풍 경로가 되어 습기가 갇히지 않는다. L2 · L3에 적용하는 아이소핑크 방습층은 <b>오히려 이 통풍을 막으므로 적용하지 않는다.</b> 지하 · 결로 현장에서 L4 · L5를 권하는 이유는 저역 대응만이 아니다. 다만 공동 충진재가 무기섬유(롤충진재 24K)인 경우 곰팡이 우려가 있으므로, 습기 현장에서는 <b>압축마블스펀지</b>를 택한다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">데크 면밀도 산출</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>층</th><th>두께</th><th>개략 면밀도</th></tr></thead>
+        <tbody>
+          <tr><td class="v">돌차음판</td><td class="mono">4T</td><td class="mono">7.5 kg/㎡</td></tr>
+          <tr><td class="v">합판 (상부)</td><td class="mono">12T</td><td class="mono">7.2 kg/㎡</td></tr>
+          <tr><td class="v">합판 (하부)</td><td class="mono">12T</td><td class="mono">7.2 kg/㎡</td></tr>
+          <tr><td class="v">마감재</td><td class="mono">3~8T</td><td class="mono">약 5 kg/㎡</td></tr>
+          <tr class="total"><td class="v">합계</td><td class="mono">—</td><td class="mono">약 26 kg/㎡</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>L2 · L3보다 가볍지만 성능은 높다.</b> 데크 26 kg/㎡는 L2(40)보다 가볍다. 그러나 저역 차단은 질량이 아니라 f₀가 지배하며, 점지지 방식의 f₀는 전면부설 대비 4~6배 낮다. 중고역은 <b>69mm 공동 + 충진재</b>가 추가 질량-공기-질량 계를 형성하여 보완하는데, 이 메커니즘은 L2 · L3에 존재하지 않는다. 단순 면밀도 비교로 등급을 판단하지 않는다.
+      </div>
+      <div class="flag warn">
+        <b>차음석고보드를 데크에 넣지 않는다.</b> 각재 400mm 간격을 데크가 스팬으로 건너가므로 보행 시 반복 굽힘이 발생한다. 석고는 취성 재료로 이 조건에서 균열 · 분화되며, 마감 아래라 발견이 늦다. 질량 보강이 필요하면 상부 합판을 15T로 상향한다(L5 방식).
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">방진고무 · 배치</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">제품</td><td class="v">십자형 탄성고무 (스포츠마루 하부용)</td></tr>
+          <tr><td class="k">규격</td><td class="v">25(T) × 75 × 110</td></tr>
+          <tr><td class="k">재질</td><td class="v">고무칩 + 우레탄 바인더</td></tr>
+          <tr><td class="k">배치</td><td class="v">각재 하부 · 400mm 간격 (㎡당 약 6.25개)</td></tr>
+          <tr><td class="k">방향</td><td class="v">긴 변(110)을 각재와 <strong>직각</strong>으로 배치</td></tr>
+          <tr class="est"><td class="k">유효 접촉면적 (추정)</td><td class="mono">약 45~50 ㎠</td></tr>
+          <tr class="est"><td class="k">면압 (추정)</td><td class="mono">약 100 kPa</td></tr>
+          <tr class="est"><td class="k">f₀ (추정)</td><td class="mono">약 15~20 Hz</td></tr>
+        </tbody>
+      </table>
+      <div class="flag gg">
+        <b>십자 형상이 성능의 핵심이다.</b> 고무는 비압축성이므로 눌리려면 옆으로 부풀어야 한다. 평판을 위아래로 구속하면 부풀 공간이 없어 실질 강성이 급등한다(형상계수 문제). 십자형은 잘려나간 홈이 부풀 공간을 제공하여, 같은 재질 · 같은 두께에서도 훨씬 부드럽게 작동한다. <b>시트를 사각으로 재단해 쓰는 것으로 대체하지 않는다.</b>
+      </div>
+      <div class="flag warn">
+        <b>추정치에 관한 주의.</b> 유효 접촉면적 · 면압 · f₀는 형상과 하중으로부터의 <b>추정값</b>이며, 제조사의 정격하중 시 처짐량 데이터를 확보하지 못했다. 대외 자료 · 견적서에 성능 수치로 기재하지 않는다. 판매처에 경도(Shore A)와 하중-처짐 곡선을 요청하여 확보되면 본 시트를 개정한다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">하중 검토</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>항목</th><th>값</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td class="v">데크 자중</td><td class="mono">0.26 kPa</td><td>26 kg/㎡</td></tr>
+          <tr><td class="v">장선 + 충진재</td><td class="mono">약 0.15 kPa</td><td>—</td></tr>
+          <tr><td class="v">활하중</td><td class="mono">2.0 kPa</td><td>일반. 댄스 · 점프 시 상향 검토</td></tr>
+          <tr><td class="v">여유</td><td class="mono">1.0 kPa</td><td>가구 · 장비</td></tr>
+          <tr class="total"><td class="v">면하중 계</td><td class="mono">약 3.4 kPa</td><td>—</td></tr>
+          <tr><td class="v">패드 1개당 하중</td><td class="mono">약 545 N</td><td>㎡당 6.25개 기준</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>하중이 클수록 유리한 구조다.</b> 전면부설 방식은 하중이 늘면 방진재가 압착되어 성능이 나빠지지만, 점지지 방식은 고무가 설계 작동 구간에 더 확실히 들어간다. 다만 <b>패드 간격을 등급 변수로 쓰지 않는다.</b> 간격을 넓히면 f₀는 내려가나 침하와 장기 크리프 위험이 커진다. 간격은 하중에 맞춰 고정하고, 등급은 데크 구성으로 가른다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">자재</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td class="v">방진고무 (십자형)</td><td>25T × 75 × 110</td><td>각재 하부 · 400 간격</td></tr>
+          <tr><td class="v">투바이 각재</td><td>69T</td><td>400mm 간격</td></tr>
+          <tr><td class="v">공동 충진재</td><td>압축마블스펀지 50T</td><td>습기 현장 권장</td></tr>
+          <tr><td class="v">— 대안</td><td>롤충진재 24K 50T</td><td>건조 현장</td></tr>
+          <tr><td class="v">합판</td><td>12T</td><td>2겹 (데크)</td></tr>
+          <tr><td class="v">그린글루</td><td>—</td><td>합판 2겹 사이. 약 0.6~0.8 튜브/㎡</td></tr>
+          <tr><td class="v">돌차음판</td><td>4T · 자체 점착 타입</td><td>데크 최상부</td></tr>
+          <tr><td class="v">목공본드</td><td>—</td><td>합판 접합</td></tr>
+          <tr><td class="v">나사</td><td>32mm (합판→합판)</td><td>각재 고정용 별도</td></tr>
+          <tr><td class="v">PE 방습필름</td><td>—</td><td>슬래브 상부. 겹침 100mm</td></tr>
+          <tr><td class="v">마감재</td><td>데코타일 3T / 마루 8T / 카페트 6T</td><td>—</td></tr>
+          <tr><td class="v">탄성 실란트</td><td>—</td><td>연변부. 경화형 퍼티 금지</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th style="width:44px">No</th><th>작업</th><th>확인사항</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="v">슬래브 청소</td><td>이물질 · 돌출부 제거</td></tr>
+          <tr><td class="num">2</td><td class="v">함수율 확인</td><td>지하 · 신축 시 비닐 테스트 24~48시간</td></tr>
+          <tr><td class="num">3</td><td class="v">평탄도 확인</td><td>패드로 레벨 조정 가능 — 기준 완화</td></tr>
+          <tr><td class="num">4</td><td class="v">PE 방습필름</td><td>겹침 100mm · 각재 하부 목재 보호</td></tr>
+          <tr><td class="num">5</td><td class="v">먹매김</td><td>각재 400 간격 · 패드 위치 표시</td></tr>
+          <tr><td class="num">6</td><td class="v">방진고무 배치</td><td>긴 변을 각재와 직각 · 400 간격</td></tr>
+          <tr><td class="num">7</td><td class="v">각재 설치</td><td>레벨 조정 · <strong>슬래브 앵커 금지</strong></td></tr>
+          <tr><td class="num">8</td><td class="v">연변 이격 확보</td><td>각재 끝단 벽에서 10mm 이격 (AC-J-01)</td></tr>
+          <tr><td class="num">9</td><td class="v">공동 충진재</td><td>압축하지 않고 채움 · 각재 높이 이내</td></tr>
+          <tr><td class="num">10</td><td class="v">하부 합판 12T</td><td>이음선 각재 위에 · 엇갈림 배치</td></tr>
+          <tr><td class="num">11</td><td class="v">그린글루 도포</td><td><strong>15분 내</strong> 다음 공정 진행</td></tr>
+          <tr><td class="num">12</td><td class="v">상부 합판 12T</td><td>하부와 직각 방향 · 나사 32mm 즉시 압착</td></tr>
+          <tr><td class="num">13</td><td class="v">돌차음판 4T 부착</td><td>이형지 20~30cm씩 벗기며 밀착</td></tr>
+          <tr><td class="num">14</td><td class="v">마감재</td><td>데코타일 / 마루 / 카페트</td></tr>
+          <tr><td class="num">15</td><td class="v">연변 정리 · 실란트</td><td>걸레받이는 데크에만 고정</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">08</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-body">
+      <ul class="notes">
+        <li><span class="mk">01</span><span><strong>슬래브 앵커 절대 금지</strong> — L4의 최대 실패 요인이다. 각재를 레벨 맞추려고 슬래브에 앵커로 고정하는 순간 강체 브릿지가 되어 전 시스템이 무효화된다. 각재는 <strong>방진고무 위에 얹혀만 있어야</strong> 한다.</span></li>
+        <li><span class="mk">02</span><span><strong>레벨 조정은 패드로</strong> — 슬래브 구배가 있으면 패드 하부에 동일 재질 심(shim)을 넣어 조정한다. 목재 쐐기 · 모르타르는 브릿지가 되므로 사용하지 않는다.</span></li>
+        <li><span class="mk">03</span><span><strong>패드 방향</strong> — 긴 변(110)을 각재와 직각으로 배치하여 하중을 각재 폭 방향으로 분산한다.</span></li>
+        <li><span class="mk">04</span><span><strong>충진재 압축 금지</strong> — 공동 흡음이 목적이므로 각재 높이(69mm) 이내에서 자연스럽게 채운다. 눌러 넣으면 각재를 밀어 올려 데크가 뜬다.</span></li>
+        <li><span class="mk">05</span><span><strong>합판 이음선</strong> — 하부 합판 이음선은 반드시 각재 위에 오도록 배치하고, 상부 합판은 하부와 직각 방향으로 깔아 이음선을 분산한다.</span></li>
+        <li><span class="mk">06</span><span><strong>그린글루 시간 관리</strong> — 도포 후 15분 이내 압착. 3~4㎡씩 구간을 나눠 도포 → 합판 → 나사까지 한 사이클로 마감한다. 완전 성능은 약 30일 후 발현된다.</span></li>
+        <li><span class="mk">07</span><span><strong>나사 길이</strong> — 합판 2겹 접합은 32mm. 각재까지 물리는 나사는 각재 상단에서 멈추게 하고, <strong>각재를 관통해 패드나 슬래브에 닿지 않게</strong> 한다.</span></li>
+        <li><span class="mk">08</span><span><strong>연변 이격</strong> — 각재 끝단, 데크 전체가 벽 · 기둥 · 문틀에 닿지 않아야 한다. 걸레받이는 데크에만 고정한다.</span></li>
+        <li><span class="mk">09</span><span><strong>중량물 구역</strong> — 드럼 라이저 · 앰프 스택 위치는 각재 간격을 300mm로 좁히거나 패드를 추가한다. 데크 하부에 각재를 보강한다.</span></li>
+        <li><span class="mk">10</span><span><strong>VOC · 냄새</strong> — 고무칩 + 우레탄 바인더 제품은 밀폐 · 난방 공간에서 냄새가 발생할 수 있다. 시공 후 충분한 환기 기간을 확보하고, 온돌 병용 시 사전 고지한다.</span></li>
+        <li><span class="mk">11</span><span><strong>관통부</strong> — 배관 · 전기가 데크를 관통하면 방진 슬리브 + 실란트 처리한다.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">09</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body">
+      <ul class="stop-list">
+        <li><span class="a">각재 슬래브 앵커 고정</span><span class="b">강체 브릿지 — 전 시스템 무효화</span></li>
+        <li><span class="a">목재 쐐기 · 모르타르 레벨링</span><span class="b">브릿지 형성 — 동일 재질 심 사용</span></li>
+        <li><span class="a">방진고무 시트 재단 대체</span><span class="b">형상계수 상실 — 십자형 전용품 사용</span></li>
+        <li><span class="a">데크에 차음석고보드 삽입</span><span class="b">스팬 굽힘으로 균열 · 분화</span></li>
+        <li><span class="a">충진재 압축 충전</span><span class="b">각재 부상 · 데크 들뜸</span></li>
+        <li><span class="a">각재 관통 나사</span><span class="b">패드 · 슬래브 접촉 시 브릿지</span></li>
+        <li><span class="a">연변 이격 생략</span><span class="b">측면전달음 발생</span></li>
+        <li><span class="a">아이소핑크 방습층 적용</span><span class="b">공동 통풍 차단 — 장선 공법에는 불필요</span></li>
+        <li><span class="a">패드 간격을 등급 변수로 사용</span><span class="b">침하 · 장기 크리프 위험</span></li>
+        <li><span class="a">추정 f₀ 대외 기재</span><span class="b">제조사 처짐 데이터 미확보</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-F-L4 &nbsp;/&nbsp; REV A</span>
+    <span>내부 견적 · 시공 기준 자료</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>
