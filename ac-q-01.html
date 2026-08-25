@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그리드에이포유 — 방음공사 상담신청서</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#DEDBD2;--navy:#002643;--navy-2:#0A3A5C;--gold:#E3B23C;--stop:#9E3324;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#EFEDE7;color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;line-height:1.6;
+  display:flex;justify-content:center;padding:0}
+.phone{width:100%;max-width:460px;min-height:100vh;background:var(--paper);
+  display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.07)}
+
+/* 헤더 */
+.hd{background:var(--navy);color:#fff;padding:14px 20px 12px;position:sticky;top:0;z-index:20}
+.hd-brand{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+  color:var(--gold);font-weight:600}
+.hd-t{font-size:16px;font-weight:600;margin-top:3px}
+.adminbtn{float:right;background:rgba(255,255,255,.14);color:#EDECE6;border:0;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  padding:3px 9px;border-radius:11px;cursor:pointer}
+.adminbtn:hover{background:rgba(255,255,255,.26)}
+.idbox{margin-top:18px;border:1.5px solid var(--navy);border-radius:11px;background:#F3F6F9;
+  padding:15px;text-align:center}
+.idbox .lb{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.13em;color:#5E7B90}
+.idbox .no{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:600;
+  color:var(--navy);letter-spacing:.06em;margin-top:4px}
+.idbox .sm{font-size:12px;color:#5E7B90;margin-top:6px}
+.reqrow{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:#fff;border:1.5px solid var(--rule);border-radius:9px;padding:11px 13px;
+  margin-bottom:7px;cursor:pointer;font-size:13.5px}
+.reqrow:hover{border-color:var(--navy)}
+.reqrow .id{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px}
+.reqrow .mt{color:var(--ink-3);font-size:12px}
+.bar{height:3px;background:rgba(255,255,255,.18);margin-top:10px;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s ease}
+.hd-step{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;
+  color:#8FA3B4;margin-top:5px}
+
+/* 본문 */
+.body{flex:1;padding:20px 20px 14px}
+.qt{font-size:18px;font-weight:600;line-height:1.4;letter-spacing:-.01em}
+.qs{font-size:12.5px;color:var(--ink-3);margin-top:5px}
+
+.opts{display:grid;gap:6px;margin-top:14px}
+.opt{background:#fff;border:1.5px solid var(--rule);border-radius:10px;
+  padding:11px 14px;font-size:14px;cursor:pointer;transition:all .13s;
+  display:flex;align-items:center;gap:11px;text-align:left;width:100%;
+  font-family:inherit;color:inherit;line-height:1.45}
+.opt:hover{border-color:#B9B5A8}
+.opt .bx{width:19px;height:19px;flex:0 0 19px;border:1.5px solid var(--rule);
+  border-radius:50%;display:grid;place-items:center;transition:all .13s}
+.opt.multi .bx{border-radius:5px}
+.opt .bx::after{content:"";width:9px;height:9px;border-radius:50%;background:transparent;transition:.13s}
+.opt.multi .bx::after{border-radius:2px}
+.opt.on{border-color:var(--navy);background:#F3F6F9}
+.opt.on .bx{border-color:var(--navy);background:var(--navy)}
+.opt.on .bx::after{background:#fff}
+.opt small{display:block;color:var(--ink-3);font-size:12px;margin-top:2px}
+
+.sub{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+  color:var(--ink-3);margin:15px 0 7px;text-transform:uppercase}
+.sub:first-child{margin-top:0}
+
+.chipwrap{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:#fff;border:1.5px solid var(--rule);border-radius:20px;
+  padding:8px 13px;font-size:13.5px;cursor:pointer;transition:all .13s;
+  font-family:inherit;color:inherit}
+.chip:hover{border-color:#B9B5A8}
+.chip.on{border-color:var(--navy);background:var(--navy);color:#fff}
+
+.txt{width:100%;font-family:inherit;font-size:15px;color:var(--ink);
+  background:#fff;border:1.5px solid var(--rule);border-radius:9px;
+  padding:11px 13px;margin-top:7px}
+.txt:focus{outline:none;border-color:var(--navy)}
+.dim{display:none}
+.dim.show{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+.size{display:flex;align-items:center;gap:7px;margin-top:7px}
+.size .txt{margin:0;text-align:center}
+.size b{font-weight:400;color:var(--ink-3);font-size:15px}
+.size i{font-style:normal;color:var(--ink-3);font-size:13px}
+
+.check{display:flex;align-items:center;gap:8px;margin-top:9px;cursor:pointer;
+  font-size:13.5px;color:var(--ink-2)}
+.check .bx{width:18px;height:18px;flex:0 0 18px;border:1.5px solid var(--rule);
+  border-radius:4px;background:#fff;display:grid;place-items:center}
+.check.on .bx{border-color:var(--navy);background:var(--navy)}
+.check.on .bx::after{content:"";width:8px;height:8px;background:#fff;border-radius:1px}
+
+.hint{margin-top:11px;background:#F1F4F7;border-radius:8px;padding:10px 13px;
+  font-size:12.5px;line-height:1.55;color:#2E4A5E}
+.hint b{color:var(--navy);font-weight:600}
+.alert{margin-top:12px;border-left:3px solid var(--stop);background:#F8ECE9;
+  padding:11px 13px;border-radius:0 8px 8px 0;font-size:13.5px;line-height:1.6;
+  color:#6E2418}
+.alert b{display:block;font-weight:600;color:var(--stop);margin-bottom:3px;font-size:13.5px}
+
+/* 하단 */
+.foot{padding:12px 20px 18px;display:flex;gap:9px;position:sticky;bottom:0;
+  background:linear-gradient(transparent,var(--paper) 22%)}
+.btn{flex:1;font-family:inherit;font-size:15px;font-weight:600;padding:13px;
+  border-radius:10px;border:0;cursor:pointer;transition:.13s}
+.btn.go{background:var(--navy);color:#fff}
+.btn.go:hover{background:var(--navy-2)}
+.btn.go:disabled{background:#C9C6BC;cursor:not-allowed}
+.btn.back{flex:0 0 62px;background:transparent;border:1.5px solid var(--rule);
+  color:var(--ink-3);font-size:14px}
+
+/* 완료 */
+.done{padding:34px 22px}
+.done-i{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;
+  display:grid;place-items:center;font-size:22px;margin-bottom:16px}
+.done h2{font-size:20px;font-weight:600}
+.done p{font-size:14px;color:var(--ink-2);margin-top:8px}
+.card{margin-top:22px;border:1.5px solid var(--rule);border-radius:11px;background:#fff;
+  overflow:hidden}
+.card-h{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.13em;
+  color:var(--ink-3);padding:11px 15px;border-bottom:1px solid var(--rule);
+  background:rgba(0,0,0,.02)}
+.row{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:10px 15px;
+  border-bottom:1px solid #F0EEE8;font-size:13.5px}
+.row:last-child{border-bottom:0}
+.row .k{color:var(--ink-3);font-size:12.5px}
+.row .v{font-weight:500}
+
+.peek{margin-top:14px;border:1.5px dashed var(--navy);border-radius:11px;overflow:hidden;
+  background:#F3F6F9}
+.peek-h{padding:12px 15px;font-size:13px;font-weight:600;color:var(--navy);
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.peek-b{padding:14px 15px 16px;font-size:13.5px;line-height:1.65;color:#123A56;display:none}
+.peek-b.show{display:block}
+.peek-b .g{font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600;
+  color:var(--navy);margin:6px 0 10px}
+.peek-b ul{margin:8px 0 0 17px}
+.peek-b li{margin-bottom:5px}
+.peek-b .bsec{border-top:1px solid #C7D6E2;padding:14px 0 4px}
+.peek-b .bsec:first-child{border-top:0;padding-top:4px}
+.bh{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;
+  color:var(--navy);font-weight:600;margin-bottom:9px}
+.bp{font-size:13px;line-height:1.6;color:#1B3E56;margin:8px 0}
+.bw{font-size:13px;line-height:1.6;background:#F8ECE9;border-left:3px solid var(--stop);
+  color:#6E2418;padding:10px 12px;margin:9px 0;border-radius:0 6px 6px 0}
+.bt{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}
+.bt th{background:#DDE7EF;color:#1B3E56;font-family:"IBM Plex Mono",monospace;
+  font-size:9.5px;letter-spacing:.08em;padding:6px 9px;text-align:left;font-weight:600}
+.bt td{background:#fff;padding:7px 9px;border-bottom:1px solid #E4EAEF}
+.bt td.m{font-family:"IBM Plex Mono",monospace;font-size:12px}
+.bt td.b{font-weight:600;color:var(--navy)}
+.bt tr.hi td{background:#FFF6E0;font-weight:600}
+.bg{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;
+  color:#5E7B90;margin:12px 0 5px}
+.bl{font-size:12.5px;line-height:1.55;color:#1B3E56;padding:6px 0 6px 14px;
+  position:relative;border-bottom:1px solid #E4EAEF}
+.bl::before{content:"—";position:absolute;left:0;color:#8FA9BC}
+.bl.ck::before{content:"☐"}
+.restart{margin-top:20px;width:100%;background:transparent;border:1.5px solid var(--rule);
+  border-radius:10px;padding:13px;font-family:inherit;font-size:14px;color:var(--ink-3);
+  cursor:pointer}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="hd">
+    <div class="hd-brand">GRID-A4U <button id="adminBtn" class="adminbtn">조회</button></div>
+    <div class="hd-t" id="hdTitle">방음공사 상담신청서</div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="hd-step" id="stepTxt">1분이면 끝납니다</div>
+  </div>
+
+  <div class="body" id="body"></div>
+
+  <div class="foot" id="foot">
+    <button class="btn back" id="back">이전</button>
+    <button class="btn go" id="next">다음</button>
+  </div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   구글 스프레드시트 주소 — 배포 후 나온 .../exec 를 넣으세요
+   비워두면 브라우저 안에만 임시 저장됩니다
+   ══════════════════════════════════════════════════ */
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbzNFSD0-L0ecRrSF26Eyff5HF3l5poQHYIRMIwp8i-hCyLrqyhyHIJyVIJrutFkJXVIUQ/exec";
+
+async function api(payload){
+  if(!ENDPOINT) return null;
+  const r = await fetch(ENDPOINT, {
+    method:"POST",
+    redirect:"follow",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},  // 사전요청 회피
+    body: JSON.stringify(payload)
+  });
+  return await r.json();
+}
+
+/* ── 저장 계층: 서버 → 아티팩트 storage → 세션 메모리 ── */
+const MEM = {};
+const STORE = {
+  async set(k,v){
+    try{ if(window.storage){ await window.storage.set(k, JSON.stringify(v)); return; } }catch(e){}
+    MEM[k]=v;
+  },
+  async get(k){
+    try{ if(window.storage){ const r=await window.storage.get(k); return r? JSON.parse(r.value):null; } }catch(e){ return MEM[k]||null; }
+    return MEM[k]||null;
+  }
+};
+function newId(idx){
+  const yy = String(new Date().getFullYear()).slice(2);      // 26
+  const pre = "AC" + yy + "-";                                // AC26-
+  const nums = idx.filter(x=>x.id.startsWith(pre))
+                  .map(x=>parseInt(x.id.slice(pre.length),10))
+                  .filter(n=>!isNaN(n));
+  const next = nums.length ? Math.max(...nums)+1 : 1001;      // 그 해 1001부터
+  return pre + next;
+}
+
+const D = { space:null, spaceEtc:"", sounds:[], soundEtc:"",
+            w:"", d:"", noSize:false, h:"", noH:false, when:null,
+            sido:null, gu:"", bldg:null, floor:null, ct:null, pt:null, pd:"", bud:"", bTBD:false,
+            name:"", phone:"" };
+
+const INST = [
+ {g:"소리를 내지 않는 일", it:[["공부",0,"quiet"],["주식 매매",0,"quiet"],
+                ["화상회의",0,"both"],["명상 · 요가",0,"quiet"],["수면",0,"quiet"]]},
+ {g:"목소리", it:[["노래 · 보컬",100],["강의 · 회의",110],["판소리",100,"loud"],
+                 ["성악",80,"loud"],["유튜브 · 방송 · 스트리밍",110,"in"]]},
+ {g:"현악", it:[["바이올린",196],["비올라",131],["첼로",65],["콘트라베이스",41],
+                ["통기타",82],["클래식 기타",82],["우쿨렐레",262],["만돌린",196],["하프",33]]},
+ {g:"국악", it:[["가야금",100],["거문고",73],["해금",220],["아쟁",65],
+                ["대금",262],["피리",294],["태평소",330,"loud"],
+                ["장구",80,"hit"],["북 · 대북",50,"hit"],["꽹과리",520,"loud"]]},
+ {g:"관악", it:[["플루트",262],["클라리넷",147],["오보에",233],["색소폰",104],
+                ["트럼펫",165,"loud"],["트롬본",82],["호른",62],["튜바",37]]},
+ {g:"건반", it:[["피아노 (그랜드)",60],["피아노 (업라이트)",60],
+                ["전자피아노",60],["신디사이저",31]]},
+ {g:"타악", it:[["드럼",50,"hit"],["카혼",60,"hit"],["젬베",60,"hit"],
+                ["팀파니",40,"hit"],["마림바",87]]},
+ {g:"앰프 · 스피커", it:[["일렉기타 앰프",82],["베이스 앰프",41],
+                ["모니터 스피커",40],["서브우퍼",20],["홈시어터",25]]},
+ {g:"그 밖", it:[["발구름 · 점프",0,"hit"],["러닝머신",0,"hit"],
+                ["웨이트 낙하",0,"hit"],["그 밖의 악기",-1]]}
+];
+const FIND = n => { for(const g of INST) for(const i of g.it) if(i[0]===n) return i; };
+
+/* ── 문항 정의 ── */
+const Q = {
+  space:{
+    t:"어떤 공간을 만드시나요?",
+    render(){
+      const G = [
+        ["소리를 내는 공간", ["개인 연습실","합주실","녹음실 · 스튜디오","음악학원",
+                             "홈시어터","댄스 · 짐"]],
+        ["조용해야 하는 공간", ["공부방 · 주식방","작업실","독서실 · 스터디카페",
+                               "상담실 · 회의실"]],
+        ["방송 · 촬영", ["유튜브 · 스트리밍 · 리딩방"]],
+        ["그 밖", ["실내 울림(흡음)만","여러 방을 나누는 공사","기타"]]
+      ];
+      let h="";
+      G.forEach(([t,list])=>{
+        h+=`<div class="sub">${t}</div><div class="chipwrap">`;
+        list.forEach(v=>{
+          const key = v==="실내 울림(흡음)만" ? "흡음" : v;
+          h+=`<button class="chip${D.space===key?" on":""}" data-v="${key}">${v}</button>`;
+        });
+        h+='</div>';
+      });
+      h+=`<div class="dim${D.space==="기타"?" show":""}" id="dimA">
+            <input class="txt" id="inA" placeholder="어떤 공간인지 적어주세요"
+                   value="${D.spaceEtc}"></div>`;
+      return h;
+    },
+    bind(){
+      document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{
+        D.space = b.dataset.v;
+        if(D.space!=="기타") D.spaceEtc="";
+        draw();
+      });
+      const i=document.getElementById("inA");
+      if(i) i.oninput=e=>{ D.spaceEtc=e.target.value; can(); };
+    },
+    ok(){ return D.space && (D.space!=="기타" || D.spaceEtc.trim()); }
+  },
+
+  sounds:{
+    t:"이 공간에서 주로 무엇을 하시나요?",
+    s:"여러 개 고르셔도 됩니다",
+    render(){
+      let h="";
+      INST.forEach(g=>{
+        h+=`<div class="sub">${g.g}</div><div class="chipwrap">`;
+        g.it.forEach(i=>{
+          h+=`<button class="chip${D.sounds.includes(i[0])?" on":""}" data-v="${i[0]}">${i[0]}</button>`;
+        });
+        h+='</div>';
+      });
+      h+=`<div class="dim${D.sounds.includes("그 밖의 악기")?" show":""}">
+            <input class="txt" id="inB" placeholder="악기 이름을 적어주세요"
+                   value="${D.soundEtc}"></div>`;
+      if(D.sounds.some(n=>{const i=FIND(n); return i && i[1]>0 && i[1]<=35;}))
+        h+=`<div class="alert"><b>미리 말씀드립니다</b>
+            고르신 것 중에 아주 낮은 소리를 내는 악기가 있습니다. 이 대역은 일반 방음 구조로는
+            완전히 잡히지 않습니다. 등급을 올려서 해결되는 문제가 아니라 방식 자체가
+            달라져야 하는 영역이라, 상담에서 따로 설명드리겠습니다.</div>`;
+      return h;
+    },
+    bind(){
+      document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{
+        const v=b.dataset.v, i=D.sounds.indexOf(v);
+        i>-1 ? D.sounds.splice(i,1) : D.sounds.push(v);
+        if(!D.sounds.includes("그 밖의 악기")) D.soundEtc="";
+        draw();
+      });
+      const i=document.getElementById("inB");
+      if(i) i.oninput=e=>{ D.soundEtc=e.target.value; can(); };
+    },
+    ok(){ return D.sounds.length &&
+           (!D.sounds.includes("그 밖의 악기")||D.soundEtc.trim()); }
+  },
+
+  size:{
+    t:"공간에 대해 알려주세요",
+    render(){
+      let h='<div class="sub">바닥 크기 — 미터, 소수점 첫째 자리까지</div>';
+      h+=`<div class="size"${D.noSize?' style="opacity:.35;pointer-events:none"':''}>
+            <input class="txt" id="inW" placeholder="예) 4.5" inputmode="decimal" value="${D.w}">
+            <i>m</i><b>×</b>
+            <input class="txt" id="inD" placeholder="예) 3.2" inputmode="decimal" value="${D.d}">
+            <i>m</i></div>`;
+      h+=`<div class="check${D.noSize?" on":""}" id="ckSize">
+            <span class="bx"></span><span>잘 모르겠어요</span></div>`;
+      h+='<div class="sub">천장 높이 — 미터, 소수점 첫째 자리까지</div>';
+      h+=`<div class="size"${D.noH?' style="opacity:.35;pointer-events:none"':''}>
+            <input class="txt" id="inH" placeholder="예) 2.4" inputmode="decimal"
+                   value="${D.h}" style="max-width:130px">
+            <i>m</i></div>`;
+      h+=`<div class="check${D.noH?" on":""}" id="ckH">
+            <span class="bx"></span><span>잘 모르겠어요</span></div>`;
+      h+=`<div class="hint">천장 높이는 방음 구조가 <b>200 ~ 400mm</b> 사용하고
+            남는 높이를 결정합니다.<br>
+            실내 흡음 설계에도 쓰이는 값이라, 수고스럽더라도 <b>줄자로 한 번 재어</b>
+            적어주시면 정확한 상담이 됩니다.</div>`;
+      h+='<div class="sub">주로 언제 사용하시나요</div><div class="chipwrap">';
+      ["낮에만 · 오후 6시까지","저녁까지 · 밤 10시까지","밤늦게도 · 10시 이후","정해지지 않음"]
+        .forEach(v=>h+=`<button class="chip t${D.when===v?" on":""}" data-v="${v}">${v}</button>`);
+      h+='</div>';
+      h+=`<div class="hint">낮에는 생활소음이 <b>40dB</b> 정도 깔려 있어 웬만한 소리가 묻힙니다.
+            밤에는 <b>25~30dB</b>로 떨어져, 낮에 들리지 않던 소리가 그대로 드러납니다.<br>
+            그래서 <b>같은 악기라도 사용 시간대에 따라 필요한 구조가 달라집니다.</b></div>`;
+      return h;
+    },
+    bind(){
+      const w=document.getElementById("inW"), d=document.getElementById("inD"),
+            hh=document.getElementById("inH");
+      const fix=(el,key)=>{
+        el.oninput=e=>{ D[key]=e.target.value; can(); };
+        el.onblur=e=>{
+          const v=parseFloat(e.target.value);
+          if(!isNaN(v)){ D[key]=(Math.round(v*10)/10).toFixed(1); e.target.value=D[key]; }
+          can();
+        };
+      };
+      if(w) fix(w,"w"); if(d) fix(d,"d"); if(hh) fix(hh,"h");
+      document.getElementById("ckSize").onclick=()=>{
+        D.noSize=!D.noSize; if(D.noSize){D.w="";D.d="";} draw(); };
+      document.getElementById("ckH").onclick=()=>{
+        D.noH=!D.noH; if(D.noH){D.h="";} draw(); };
+      document.querySelectorAll(".chip.t").forEach(b=>b.onclick=()=>{D.when=b.dataset.v;draw()});
+    },
+    ok(){ return (D.noSize || (D.w.trim()&&D.d.trim())) && (D.noH || D.h.trim()) && D.when; }
+  },
+
+  place:{
+    t:"현장은 어디인가요?",
+    render(){
+      let h='<div class="sub">지역</div><div class="chipwrap">';
+      ["서울","경기","인천","그 밖의 지역"]
+        .forEach(v=>h+=`<button class="chip r${D.sido===v?" on":""}" data-v="${v}">${v}</button>`);
+      h+='</div>';
+      if(D.sido==="그 밖의 지역")
+        h+=`<div class="hint">현재는 수도권 위주로 시공하고 있습니다.
+             다른 지역도 규모와 일정에 따라 가능한 경우가 있으니,
+             남겨주시면 <b>검토 후 연락드리겠습니다.</b></div>`;
+      h+=`<input class="txt" id="inGu" placeholder="${D.sido==="그 밖의 지역"?"지역을 적어주세요 (예: 부산 해운대구)":"시 · 군 · 구 (예: 강남구)"}" value="${D.gu}">`;
+      if(D.space!=="흡음"){
+        h+='<div class="sub">건물</div><div class="chipwrap">';
+        ["상가 · 근생","오피스 빌딩","아파트","빌라 · 다세대","오피스텔 · 지산","단독주택"]
+          .forEach(v=>h+=`<button class="chip b${D.bldg===v?" on":""}" data-v="${v}">${v}</button>`);
+        h+='</div><div class="sub">층</div><div class="chipwrap">';
+        ["지하","1층 · 필로티 위","중간층","최상층","건물 전체"]
+          .forEach(v=>h+=`<button class="chip f${D.floor===v?" on":""}" data-v="${v}">${v}</button>`);
+        h+='</div>';
+      }
+      return h;
+    },
+    bind(){
+      document.querySelectorAll(".chip.r").forEach(b=>b.onclick=()=>{D.sido=b.dataset.v;draw()});
+      document.querySelectorAll(".chip.b").forEach(b=>b.onclick=()=>{D.bldg=b.dataset.v;draw()});
+      document.querySelectorAll(".chip.f").forEach(b=>b.onclick=()=>{D.floor=b.dataset.v;draw()});
+      const g=document.getElementById("inGu");
+      if(g) g.oninput=e=>{D.gu=e.target.value;can()};
+    },
+    ok(){ return D.sido && D.gu.trim() && (D.space==="흡음" || (D.bldg && D.floor)); }
+  },
+
+  contract:{
+    t:"계약 여부와 시공 희망 시기를 알려주세요",
+    render(){
+      let h='<div class="sub">계약 여부</div><div class="chipwrap">';
+      ["계약 전","계약 예정","계약 완료"]
+        .forEach(v=>h+=`<button class="chip c${D.ct===v?" on":""}" data-v="${v}">${v}</button>`);
+      h+='</div>';
+      if(D.ct==="계약 전")
+        h+=`<div class="hint">아직 계약 전이시라면 <b>계약 전에 한 번 봐드리는 편이 좋습니다.</b>
+             층고가 낮거나 구조 변경이 막힌 공간은 계약 후에는 되돌릴 수 없습니다.</div>`;
+      h+='<div class="sub">시공 희망 시기</div><div class="chipwrap">';
+      ["1개월 이내","희망 날짜 지정","아직 미정"]
+        .forEach(v=>h+=`<button class="chip p${D.pt===v?" on":""}" data-v="${v}">${v}</button>`);
+      h+='</div>';
+      h+=`<div class="dim${D.pt==="희망 날짜 지정"?" show":""}">
+            <input class="txt" type="date" id="inDate" value="${D.pd}"></div>`;
+      return h;
+    },
+    bind(){
+      document.querySelectorAll(".chip.c").forEach(b=>b.onclick=()=>{D.ct=b.dataset.v;draw()});
+      document.querySelectorAll(".chip.p").forEach(b=>b.onclick=()=>{
+        D.pt=b.dataset.v; if(D.pt!=="희망 날짜 지정") D.pd=""; draw(); });
+      const d=document.getElementById("inDate");
+      if(d) d.onchange=e=>{D.pd=e.target.value;can()};
+    },
+    ok(){ return D.ct && D.pt && (D.pt!=="희망 날짜 지정" || D.pd); }
+  },
+
+  budget:{
+    t:"희망 예산과 연락처를 남겨주세요",
+    render(){
+      let h='<div class="sub">희망 예산</div>';
+      h+=`<div class="size"${D.bTBD?' style="opacity:.35;pointer-events:none"':''}>
+            <input class="txt" id="inBud" placeholder="금액 입력" inputmode="numeric"
+                   value="${D.bud}" style="max-width:150px"><i>만원</i></div>`;
+      h+=`<div class="check${D.bTBD?" on":""}" id="ckBud">
+            <span class="bx"></span><span>업체와 상담 후 결정할게요</span></div>`;
+      h+='<div class="sub">연락처</div>';
+      h+=`<input class="txt" id="inN" placeholder="성함" value="${D.name}">`;
+      h+=`<input class="txt" id="inP" placeholder="휴대폰 번호" inputmode="tel" value="${D.phone}">`;
+      return h;
+    },
+    bind(){
+      const bu=document.getElementById("inBud");
+      if(bu) bu.oninput=e=>{D.bud=e.target.value;can()};
+      document.getElementById("ckBud").onclick=()=>{
+        D.bTBD=!D.bTBD; if(D.bTBD) D.bud=""; draw(); };
+      document.getElementById("inN").oninput=e=>{D.name=e.target.value;can()};
+      document.getElementById("inP").oninput=e=>{D.phone=e.target.value;can()};
+    },
+    ok(){ return (D.bTBD||D.bud.trim()) && D.name.trim() && D.phone.trim(); }
+  }
+};
+
+/* ── 흐름 ── */
+function steps(){
+  return D.space==="흡음" ? ["space","size","place","contract","budget"]
+                          : ["space","sounds","size","place","contract","budget"];
+}
+let at = 0, done = false;
+
+function draw(){
+  const seq = steps();
+  if(at >= seq.length) at = seq.length-1;
+  const q = Q[seq[at]];
+  document.getElementById("bar").style.width = ((at)/seq.length*100)+"%";
+  document.getElementById("stepTxt").textContent = `${at+1} / ${seq.length}`;
+  document.getElementById("body").innerHTML =
+    `<div class="qt">${q.t}</div>${q.s?`<div class="qs">${q.s}</div>`:""}${q.render()}`;
+  q.bind();
+  const al = document.getElementById("body").querySelector(".alert");
+  if(al && !window.__alertSeen){ window.__alertSeen = true;
+    setTimeout(()=>al.scrollIntoView({behavior:"smooth",block:"center"}),120); }
+  if(!al) window.__alertSeen = false;
+  document.getElementById("back").style.visibility = at? "visible":"hidden";
+  document.getElementById("next").textContent = at===seq.length-1 ? "상담 신청하기":"다음";
+  can();
+}
+function can(){
+  const q = Q[steps()[at]];
+  document.getElementById("next").disabled = !q.ok();
+}
+document.getElementById("next").onclick=()=>{
+  const seq=steps();
+  if(at < seq.length-1){ at++; draw(); window.scrollTo(0,0); }
+  else finish();
+};
+document.getElementById("back").onclick=()=>{ if(at){at--;draw();window.scrollTo(0,0);} };
+
+/* ── 완료 · 내부 판정 ── */
+/* ═══════ AC-Q-02 시공 검토서 생성 ═══════ */
+
+/* 등급별 벽 공진점(f₀)과 실질 차음 시작 주파수(√2·f₀) — 시트 값 */
+const F0 = {1:150, 2:95, 3:70, 4:52, 5:44};
+const START = {1:212, 2:134, 3:99, 4:74, 5:62};
+const STC = {1:"45~47", 2:"48~50", 3:"64~67", 4:"66~68", 5:"68~70"};
+/* 소리원천별 음압 4단계 (1m 기준) */
+const SPLTAB = {quiet:70, normal:90, loud:110, hit:115};
+
+const SPEC = {
+  F:{ // 바닥
+    0:{t:"25",   n:"방진매트 시공",              c:"차음 아님"},
+    1:{t:"61~64", n:"슬림형 부유바닥",           c:"차음 (제한적)"},
+    2:{t:"94~97", n:"표준 부유바닥",             c:"차음"},
+    3:{t:"106~109",n:"강화 부유바닥",            c:"차음 (강화)"},
+    4:{t:"125~130",n:"방진고무 장선 부유바닥",   c:"차음 (방진)"},
+    5:{t:"148~153",n:"방진고무 장선 부유바닥 (심층형)", c:"차음 (최상)"}
+  },
+  WS:{
+    1:{t:"56 / 76",   n:"이격 없는 부착형 벽체"},
+    2:{t:"93 / 91",   n:"표준 부착형 벽체"},
+    3:{t:"145 / 156", n:"이격 독립형 벽체"},
+    4:{t:"216 / 227", n:"이격 확대형 벽체"},
+    5:{t:"220 / 231", n:"이격 확대형 벽체 (질량 보강)"}
+  },
+  WP:{
+    1:{t:"133 / 144", n:"단일 하지 칸막이"},
+    2:{t:"184 / 195", n:"단일 하지 칸막이 (확대)"},
+    3:{t:"252 / 263", n:"이중 하지 칸막이"},
+    4:{t:"272 / 283", n:"이중 하지 칸막이 (분리 확대)"},
+    5:{t:"280 / 291", n:"이중 하지 칸막이 (질량 보강)"}
+  },
+  C:{
+    0:{t:"17",  h:17,  n:"기존 천장 활용형",     c:"차음 아님"},
+    1:{t:"13",  h:13,  n:"기존 천장고 유지형",   c:"중고역만"},
+    2:{t:"161~191", h:191, n:"벽 지지형 독립 천장", c:"전대역"},
+    3:{t:"292.5 + 설비층", h:293, n:"이중 천장형"},
+    4:{t:"365 + 설비층",   h:365, n:"이중 천장 방진형"},
+    5:{t:"369 + 설비층",   h:369, n:"이중 천장 방진형 · 마감판 상향"}
+  }
+};
+const FH = {0:25,1:64,2:97,3:109,4:130,5:153}; // 바닥 실높이(mm)
+
+function lvName(l){ return "L"+l; }
+
+
+const RT = {
+  "녹음실 · 스튜디오":[0.25,"악기 소리를 그대로 담아야 하므로 짧게"],
+  "합주실":[0.45,"서로의 소리가 분간되어야 함. 너무 죽이면 연주가 힘들어짐"],
+  "개인 연습실":[0.40,"자기 소리를 정확히 들어야 함"],
+  "음악학원":[0.50,"강사 지시가 전달되어야 함"],
+  "홈시어터":[0.35,"대사 명료도 우선"],
+  "유튜브 · 스트리밍 · 리딩방":[0.30,"마이크에 잔향이 실리지 않게"],
+  "댄스 · 짐":[0.70,"음악 재생 위주. 과하게 죽일 필요 없음"],
+  "공부방 · 주식방":[0.50,"일반 실내 수준"],
+  "작업실":[0.50,"일반 실내 수준"],
+  "상담실 · 회의실":[0.60,"말소리 명료도"],
+  "독서실 · 스터디카페":[0.60,"일반 실내 수준"],
+  "여러 방을 나누는 공사":[0.50,"용도별 재확인 필요"],
+  "기타":[0.50,"용도 확인 후 조정"]
+};
+
+function buildBrief(){
+  if(D.space==="흡음") return null;
+
+  /* ── 1. 대상 주파수 ── */
+  let lo=9999, loName="", hit=false, loud=[], quiet=[], both=false, inbound=false;
+  const picked=[];
+  D.sounds.forEach(n=>{
+    const i=FIND(n); if(!i) return;
+    if(i[2]==="hit") hit=true;
+    if(i[2]==="loud") loud.push(n);
+    if(i[2]==="quiet") quiet.push(n);
+    if(i[2]==="both"){ quiet.push(n); both=true; }
+    if(i[2]==="in") inbound=true;
+    if(i[1]>0){ picked.push([n,i[1]]); if(i[1]<lo){ lo=i[1]; loName=n; } }
+  });
+  picked.sort((a,b)=>a[1]-b[1]);
+  const quietOnly = quiet.length && lo===9999;
+
+  /* 음원 음압 추정 */
+  const QUIETSET = ["공부","주식 매매","화상회의","명상 · 요가","수면"];
+  const AMPSET = ["일렉기타 앰프","베이스 앰프","모니터 스피커","서브우퍼","홈시어터"];
+  const TALKSET = ["강의 · 회의"];
+  function splOf(n){
+    if(QUIETSET.includes(n)||TALKSET.includes(n)) return SPLTAB.quiet;
+    const i=FIND(n); if(!i) return SPLTAB.normal;
+    if(i[2]==="hit") return SPLTAB.hit;
+    if(i[2]==="loud"||AMPSET.includes(n)) return SPLTAB.loud;
+    return SPLTAB.normal;
+  }
+  let B_SPL = null;
+  if(D.sounds.length) B_SPL = Math.max(...D.sounds.map(splOf));
+
+  /* ── 2. 목표 f₀ ── */
+  const f0 = lo<9999 ? (lo/1.414) : null;
+
+  /* ── 3. 등급 산정 ── */
+  /* 최저 기음이 각 등급의 "막히기 시작" 주파수 이상인지로 판정 */
+  let base, overLimit=false, target=lo, targetName=loName, skipped=[];
+  if(quietOnly){ base = 2; }
+  else {
+    const pick = f => { for(let L=1;L<=5;L++) if(f >= START[L]) return L; return null; };
+    base = pick(lo);
+    if(base===null){
+      /* 최저 기음이 L5로도 안 잡힘 → 다음 소리로 타겟 하향 */
+      overLimit = true;
+      for(const [n,f] of picked){
+        const L = pick(f);
+        if(L===null){ skipped.push([n,f]); continue; }
+        base = L; target = f; targetName = n; break;
+      }
+      if(base===null) base = 5;
+    }
+  }
+
+  let fL = base, cL = base, wL = base;
+  /* 바닥은 층 위치와 무관하게 유지 — 고체전달음은 위·옆으로도 돈다 */
+  if(hit) fL = Math.min(5, base+1);
+  if(D.floor==="최상층" || D.floor==="건물 전체") cL = Math.max(0, cL-2);
+
+  /* 천장고 제약 — 잔여 2.1m 확보 */
+  const H = (!D.noH && parseFloat(D.h)) ? parseFloat(D.h)*1000 : null;
+  let capped=false, rest=null;
+  if(H){
+    while(cL>0){
+      rest = H - SPEC.C[cL].h - FH[fL];
+      if(rest >= 2100) break;
+      cL--; capped=true;
+    }
+    rest = H - SPEC.C[cL].h - FH[fL];
+  }
+
+  /* ── 4. 룸 모드 ── */
+  let modes=null, clash=[], cube=false;
+  if(!D.noSize && parseFloat(D.w) && parseFloat(D.d)){
+    const L=Math.max(parseFloat(D.w),parseFloat(D.d)),
+          W=Math.min(parseFloat(D.w),parseFloat(D.d)),
+          Hm=(H? (rest||H)/1000 : parseFloat(D.h)||2.4);
+    modes=[["길이 "+L+"m", 171.5/L],["폭 "+W+"m", 171.5/W],["높이 "+Hm.toFixed(2)+"m", 171.5/Hm]];
+    const r=L/W;
+    if(r<1.15) cube=true;
+    picked.forEach(([n,f])=>{
+      modes.forEach(m=>{ if(Math.abs(m[1]-f)/f < 0.12) clash.push([n,f,m[0],m[1]]); });
+    });
+  }
+
+  /* ── 4-b. 사용 시간대 · 목표 배경소음 ── */
+  const BG = {
+    "낮에만 · 오후 6시까지":[45,40,"생활소음이 깔려 있어 여유가 큼"],
+    "저녁까지 · 밤 10시까지":[40,35,"저녁은 배경소음이 낮아지기 시작"],
+    "밤늦게도 · 10시 이후":[30,25,"배경소음이 사라져 저역이 그대로 드러남"],
+    "정해지지 않음":[30,25,"최악 조건(심야)으로 잡아둠"]
+  };
+  const sensitive = (D.bldg==="아파트"||D.bldg==="빌라 · 다세대") && D.floor==="중간층";
+  const raw = BG[D.when] || [30,25,"—"];
+  const bg = [sensitive?raw[1]:raw[0], raw[2], sensitive];
+  let need = null;
+  if(B_SPL) need = B_SPL - bg[0];
+
+  /* ── 5. 시공 주의 ── */
+  const care=[];
+  care.push(["공통","외벽(구조벽에 접한 벽)은 원 슬래브에 직접 세운다. 부유바닥 위에 올리거나 하부에 방진패드를 넣지 않는다."]);
+  care.push(["공통","내벽은 부유바닥 위에 세우고, 부유 슬래브 단부는 공기층 안에서 끝낸다. 슬래브 단부를 복도로 노출하지 않는다."]);
+  care.push(["공통","모든 러너는 실런트 베드(Ecoseal 805) 위에 고정한다. 방진패드나 경질재로 대체하지 않는다 — 질량 결합이 끊겨 중역 공진이 증폭된다."]);
+  care.push(["공통","삼중 구성 금지. 판을 한 겹 더 띄우면 저역에서 오히려 나빠진다."]);
+  if(wL>=3) care.push(["벽","그린글루 제진층 적용(L3부터). 도포 후 15분 내 압착."]);
+  if(wL>=1) care.push(["벽","돌차음판 4T는 구조체 면에 전 등급 적용. L5는 마감판 사이에 한 겹 더."]);
+  care.push(["벽","이격·열간분리 최대 50mm, 미네랄울 충진 최대 100T(48K). 미네랄울은 구조체 쪽에 밀착하고 마감판 뒷면과 닿지 않게 한다."]);
+  care.push(["벽","하지는 바닥에서 눕혀 짜고 세워 고정. 스태거드 스터드는 눕혀 짜기가 불가해 표준에서 제외."]);
+  care.push(["벽","WS 배선은 관이 구조체와 각재를 동시에 접촉하지 않게 한다. WP 배선은 반드시 한쪽 열에만 — 열간 분리 구간 횡단은 이중벽을 무효로 만든다."]);
+  if(cL>=2) care.push(["천장","천장 장선은 개별 설치. 2×4 표준이며 2×6은 하중 때문에 제외. 장스팬은 제작 박스빔."]);
+  if(cL>=4) care.push(["천장","상부 천장에 방진행거, 이격 50mm 확보. 하부는 박스빔 140mm."]);
+  care.push(["천장","드레인은 응축수 펌프 방식으로 한다."]);
+  if(hit) care.push(["바닥","충격음 대응이 우선. 방진고무는 점 지지(십자형)로 면압을 확보한다 — 판재를 전면에 깔면 눌리지 않아 f₀가 올라간다."]);
+  care.push(["바닥","이중벽 공기층은 최소 100mm. 내부는 비워두고 단열은 각 벽 스터드 안에만 넣는다."]);
+
+  /* ── 6. 확인 필요 ── */
+  const ask=[];
+  ask.push("맞닿은 면 — 위·아래·옆 몇 면인지 (시공 면 = 물량 결정)");
+  ask.push("철거 가능 여부 — 임차면 원상복구 범위");
+  ask.push("개구부 — 문·창·에어컨·환기·덕트 (실제 성능 상한을 결정)");
+  ask.push("사용 시간대 — 심야 포함 여부");
+  if(capped) ask.push("천장고 조정 의사 — 잔여 "+(rest/1000).toFixed(2)+"m 수용 가능한지");
+  if(overLimit) ask.push("저역 목표 합의 — AC-B(박스인박스) 전환 여부와 예산");
+  if(D.bldg==="아파트") ask.push("관리규약상 바닥 구조 변경 허용 여부");
+  if(D.ct!=="계약 완료") ask.push("계약 조건 — 원상복구 범위·구조 변경 허용 조항");
+  if(D.noSize) ask.push("실측 — 치수 미기재");
+  if(D.soundEtc) ask.push("직접 입력 악기 대역 확인: "+D.soundEtc);
+
+  /* ── 실내 음향 ── */
+  let ac=null;
+  if(!D.noSize && parseFloat(D.w) && parseFloat(D.d)){
+    const W=parseFloat(D.w), Dp=parseFloat(D.d),
+          Hi=(H? (rest||H)/1000 : (parseFloat(D.h)||2.4));
+    const V = W*Dp*Hi;
+    const S = 2*(W*Dp + W*Hi + Dp*Hi);
+    const key = RT[D.space] ? D.space : "기타";
+    const tgt = RT[key][0], why = RT[key][1];
+    const a0 = 0.06;                    // 석고 마감 평균 흡음률
+    const A0 = a0*S;
+    const rtNow = 0.161*V/A0;           // 마감만 했을 때
+    const Areq = 0.161*V/tgt;
+    const dA = Areq - A0;
+    const aAbs = 0.85;                  // 흡음 마감 평균
+    const need = dA>0 ? dA/(aAbs-a0) : 0;
+    ac = {V,S,Hi,tgt,why,rtNow,Areq,A0,need, pct: need/S*100};
+  }
+
+  return {lo,loName,f0,picked,hit,loud,quiet,both,inbound,quietOnly,overLimit,
+          fL,wL,cL,capped,rest,H,modes,clash,cube,care,ask,ac,bg,need,B_SPL,
+          target,targetName,skipped,splOf};
+}
+
+function grade(){
+  if(D.space==="흡음") return {g:"AC-AB 흡음 상담", note:["차음 등급 산정 대상 아님"]};
+  let lo=9999, loName="", hit=false, loud=[], inbound=false, quiet=[], both=false;
+  D.sounds.forEach(n=>{
+    const i=FIND(n); if(!i) return;
+    if(i[2]==="hit") hit=true;
+    if(i[2]==="loud") loud.push(n);
+    if(i[2]==="in") inbound=true;
+    if(i[2]==="quiet") quiet.push(n);
+    if(i[2]==="both"){ quiet.push(n); both=true; }
+    if(i[1]>0 && i[1]<lo){ lo=i[1]; loName=n; }
+  });
+  let g="—";
+  if(lo<9999){
+    g = lo<=35 ? "L5 초과 — AC-B 검토" : lo<=50 ? "L4" : lo<=80 ? "L3"
+      : lo<=150 ? "L2" : "L1 ~ L2";
+  } else if(quiet.length) g = "유입 차단형 — 소음원 확인 후 결정";
+  else if(hit) g = "충격음 전용 — 바닥 중심";
+  const n=[];
+  if(quiet.length) n.push(`<b>${quiet.join(", ")}</b> — 내보낼 소리가 없는 실. 등급은 <b>무엇을 막느냐</b>로 정한다. 2단계에서 방해 소음원 확인 (윗집 발소리 / 도로 / 옆방 / 설비 / 복도)`);
+  if(both) n.push("<b>화상회의 — 양방향</b>. 들어오는 소음뿐 아니라 통화 음성·스피커 소리가 나가는 것도 잡아야 함");
+  if(lo<9999) n.push(`최저 기음 <b>${lo}Hz</b> (${loName}) 기준`);
+  if(lo<=35) n.push("<b>AC-A 한계 초과</b> — 박스인박스(AC-B) 검토 필요");
+  if(inbound) n.push("<b>유입 차단 중심 현장</b> — 마이크에 잡히는 외부 소음이 실제 문제일 가능성. 벽 등급보다 창호 · 환기구 · 기밀이 관건. 목표 배경소음(NC) 확인");
+  if(hit) n.push("충격음 동반 — 바닥 등급 우선");
+  if(loud.length) n.push(`음압 큼 (${loud.join(", ")}) — 벽 질량 · 기밀 강화`);
+  if(D.sounds.some(x=>x.startsWith("피아노"))) n.push("피아노 — 실사용 하한 60Hz로 봄. 연주 장르 확인");
+  if(!D.noH && parseFloat(D.h)){
+    const hv=parseFloat(D.h);
+    if(hv<=2.5) n.push(`천장고 <b>${hv}m</b> — 상급 천장(365mm+) 적용 시 잔여 ${(hv-0.4).toFixed(2)}m. <b>천장 등급 상한 걸림</b>`);
+    else if(hv<=2.8) n.push(`천장고 <b>${hv}m</b> — 중급까지 여유. 상급 적용 시 잔여 ${(hv-0.4).toFixed(2)}m`);
+    else n.push(`천장고 <b>${hv}m</b> — 등급 제약 없음`);
+  } else n.push("천장고 미기재 — 실측 선행");
+  if(D.bldg==="아파트") n.push("아파트 — 관리규약상 바닥 구조 변경 가능 여부 확인");
+  if(D.floor==="중간층") n.push("중간층 — 바닥·천장 모두 필요");
+  if(D.floor==="1층 · 필로티 위") n.push("아래 세대 없음 — 바닥 등급 완화 가능");
+  if(D.floor==="최상층") n.push("위 세대 없음 — 천장 등급 완화 가능");
+  if(D.space==="공부방 · 주식방" || D.space==="작업실")
+    n.push("가정 내 실 — 인접면 중 자가 공간 비율 확인. 그만큼 등급 완화 여지");
+  if(D.space==="독서실 · 스터디카페" || D.space==="음악학원" || D.space==="상담실 · 회의실" || D.space==="여러 방을 나누는 공사")
+    n.push("다실 구성 — 실간 칸막이(AC-WP) 중심 · 다중이용업소 마감재 규정 확인");
+  if(D.sido==="그 밖의 지역") n.push(`<b>수도권 외 — ${D.gu}</b>. 출장 조건 · 숙식 · 자재 운송비 반영 여부 판단 후 회신`);
+  if(D.ct==="계약 전") n.push("<b>계약 전</b> — 공간 미확정. 실측 불가하나 <b>계약 전 조건 검토가 가장 값어치 있는 개입 시점</b>. 층고 · 구조 변경 가능 여부 · 인접 용도 확인 권고");
+  if(D.ct==="계약 예정") n.push("계약 예정 — 계약서에 원상복구 범위 · 구조 변경 허용 여부를 넣도록 조언");
+  if(D.ct==="계약 완료") n.push("계약 완료 — 즉시 실측 가능");
+  if(D.pt==="1개월 이내") n.push("<b>1개월 이내</b> — 공기가 등급보다 우선. 달성 가능 등급 하향 고지 필요");
+  if(D.bTBD) n.push("예산 미제시 — 등급별 안 2~3개로 제시");
+  if(D.noSize) n.push("치수 미기재 — 실측 선행");
+  if(D.soundEtc) n.push(`직접 입력: ${D.soundEtc} — 대역 확인 필요`);
+  if(!n.length) n.push("특이사항 없음");
+  return {g, note:n};
+}
+
+function briefHTML(){
+  const B=buildBrief();
+  if(!B) return `<div class="bsec"><div class="bh">판정</div>
+    <div class="bp">흡음 단독 공사 — 차음 등급 산정 대상 아님. AC-AB 계열로 진행.</div></div>`;
+  let h="";
+
+  /* 1 목표 */
+  h+=`<div class="bsec"><div class="bh">01 &nbsp;체크하신 소리</div>`;
+  if(B.quietOnly){
+    h+=`<div class="bp">내보낼 소리가 없는 실(${B.quiet.join(", ")}).
+        <b>등급은 무엇을 막느냐로 정한다.</b> 방해 소음원을 먼저 확정해야 설계가 시작된다.</div>`;
+  } else {
+    h+=`<table class="bt"><tr><th>소리원천</th><th>최저기음</th><th>음압</th><th>별도 경로</th></tr>`;
+    B.picked.forEach(([n,f])=>{
+      const i=FIND(n);
+      h+=`<tr${f===B.lo?' class="hi"':''}><td>${n}</td><td class="m">${f} Hz</td>
+          <td class="m">${B.splOf(n)} dB</td>
+          <td class="m">${i&&i[2]==="hit"?"바닥 진동":"—"}</td></tr>`;
+    });
+    h+=`</table>`;
+    h+=`<div class="bp">가장 낮은 소리 <b>${B.lo}Hz</b> (${B.loName}) ·
+        가장 큰 소리 <b>${B.B_SPL}dB</b></div>`;
+  }
+  h+=`</div>`;
+
+  /* 필요 차음량 */
+  if(B.need!==null){
+    h+=`<div class="bsec"><div class="bh">02 &nbsp;필요 차음량</div>`;
+    h+=`<table class="bt"><tr><th>소리원천</th><th>음압</th><th>목표</th><th>필요 차음량</th></tr>`;
+    const rows = B.quietOnly ? [] : B.picked.slice().sort((a,b)=>B.splOf(b[0])-B.splOf(a[0]));
+    rows.forEach(([n,f])=>{
+      const sp=B.splOf(n);
+      h+=`<tr${sp===B.B_SPL?' class="hi"':''}><td>${n}</td><td class="m">${sp}</td>
+          <td class="m">${B.bg[0]}</td><td class="m">${sp-B.bg[0]} dB</td></tr>`;
+    });
+    h+=`</table>`;
+    h+=`<div class="bp">사용 시간대 <b>${D.when}</b> → 목표 배경소음 <b>${B.bg[0]}dB</b>.
+        ${B.bg[1]}. ${B.bg[2]?"<b>주거 인접 중간층이라 5dB 조여 잡았다.</b>":""}</div>`;
+    h+=`<table class="bt"><tr><th>시간대</th><th>목표</th><th>최대 필요 차음량</th></tr>
+      <tr><td>낮에만</td><td class="m">45</td><td class="m">${B.B_SPL-45} dB</td></tr>
+      <tr><td>저녁까지</td><td class="m">40</td><td class="m">${B.B_SPL-40} dB</td></tr>
+      <tr><td>심야</td><td class="m">30</td><td class="m">${B.B_SPL-30} dB</td></tr>
+      </table>`;
+    h+=`<div class="bp">낮에만 쓰면 심야 대비 <b>15dB</b>이 내려간다.
+        <b>시간대 조정이 등급을 올리는 것보다 효과가 큰 경우가 많다.</b></div>`;
+    if(D.when==="밤늦게도 · 10시 이후")
+      h+=`<div class="bw"><b>심야 사용.</b> 남는 대역이 있으면 <b>사용 시간 제한을 계약 조건으로 명시</b>한다.
+          시공 조건이 아니라 사용 조건이므로 문서에 남기지 않으면 나중에 우리 책임이 된다.</div>`;
+    if(D.when==="정해지지 않음")
+      h+=`<div class="bw">사용 시간 미정 — 심야 기준으로 잡아두었다. 상담에서 반드시 확정할 것.</div>`;
+    h+=`</div>`;
+  }
+
+  /* 벽 사다리 · 목표 주파수 */
+  if(!B.quietOnly){
+    h+=`<div class="bsec"><div class="bh">03 &nbsp;어디까지 잡히는가</div>`;
+    h+=`<table class="bt"><tr><th>등급</th><th>공진점 f₀</th><th>막히기 시작</th><th>STC 추정</th></tr>`;
+    for(let L=1;L<=5;L++){
+      const on = (L===Math.max(1,B.wL));
+      h+=`<tr${on?' class="hi"':''}><td>${on?"▶ ":""}L${L}</td><td class="m">${F0[L]} Hz</td>
+          <td class="m">${START[L]} Hz 이상</td><td class="m">${STC[L]}</td></tr>`;
+    }
+    h+=`</table>`;
+    h+=`<div class="bp">벽은 자기 공진점 근처에서 가장 약하다. 확실히 막히는 것은
+        공진점의 <b>약 1.4배(√2)</b> 위부터다. 위 표의 세 번째 칸이 그 값이다.</div>`;
+    if(B.overLimit){
+      h+=`<div class="bw"><b>1순위 ${B.loName} ${B.lo}Hz — AC-A로 도달 불가.</b>
+          최고 등급 L5의 공진점이 44Hz라 <b>62Hz 아래는 벽으로 막을 수 없다.</b></div>`;
+      let rank=1;
+      h+=`<table class="bt"><tr><th>순위</th><th>대상</th><th>결과</th></tr>`;
+      B.skipped.forEach(([n,f])=>{
+        h+=`<tr><td class="m">${rank++}</td><td>${n} ${f}Hz</td><td>AC-A 범위 밖</td></tr>`;
+      });
+      h+=`<tr class="hi"><td class="m">${rank}</td><td>${B.targetName} ${B.target}Hz</td>
+          <td><b>L${B.wL}로 달성 — 설계 기준</b></td></tr></table>`;
+      h+=`<div class="bp"><b>설계 기준 ${B.target}Hz · 벽 L${B.wL}.</b>
+          그 아래 대역은 박스인박스(AC-B) 전환, 또는 음원 방진·실내 저역 저감으로 대응한다.</div>`;
+    } else {
+      h+=`<div class="bp"><b>설계 기준 ${B.lo}Hz · 벽 L${Math.max(1,B.wL)}.</b>
+          체크하신 소리는 모두 이 등급으로 대응된다.</div>`;
+    }
+    if(B.hit) h+=`<div class="bp"><b>충격음 동반.</b> 공기전달음과 별개 경로다.
+        슬래브에 들어간 진동은 아래뿐 아니라 기둥·내력벽을 타고 위·옆으로도 돈다.
+        <b>바닥 등급은 층 위치와 무관하게 유지</b>하며 한 단계 올려 잡는다.</div>`;
+    if(B.loud.length) h+=`<div class="bp"><b>고음압 (${B.loud.join(", ")}).</b> 대역은 높지만 절대 음압이 커서 벽 질량과 기밀이 관건.</div>`;
+    if(B.both) h+=`<div class="bp"><b>화상회의 — 양방향.</b> 유입 차단만으로 부족. 통화 음성·스피커 출력도 잡는다.</div>`;
+    if(B.inbound) h+=`<div class="bp"><b>유입 차단 중심.</b> 벽 등급보다 창호·환기구·기밀이 성능을 좌우한다.</div>`;
+    h+=`</div>`;
+  }
+
+  /* 2 실 조건 */
+  if(B.modes){
+    h+=`<div class="bsec"><div class="bh">04 &nbsp;실 조건 · 룸 모드</div>`;
+    h+=`<table class="bt"><tr><th>축</th><th>1차 공진</th></tr>`;
+    B.modes.forEach(m=>h+=`<tr><td>${m[0]}</td><td class="m">${m[1].toFixed(1)} Hz</td></tr>`);
+    h+=`</table>`;
+    h+=`<div class="bp">축방향 1차 모드(c/2L)다. 이 주파수에서 실 안이 뭉친다.
+        <b>차음 성능과 무관한 실 형상의 문제</b>이므로 등급을 올려도 사라지지 않는다.</div>`;
+    if(B.cube) h+=`<div class="bw"><b>정방형에 가깝다.</b> 두 축의 모드가 겹쳐 특정 대역이 크게 부풀 수 있다. 흡음 배치나 비대칭 마감으로 완화한다.</div>`;
+    B.clash.forEach(c=>h+=`<div class="bw"><b>모드 충돌</b> ${c[0]} 기음 ${c[1]}Hz가 ${c[2]} 방향 모드 ${c[3].toFixed(1)}Hz와 겹친다. 그 음이 유독 크게 들린다고 할 가능성.</div>`);
+    h+=`</div>`;
+  }
+
+  /* 3 부위별 등급 */
+  h+=`<div class="bsec"><div class="bh">05 &nbsp;부위별 공법</div>`;
+  const wp = (D.space==="음악학원"||D.space==="독서실 · 스터디카페"||
+              D.space==="상담실 · 회의실"||D.space==="여러 방을 나누는 공사");
+  h+=`<table class="bt">
+    <tr><th>부위</th><th>등급</th><th>공법</th><th>두께</th></tr>
+    <tr><td>바닥</td><td class="m b">AC-F-${lvName(B.fL)}</td><td>${SPEC.F[B.fL].n}</td><td class="m">${SPEC.F[B.fL].t}</td></tr>
+    <tr><td>벽 · 구조벽면</td><td class="m b">AC-WS-${lvName(Math.max(1,B.wL))}</td><td>${SPEC.WS[Math.max(1,B.wL)].n}</td><td class="m">${SPEC.WS[Math.max(1,B.wL)].t}</td></tr>`;
+  if(wp) h+=`<tr><td>벽 · 실간 칸막이</td><td class="m b">AC-WP-${lvName(Math.max(1,B.wL))}</td><td>${SPEC.WP[Math.max(1,B.wL)].n}</td><td class="m">${SPEC.WP[Math.max(1,B.wL)].t}</td></tr>`;
+  h+=`<tr><td>천장</td><td class="m b">AC-C-${lvName(B.cL)}</td><td>${SPEC.C[B.cL].n}</td><td class="m">${SPEC.C[B.cL].t}</td></tr>
+    </table>`;
+  h+=`<div class="bp">벽 두께는 <b>LT(목재) / LS(경량스터드)</b> 순이다.</div>`;
+  const wlv = Math.max(1,B.wL);
+  const DOOR = {1:["단일 방음문","STC 33 이상"],2:["단일 방음문","STC 35 이상"],
+                3:["이중 방음문","STC 45 이상 · 단일문 적용 시 벽 성능 10dB 이상 손실"],
+                4:["사운드락 권장","자리가 없으면 이중 방음문 + 성능 한계 고지"],
+                5:["사운드락 필수","단일문으로는 벽 등급이 성립하지 않는다"]};
+  h+=`<div class="bg">출입문</div>`;
+  h+=`<div class="bl"><b>${DOOR[wlv][0]}</b> — ${DOOR[wlv][1]}</div>`;
+  if(wlv>=3)
+    h+=`<div class="bl">벽만 올리고 문을 방치하면 <b>벽에 쓴 돈이 문으로 빠져나간다.</b>
+        벽 STC 65에 문 STC 30이면 합성 결과는 40이다.</div>`;
+  if(wlv>=4)
+    h+=`<div class="bl">사운드락 — 문 간격 <b>900mm 이상</b>, 중간 공간 흡음 처리, 두 문 엇갈림 배치.
+        이중 방음문(간격 200~300mm)과는 다른 물건이며 성능 차이가 크다.
+        피난 동선이 되므로 문 열림 방향·유효 폭·피난 표시를 함께 확인한다.</div>`;
+  if(B.H){
+    h+=`<div class="bp">천장 ${D.h}m에서 천장 ${SPEC.C[B.cL].h}mm + 바닥 ${FH[B.fL]}mm를 빼면
+        <b>실내 잔여 ${(B.rest/1000).toFixed(2)}m</b>.</div>`;
+    if(B.capped)
+      h+=`<div class="bw"><b>천장고 제약으로 등급을 낮췄다.</b> 층고가 부족해 목표 등급을
+          그대로 쓰면 거실 반자 최소 높이(2.1m)를 못 지킨다. 고객에게 <b>등급을 내릴지,
+          높이를 감수할지</b> 선택하게 할 것. 시공 후에 말하면 늦다.</div>`;
+  }
+  if(B.floorNote) h+=`<div class="bp">${B.floorNote}</div>`;
+  if(D.floor==="1층 · 필로티 위") h+=`<div class="bp">아래에 사용 공간이 없어 바닥 등급을 낮춰 잡았다. 다만 충격음이 있으면 구조체 전달은 남는다.</div>`;
+  if(D.floor==="최상층") h+=`<div class="bp">위에 사용 공간이 없어 천장 등급을 낮춰 잡았다. 옥상 설비 소음·우수 소음은 별도 확인.</div>`;
+  if(D.floor==="지하") h+=`<div class="bp">지하 — 소리가 나갈 곳은 적으나 구조체 전달과 결로·환기가 별도 과제다.</div>`;
+  h+=`</div>`;
+
+
+  /* 4 실내 음향 */
+  if(B.ac){
+    const a=B.ac;
+    h+=`<div class="bsec"><div class="bh">06 &nbsp;실내 음향 설계</div>`;
+    h+=`<div class="bp">차음이 끝나면 <b>안에서 쓸 수 있는 방인지</b>가 남는다.
+        밖으로는 안 나가는데 안이 뭉개지면 합주도 녹음도 안 된다. 아래는 개략 산정(Sabine)이며
+        실측 후 조정한다.</div>`;
+    h+=`<table class="bt">
+      <tr><th>항목</th><th>값</th></tr>
+      <tr><td>실 부피</td><td class="m">${a.V.toFixed(1)} m³</td></tr>
+      <tr><td>내부 표면적</td><td class="m">${a.S.toFixed(1)} m²</td></tr>
+      <tr><td>목표 잔향(RT)</td><td class="m b">${a.tgt.toFixed(2)} 초</td></tr>
+      <tr><td>흡음 없을 때</td><td class="m">약 ${a.rtNow.toFixed(2)} 초</td></tr>
+      <tr><td>필요 흡음 면적</td><td class="m b">약 ${a.need.toFixed(1)} m²</td></tr>
+      </table>`;
+    h+=`<div class="bp">목표 ${a.tgt.toFixed(2)}초 — ${a.why}.
+        석고 마감만 하면 <b>${a.rtNow.toFixed(2)}초</b>가 나와 소리가 심하게 남는다.
+        흡음 마감을 <b>내부 표면의 약 ${a.pct.toFixed(0)}%</b>에 넣어야 목표에 닿는다.</div>`;
+    if(a.rtNow>1.2)
+      h+=`<div class="bw"><b>차음만 하면 못 쓰는 방이 된다.</b> 마감 상태 잔향이 ${a.rtNow.toFixed(1)}초다.
+          흡음 계획을 견적에 처음부터 포함할 것. 나중에 붙이면 층이 하나 더 생겨
+          치수와 마감이 다 틀어진다.</div>`;
+    if(B.modes){
+      const lowF = Math.min(...B.modes.map(m=>m[1]));
+      const q = 343/lowF/4;
+      h+=`<div class="bg">저역</div>`;
+      h+=`<div class="bl">이 방의 가장 낮은 모드는 <b>${lowF.toFixed(1)}Hz</b>다.
+          다공질 흡음재는 파장의 1/4 두께가 있어야 그 대역에서 작동하는데,
+          ${lowF.toFixed(0)}Hz면 <b>${q.toFixed(1)}m</b>가 필요하다. 현실적으로 불가능하다.</div>`;
+      h+=`<div class="bl">따라서 저역은 흡음보드로 못 잡는다. <b>판진동(멤브레인)형</b>이나
+          <b>헬름홀츠 공진기</b>로 대응하며, 모서리(코너)가 모든 모드의 음압이 최대인 지점이라
+          가장 효율이 좋다.</div>`;
+      if(B.picked.length && B.lo<80)
+        h+=`<div class="bl">${B.loName} ${B.lo}Hz 대역을 실제로 쓰므로, 저역 처리를 빼면
+            시공 후 "안에서 웅웅거린다"는 지적이 나온다.</div>`;
+    }
+    h+=`<div class="bg">중고역 · 배치</div>`;
+    h+=`<div class="bl">마주 보는 벽이 평행하면 <b>플러터 에코</b>가 생긴다. 한쪽만 흡음하거나
+        확산체를 넣어 비대칭으로 구성한다. 네 벽을 균등하게 덮는 것은 좋은 방법이 아니다.</div>`;
+    h+=`<div class="bl">천장은 바닥과 마주 보는 평행면이다. 바닥이 반사면(마루)이면
+        천장 흡음 비중을 높인다.</div>`;
+    if(D.space==="합주실"||D.space==="개인 연습실"||D.space==="음악학원")
+      h+=`<div class="bl">과도한 흡음은 금물. 연주자가 자기 소리를 못 들으면 무리하게 세게 치게 되고,
+          그러면 차음 부담이 다시 커진다.</div>`;
+    if(D.space==="녹음실 · 스튜디오"||D.space==="유튜브 · 스트리밍 · 리딩방")
+      h+=`<div class="bl">마이크 주변 초기 반사가 음질을 좌우한다. 마이크 위치 기준
+          <b>1차 반사점</b>(측벽·천장·후벽)을 우선 처리한다.</div>`;
+    h+=`<div class="bw"><b>흡음은 차음이 아니다.</b> 흡음재를 아무리 붙여도 밖으로 나가는 소리는
+        줄지 않는다. 견적서에서 두 항목을 반드시 갈라 적어야 타사 비교에서 오해가 없다.
+        (AC-AB 계열로 분리)</div>`;
+    h+=`</div>`;
+  }
+
+  /* 5 주의 */
+  h+=`<div class="bsec"><div class="bh">07 &nbsp;시공 주의</div>`;
+  let last="";
+  B.care.forEach(([g,t])=>{
+    if(g!==last){ h+=`<div class="bg">${g}</div>`; last=g; }
+    h+=`<div class="bl">${t}</div>`;
+  });
+  h+=`</div>`;
+
+  /* 5 확인 */
+  h+=`<div class="bsec"><div class="bh">08 &nbsp;상담에서 확인할 것</div>`;
+  B.ask.forEach(t=>h+=`<div class="bl ck">${t}</div>`);
+  h+=`</div>`;
+
+  return h;
+}
+
+async function finish(){
+  done=true;
+  document.getElementById("foot").style.display="none";
+  document.getElementById("bar").style.width="100%";
+  document.getElementById("stepTxt").textContent="접수 완료";
+
+  let id = null, at = new Date().toISOString();
+  try{
+    const res = await api({ action:"save", data:D });
+    if(res && res.ok){ id = res.id; at = res.at; }
+  }catch(e){ /* 서버 실패 시 아래 로컬 저장으로 넘어감 */ }
+
+  const idx = (await STORE.get("req:index")) || [];
+  if(!id) id = newId(idx);
+  const rec = { id, at, data:JSON.parse(JSON.stringify(D)) };
+  await STORE.set("req:"+id, rec);
+  idx.unshift({ id, at, space:D.space, name:D.name, phone:D.phone });
+  await STORE.set("req:index", idx.slice(0,200));
+
+  const r=summaryRows();
+  document.getElementById("body").outerHTML = `<div class="body done">
+    <div class="done-i">✓</div>
+    <h2>접수되었습니다</h2>
+    <p>영업일 기준 하루 안에 ${D.name}님께 연락드리겠습니다.</p>
+    <div class="idbox">
+      <div class="lb">신청번호</div>
+      <div class="no">${id}</div>
+      <div class="sm"><b>이 번호를 저장해 두세요.</b><br>
+        번호가 기억나지 않으시면 <b>성함과 휴대폰 번호</b>로 확인해 드립니다.<br>
+        미리 알려주시면 상담이 훨씬 수월합니다.</div>
+    </div>
+    <div class="card"><div class="card-h">보내주신 내용</div>
+      ${r.map(x=>`<div class="row"><span class="k">${x[0]}</span><span class="v">${x[1]}</span></div>`).join("")}
+    </div>
+    <button class="restart" onclick="location.reload()">처음부터 다시 해보기</button>
+  </div>`;
+}
+
+function summaryRows(){
+  const r=[];
+  r.push(["공간", D.space==="기타"?D.spaceEtc:(D.space==="흡음"?"실내 울림(흡음)만":D.space)]);
+  if(D.space!=="흡음"){
+    const t=D.sounds.filter(x=>x!=="그 밖의 악기");
+    if(D.soundEtc) t.push(D.soundEtc);
+    r.push(["소리", t.join(", ")||"—"]);
+  }
+  r.push(["크기", D.noSize?"모름":`${D.w} × ${D.d} m`]);
+  r.push(["천장", D.noH?"모름":`${D.h} m`]);
+  r.push(["사용 시간", D.when]);
+  r.push(["지역", D.sido?`${D.sido} ${D.gu}`:"—"]);
+  if(D.space!=="흡음"){ r.push(["건물", D.bldg]); r.push(["층", D.floor]); }
+  r.push(["계약", D.ct]);
+  r.push(["시기", D.pt==="희망 날짜 지정" ? D.pd : D.pt]);
+  r.push(["예산", D.bTBD?"상담 후 결정":`${D.bud} 만원`]);
+  r.push(["연락처", `${D.name} · ${D.phone}`]);
+  return r;
+}
+
+/* ── 조회 화면 ── */
+async function openAdmin(){
+  document.getElementById("foot").style.display="none";
+  document.getElementById("hdTitle").textContent="시공 검토서 조회";
+  document.getElementById("stepTxt").textContent="AC-Q-02";
+  document.getElementById("bar").style.width="100%";
+  let idx = [];
+  try{
+    const res = await api({ action:"list", n:30 });
+    if(res && res.ok) idx = res.hits.map(h=>({id:h.id, at:h.at, space:h.space, name:h.name, phone:h.phone}));
+  }catch(e){}
+  if(!idx.length) idx = (await STORE.get("req:index")) || [];
+  const list = idx.length
+    ? idx.map(x=>`<div class="reqrow" data-id="${x.id}">
+        <span><span class="id">${x.id}</span><br><span class="mt">${x.space||"—"} · ${x.name||"—"}</span></span>
+        <span class="mt">${new Date(x.at).toLocaleDateString("ko-KR")}</span></div>`).join("")
+    : `<div class="bp" style="color:var(--ink-3)">저장된 신청서가 없습니다.</div>`;
+  const el=document.querySelector(".body")||document.querySelector(".done");
+  el.outerHTML = `<div class="body">
+    <div class="qt">신청서 불러오기</div>
+    <div class="qs">신청번호 또는 휴대폰 번호로 찾습니다</div>
+    <input class="txt" id="findId" placeholder="AC26-1001  또는  010-0000-0000" autocomplete="off">
+    <button class="btn go" id="findBtn" style="width:100%;margin-top:9px">검토서 열기</button>
+    <div id="findMsg" class="qs" style="color:var(--stop);margin-top:7px"></div>
+    <div class="sub">최근 접수</div>
+    <div id="reqList">${list}</div>
+    <button class="restart" onclick="location.reload()">신청서로 돌아가기</button>
+  </div>`;
+  document.getElementById("findBtn").onclick=async ()=>{
+    const q=document.getElementById("findId").value.trim();
+    const msg=document.getElementById("findMsg");
+    if(!q){ msg.textContent="번호를 입력해 주세요."; return; }
+    if(/^AC/i.test(q)){ showBrief(q.toUpperCase().replace(/\s/g,"")); return; }
+    const digits=q.replace(/[^0-9]/g,"");
+    let hits=[];
+    try{
+      const res = await api({ action:"find", q:digits });
+      if(res && res.ok) hits = res.hits.map(h=>({id:h.id, at:h.at, space:h.space, name:h.name}));
+    }catch(e){}
+    if(!hits.length) hits=idx.filter(x=>(x.phone||"").replace(/[^0-9]/g,"")===digits);
+    if(!hits.length){ msg.textContent="해당 번호로 접수된 신청서가 없습니다."; return; }
+    if(hits.length===1){ showBrief(hits[0].id); return; }
+    msg.textContent="";
+    document.getElementById("reqList").innerHTML = hits.map(x=>`<div class="reqrow" data-id="${x.id}">
+        <span><span class="id">${x.id}</span><br><span class="mt">${x.space||"—"} · ${x.name||"—"}</span></span>
+        <span class="mt">${new Date(x.at).toLocaleDateString("ko-KR")}</span></div>`).join("");
+    document.querySelectorAll(".reqrow").forEach(b=>b.onclick=()=>showBrief(b.dataset.id));
+  };
+  document.querySelectorAll(".reqrow").forEach(b=>b.onclick=()=>showBrief(b.dataset.id));
+}
+
+async function showBrief(id){
+  if(!id) return;
+  let rec = null;
+  try{
+    const res = await api({ action:"find", q:id });
+    if(res && res.ok && res.hits.length) rec = { at:res.hits[0].at, data:res.hits[0].data };
+  }catch(e){}
+  if(!rec) rec = await STORE.get("req:"+id);
+  if(!rec){ alert("해당 번호의 신청서를 찾을 수 없습니다."); return; }
+  Object.keys(rec.data).forEach(k=>D[k]=rec.data[k]);
+  document.getElementById("hdTitle").textContent="시공 검토서";
+  document.getElementById("stepTxt").textContent=id;
+  const el=document.querySelector(".body");
+  el.outerHTML = `<div class="body">
+    <div class="idbox" style="margin-top:0">
+      <div class="lb">신청번호</div><div class="no">${id}</div>
+      <div class="sm">${new Date(rec.at).toLocaleString("ko-KR")} 접수</div>
+    </div>
+    <div class="peek" style="margin-top:16px"><div class="peek-b show">${briefHTML()}</div></div>
+    <button class="restart" onclick="location.reload()">처음으로</button>
+  </div>`;
+}
+
+document.getElementById("adminBtn").onclick=openAdmin;
+
+draw();
+</script>
+</body>
+</html>
