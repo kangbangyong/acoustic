@@ -33,6 +33,20 @@ body{background:#EFEDE7;color:var(--ink);
 .idbox .no{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:600;
   color:var(--navy);letter-spacing:.06em;margin-top:4px}
 .idbox .sm{font-size:12px;color:#5E7B90;margin-top:6px}
+.abar{background:#EDEBE4;border-bottom:1px solid var(--rule);padding:9px 12px;
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;position:sticky;top:0;z-index:30}
+.abar .lb{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;
+  color:var(--ink-3);margin-right:2px}
+.abar input{font-family:inherit;font-size:13px;color:var(--ink);background:#fff;
+  border:1.5px solid var(--rule);border-radius:7px;padding:7px 10px;min-width:0}
+.abar input:focus{outline:none;border-color:var(--navy)}
+.abar .w1{width:118px} .abar .w2{width:72px} .abar .w3{width:108px}
+.abar button{font-family:inherit;font-size:12.5px;font-weight:600;padding:7px 11px;
+  border-radius:7px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
+.abar button:hover{background:var(--navy);color:#fff}
+.abar button.solid{background:var(--navy);color:#fff}
+.abar .sep{width:1px;height:20px;background:var(--rule);margin:0 2px}
+@media print{ .abar,.hd,.restart{display:none !important} body{background:#fff} .phone{box-shadow:none;max-width:none} }
 .reqrow{display:flex;justify-content:space-between;align-items:center;gap:10px;
   background:#fff;border:1.5px solid var(--rule);border-radius:9px;padding:11px 13px;
   margin-bottom:7px;cursor:pointer;font-size:13.5px}
@@ -171,7 +185,7 @@ body{background:#EFEDE7;color:var(--ink);
 <div class="phone">
 
   <div class="hd">
-    <div class="hd-brand">GRID-A4U <button id="adminBtn" class="adminbtn">조회</button></div>
+    <div class="hd-brand">GRID-A4U <button id="adminBtn" class="adminbtn">ADMIN</button></div>
     <div class="hd-t" id="hdTitle">방음공사 상담신청서</div>
     <div class="bar"><i id="bar"></i></div>
     <div class="hd-step" id="stepTxt">1분이면 끝납니다</div>
@@ -1043,53 +1057,96 @@ function summaryRows(){
   return r;
 }
 
-/* ── 조회 화면 ── */
+/* ── 관리자 ── */
+let ADMIN_PASS = null;
+
 async function openAdmin(){
+  if(!ADMIN_PASS){
+    const v = prompt("관리자 비밀번호");
+    if(!v) return;
+    let ok=false;
+    try{ const r = await api({action:"checkpass", pass:v}); ok = !!(r && r.ok); }catch(e){}
+    if(!ok){ alert("비밀번호가 맞지 않습니다."); return; }
+    ADMIN_PASS = v;
+  }
+  renderAdmin();
+}
+
+async function renderAdmin(inner){
   document.getElementById("foot").style.display="none";
-  document.getElementById("hdTitle").textContent="시공 검토서 조회";
-  document.getElementById("stepTxt").textContent="AC-Q-02";
+  document.getElementById("hdTitle").textContent="관리자";
+  document.getElementById("stepTxt").textContent="AC-Q-02 시공 검토서";
   document.getElementById("bar").style.width="100%";
-  let idx = [];
+
+  let hits = [];
   try{
-    const res = await api({ action:"list", n:30 });
-    if(res && res.ok) idx = res.hits.map(h=>({id:h.id, at:h.at, space:h.space, name:h.name, phone:h.phone}));
+    const res = await api({ action:"list", n:50, pass:ADMIN_PASS });
+    if(res && res.ok) hits = res.hits;
   }catch(e){}
-  if(!idx.length) idx = (await STORE.get("req:index")) || [];
-  const list = idx.length
-    ? idx.map(x=>`<div class="reqrow" data-id="${x.id}">
-        <span><span class="id">${x.id}</span><br><span class="mt">${x.space||"—"} · ${x.name||"—"}</span></span>
-        <span class="mt">${new Date(x.at).toLocaleDateString("ko-KR")}</span></div>`).join("")
-    : `<div class="bp" style="color:var(--ink-3)">저장된 신청서가 없습니다.</div>`;
+  if(!hits.length){
+    const idx = (await STORE.get("req:index")) || [];
+    hits = idx;
+  }
+  window.__hits = hits;
+
+  const rows = hits.length ? hits.map(x=>`<div class="reqrow" data-id="${x.id}">
+      <span><span class="id">${x.id}</span><br><span class="mt">${x.space||"—"} · ${x.name||"—"}</span></span>
+      <span class="mt">${fmt(x.at)}</span></div>`).join("")
+    : `<div class="bp" style="color:var(--ink-3)">접수된 신청서가 없습니다.</div>`;
+
   const el=document.querySelector(".body")||document.querySelector(".done");
-  el.outerHTML = `<div class="body">
-    <div class="qt">신청서 불러오기</div>
-    <div class="qs">신청번호 또는 휴대폰 번호로 찾습니다</div>
-    <input class="txt" id="findId" placeholder="AC26-1001  또는  010-0000-0000" autocomplete="off">
-    <button class="btn go" id="findBtn" style="width:100%;margin-top:9px">검토서 열기</button>
-    <div id="findMsg" class="qs" style="color:var(--stop);margin-top:7px"></div>
-    <div class="sub">최근 접수</div>
-    <div id="reqList">${list}</div>
-    <button class="restart" onclick="location.reload()">신청서로 돌아가기</button>
+  el.outerHTML = `<div class="body" style="padding:0">
+    <div class="abar">
+      <span class="lb">신청번호</span>
+      <input class="w1" id="fId" placeholder="AC26-1001">
+      <button id="bLoad">불러오기</button>
+      <span class="sep"></span>
+      <input class="w2" id="fName" placeholder="성명">
+      <input class="w3" id="fPhone" placeholder="연락처">
+      <button id="bFind">찾기</button>
+      <span class="sep"></span>
+      <button id="bPrint">인쇄</button>
+      <button class="solid" onclick="location.reload()">신청서</button>
+    </div>
+    <div style="padding:18px 20px 30px">
+      ${inner || `<div class="sub" style="margin-top:0">최근 접수 ${hits.length}건</div>
+                  <div id="reqList">${rows}</div>`}
+    </div>
   </div>`;
-  document.getElementById("findBtn").onclick=async ()=>{
-    const q=document.getElementById("findId").value.trim();
-    const msg=document.getElementById("findMsg");
-    if(!q){ msg.textContent="번호를 입력해 주세요."; return; }
-    if(/^AC/i.test(q)){ showBrief(q.toUpperCase().replace(/\s/g,"")); return; }
-    const digits=q.replace(/[^0-9]/g,"");
-    let hits=[];
+  bindAdmin();
+}
+
+function fmt(v){
+  if(!v) return "—";
+  const d = new Date(v);
+  if(isNaN(d)) return String(v);
+  return d.toLocaleString("ko-KR",{year:"2-digit",month:"2-digit",day:"2-digit",
+                                   hour:"2-digit",minute:"2-digit"});
+}
+
+function bindAdmin(){
+  const g=id=>document.getElementById(id);
+  g("bLoad").onclick=()=>showBrief(g("fId").value.trim().toUpperCase());
+  g("bPrint").onclick=()=>window.print();
+  g("bFind").onclick=async ()=>{
+    const nm=g("fName").value.trim(), ph=g("fPhone").value.replace(/[^0-9]/g,"");
+    if(!nm && !ph){ alert("성명 또는 연락처를 입력하세요."); return; }
+    let hits = window.__hits || [];
     try{
-      const res = await api({ action:"find", q:digits });
-      if(res && res.ok) hits = res.hits.map(h=>({id:h.id, at:h.at, space:h.space, name:h.name}));
+      const res = await api({ action:"find", q: ph || nm, pass:ADMIN_PASS });
+      if(res && res.ok && res.hits.length) hits = res.hits;
     }catch(e){}
-    if(!hits.length) hits=idx.filter(x=>(x.phone||"").replace(/[^0-9]/g,"")===digits);
-    if(!hits.length){ msg.textContent="해당 번호로 접수된 신청서가 없습니다."; return; }
-    if(hits.length===1){ showBrief(hits[0].id); return; }
-    msg.textContent="";
-    document.getElementById("reqList").innerHTML = hits.map(x=>`<div class="reqrow" data-id="${x.id}">
+    const f = hits.filter(x=>{
+      const okN = !nm || String(x.name||"").indexOf(nm) > -1;
+      const okP = !ph || String(x.phone||"").replace(/[^0-9]/g,"").indexOf(ph) > -1;
+      return okN && okP;
+    });
+    if(!f.length){ alert("찾는 신청서가 없습니다."); return; }
+    if(f.length===1){ showBrief(f[0].id); return; }
+    const list=f.map(x=>`<div class="reqrow" data-id="${x.id}">
         <span><span class="id">${x.id}</span><br><span class="mt">${x.space||"—"} · ${x.name||"—"}</span></span>
-        <span class="mt">${new Date(x.at).toLocaleDateString("ko-KR")}</span></div>`).join("");
-    document.querySelectorAll(".reqrow").forEach(b=>b.onclick=()=>showBrief(b.dataset.id));
+        <span class="mt">${fmt(x.at)}</span></div>`).join("");
+    renderAdmin(`<div class="sub" style="margin-top:0">검색 결과 ${f.length}건</div>${list}`);
   };
   document.querySelectorAll(".reqrow").forEach(b=>b.onclick=()=>showBrief(b.dataset.id));
 }
@@ -1098,23 +1155,18 @@ async function showBrief(id){
   if(!id) return;
   let rec = null;
   try{
-    const res = await api({ action:"find", q:id });
+    const res = await api({ action:"find", q:id, pass:ADMIN_PASS });
     if(res && res.ok && res.hits.length) rec = { at:res.hits[0].at, data:res.hits[0].data };
   }catch(e){}
   if(!rec) rec = await STORE.get("req:"+id);
   if(!rec){ alert("해당 번호의 신청서를 찾을 수 없습니다."); return; }
   Object.keys(rec.data).forEach(k=>D[k]=rec.data[k]);
-  document.getElementById("hdTitle").textContent="시공 검토서";
-  document.getElementById("stepTxt").textContent=id;
-  const el=document.querySelector(".body");
-  el.outerHTML = `<div class="body">
+  renderAdmin(`
     <div class="idbox" style="margin-top:0">
       <div class="lb">신청번호</div><div class="no">${id}</div>
-      <div class="sm">${new Date(rec.at).toLocaleString("ko-KR")} 접수</div>
+      <div class="sm">${fmt(rec.at)} 접수 · ${D.name||""} ${D.phone||""}</div>
     </div>
-    <div class="peek" style="margin-top:16px"><div class="peek-b show">${briefHTML()}</div></div>
-    <button class="restart" onclick="location.reload()">처음으로</button>
-  </div>`;
+    <div class="peek" style="margin-top:16px"><div class="peek-b show">${briefHTML()}</div></div>`);
 }
 
 document.getElementById("adminBtn").onclick=openAdmin;
