@@ -15,7 +15,7 @@
 body{background:#EFEDE7;color:var(--ink);
   font-family:"IBM Plex Sans KR",system-ui,sans-serif;line-height:1.6;
   display:flex;justify-content:center;padding:0}
-.phone{width:100%;max-width:460px;min-height:100vh;background:var(--paper);
+.phone{width:100%;max-width:460px;transition:max-width .2s;min-height:100vh;background:var(--paper);
   display:flex;flex-direction:column;box-shadow:0 0 40px rgba(0,0,0,.07)}
 
 /* 헤더 */
@@ -33,6 +33,16 @@ body{background:#EFEDE7;color:var(--ink);
 .idbox .no{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:600;
   color:var(--navy);letter-spacing:.06em;margin-top:4px}
 .idbox .sm{font-size:12px;color:#5E7B90;margin-top:6px}
+body.admin .phone{max-width:1100px}
+body.admin .peek{border-style:solid;border-color:var(--rule)}
+@media(min-width:900px){
+  body.admin .bt{font-size:13px}
+  body.admin .bt th,body.admin .bt td{padding:8px 12px}
+  body.admin .bp,body.admin .bl{font-size:13.5px}
+  body.admin .bw{font-size:13.5px}
+  body.admin .reqrow{font-size:14px}
+  body.admin .idbox .no{font-size:27px}
+}
 .abar{background:#EDEBE4;border-bottom:1px solid var(--rule);padding:9px 12px;
   display:flex;flex-wrap:wrap;gap:6px;align-items:center;position:sticky;top:0;z-index:30}
 .abar .lb{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;
@@ -1073,6 +1083,7 @@ async function openAdmin(){
 }
 
 async function renderAdmin(inner){
+  document.body.classList.add("admin");
   document.getElementById("foot").style.display="none";
   document.getElementById("hdTitle").textContent="관리자";
   document.getElementById("stepTxt").textContent="AC-Q-02 시공 검토서";
