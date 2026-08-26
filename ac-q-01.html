@@ -203,9 +203,37 @@ body.admin .hd{padding-bottom:2px}
   .qt{font-size:17.5px} .qs{padding-left:0}
 }
 @media print{
-  .abar,.hd,.restart,.foot{display:none !important}
-  body{background:#fff;padding:0} .phone{box-shadow:none;max-width:none}
-  .peek{border:0} .peek-b{padding:0}
+  @page{ size:A4; margin:11mm 12mm }
+  .abar,.hd,.restart,.foot,.adminbtn{display:none !important}
+  body{background:#fff;padding:0;font-size:9pt;line-height:1.42}
+  .phone{box-shadow:none;max-width:none;min-height:0}
+  .body{padding:0 !important}
+  .peek{border:0;margin:0}
+  .peek-b{padding:0;font-size:9pt;line-height:1.42;display:block !important}
+
+  /* 표제 — 한 줄로 압축 */
+  .idbox{margin:0 0 6px;padding:5px 8px;text-align:left;border:0;border-bottom:1.2pt solid var(--ink);background:none}
+  .idbox .lb{display:inline;font-size:7pt;letter-spacing:.12em;margin-right:6px}
+  .idbox .no{display:inline;font-size:13pt;letter-spacing:.06em}
+  .idbox .sm{display:inline;font-size:8pt;margin-left:8px}
+  .idbox .sm br{display:none}
+
+  /* 섹션 */
+  .bsec{padding:6px 0 2px;break-inside:avoid}
+  .bh{font-size:8pt;margin-bottom:4px;letter-spacing:.1em}
+  .bp{font-size:8.6pt;line-height:1.45;margin:3px 0}
+  .bw{font-size:8.4pt;line-height:1.45;padding:5px 7px;margin:4px 0}
+  .bg{font-size:7.5pt;margin:6px 0 2px}
+  .bl{font-size:8.3pt;line-height:1.4;padding:2.5px 0 2.5px 11px}
+
+  /* 표 — 2단으로 흘려 지면 절약 */
+  .bt{font-size:8.2pt;margin:4px 0;break-inside:avoid}
+  .bt th{font-size:7pt;padding:3px 6px}
+  .bt td{padding:3px 6px}
+
+  /* 페이지 나눔 */
+  .bsec,.bt,.bw{page-break-inside:avoid}
+  h2,.bh{page-break-after:avoid}
 }
 </style>
 </head>
