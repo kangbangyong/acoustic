@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-00 — 도면 표기 규칙</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;line-height:1.65;
+  padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:middle}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.sw{width:82px}
+td.sw svg{display:block}
+td.nm{font-weight:600;width:24%}
+td.ds{color:var(--ink-2)}
+tr.new td{background:#EEF3F6}
+tr.new td.nm{color:#2A5468}
+
+.flag{border:1px solid #8A5A2B;background:#F4EBE0;padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:#8A5A2B}
+.flag.warn{border-color:var(--stop);background:var(--stop-bg);color:#6E2418}
+.flag.warn b{color:var(--stop)}
+
+pre{background:#F2F1EC;border:1px solid var(--rule);padding:14px 16px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.55;
+  overflow-x:auto;color:#33322E;white-space:pre}
+.pre-cap{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);margin:18px 0 7px}
+
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav"><a class="acnav-home" href="../index.html">← AC 목록</a><span class="acnav-code">AC-00</span><span class="acnav-move"><a class="off">←</a><a href="../common/AC-00-R.html">AC-00-R →</a></span></div>
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-00</div>
+      <div class="tb-name">도면 표기 규칙</div>
+      <div class="tb-en">Drawing convention / material hatching</div>
+    </div>
+    <div class="tb-meta">
+      <div class="tb-cell"><span class="tb-k">Scope</span><span class="tb-v">전 부위 공통</span></div>
+      <div class="tb-cell"><span class="tb-k">Applies</span><span class="tb-v">F · W · C · D · G · M · J</span></div>
+      <div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div>
+      <div class="tb-cell"><span class="tb-k">Base</span><span class="tb-v">AC-F 시리즈</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">원칙</span></div>
+    <div class="sec-body">
+      <ul style="list-style:none;display:grid;gap:10px;font-size:13.5px">
+        <li><strong>색을 늘리지 않고 무늬로 재질을 구분한다.</strong> 질량판(합판 · 석고 · PB)은 같은 색을 쓰고 빗금 · 점 · 민무늬로 나눈다.</li>
+        <li><strong>두께가 있으면 실선 박스, 없으면 점선.</strong> 필름 · 시트처럼 층으로 그릴 수 없는 것만 점선으로 표기한다.</li>
+        <li><strong>비어 있는 것은 비워 둔다.</strong> 공기층에는 테두리를 두르지 않는다. 점선 박스는 충진재를 뜻하므로 혼동을 피한다.</li>
+        <li><strong>마감재 분할선은 층의 짧은 쪽으로 세운다.</strong> 부위가 달라도 표기는 같으며, 도면이 회전하면 선도 함께 회전한다. 빗금 각도(45°)는 부위와 무관하게 고정한다.</li>
+        <li><strong>방향이 성능을 좌우하는 부재는 형상으로 그린다.</strong> 레질리언트 채널이 대표적이다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">질량판 · 목재</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>표기</th><th>재료</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="연청색 바탕에 45도 빗금">
+              <defs><pattern id="p1" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="5" stroke="#3E4A6B" stroke-width=".8" opacity=".55"/></pattern></defs>
+              <rect x=".5" y=".5" width="69" height="25" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x=".5" y=".5" width="69" height="25" fill="url(#p1)"/></svg></td>
+            <td class="nm">합판</td>
+            <td class="ds">빗금 = 목재. 장선 · 목재 스터드도 같은 빗금을 쓰되 색을 달리한다.</td>
+          </tr>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="연청색 바탕 무늬 없음">
+              <rect x=".5" y=".5" width="69" height="25" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/></svg></td>
+            <td class="nm">차음석고보드</td>
+            <td class="ds">무늬 없음. 질량판 기본형으로 둔다.</td>
+          </tr>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="연청색 바탕에 점 패턴">
+              <defs><pattern id="p2" patternUnits="userSpaceOnUse" width="4" height="4">
+                <circle cx="2" cy="2" r=".85" fill="#3E4A6B" opacity=".5"/></pattern></defs>
+              <rect x=".5" y=".5" width="69" height="25" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x=".5" y=".5" width="69" height="25" fill="url(#p2)"/></svg></td>
+            <td class="nm">PB (파티클보드)</td>
+            <td class="ds">점 = 파티클. 재료 이름과 직결되어 기억하기 쉽다.</td>
+          </tr>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="베이지 바탕에 빗금, 장선">
+              <defs><pattern id="p3" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".9" opacity=".6"/></pattern></defs>
+              <rect x=".5" y=".5" width="69" height="25" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+              <rect x=".5" y=".5" width="69" height="25" fill="url(#p3)"/></svg></td>
+            <td class="nm">장선 · 목재 스터드</td>
+            <td class="ds">같은 빗금이되 색이 다르다. 질량판이 아니라 구조재임을 구분한다.</td>
+          </tr>
+          <tr class="new">
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="진회색 바탕에 교차 빗금, 경량스터드">
+              <defs><pattern id="p4" patternUnits="userSpaceOnUse" width="5" height="5">
+                <line x1="0" y1="0" x2="5" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/>
+                <line x1="5" y1="0" x2="0" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/></pattern></defs>
+              <rect x=".5" y=".5" width="69" height="25" fill="#DFE1E4" stroke="#4A4E54" stroke-width=".8"/>
+              <rect x=".5" y=".5" width="69" height="25" fill="url(#p4)"/></svg></td>
+            <td class="nm">경량스터드 (강재)</td>
+            <td class="ds">교차 빗금 = 금속. 목재의 단방향 빗금과 대비된다. <strong>신규</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">얇은 층 · 제진</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>표기</th><th>재료</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="진한 갈색 얇은 띠">
+              <rect x=".5" y="10" width="69" height="6" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/></svg></td>
+            <td class="nm">돌차음판</td>
+            <td class="ds">진한 갈색 얇은 띠. 실제 4T이므로 그린글루와 같은 두께로 그린다.</td>
+          </tr>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="녹색 얇은 띠">
+              <rect x=".5" y="10.5" width="69" height="5" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/></svg></td>
+            <td class="nm">그린글루</td>
+            <td class="ds">녹색 얇은 띠. 제품명과 색을 일치시킨다.</td>
+          </tr>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="갈색 점선">
+              <line x1="0" y1="13" x2="70" y2="13" stroke="#8A5A2B" stroke-width="1.8" stroke-dasharray="5 3"/></svg></td>
+            <td class="nm">PE 방습필름</td>
+            <td class="ds">층으로 그릴 수 없는 두께. 점선으로만 표기한다.</td>
+          </tr>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="청색 점선">
+              <line x1="0" y1="13" x2="70" y2="13" stroke="#4A8FA8" stroke-width="1.8" stroke-dasharray="5 3"/></svg></td>
+            <td class="nm">은박 EPE</td>
+            <td class="ds">같은 점선이되 색으로 구분한다. M 시리즈 전용.</td>
+          </tr>
+          <tr class="new">
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="검정 삼각 비드, 실란트">
+              <line x1="0" y1="18" x2="70" y2="18" stroke="#8E8C84" stroke-width=".8"/>
+              <path d="M 26 18 L 44 18 L 26 6 Z" fill="#2A2A28" stroke="#2A2A28" stroke-width=".6" stroke-linejoin="round"/>
+              <line x1="26" y1="18" x2="26" y2="4" stroke="#8E8C84" stroke-width=".8"/></svg></td>
+            <td class="nm">실란트</td>
+            <td class="ds">모서리 삼각 비드. 연변 이격부 · 관통부에 표기한다. <strong>신규</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">방진 · 공동</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>표기</th><th>재료</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="연녹색 실선 박스, 방진층">
+              <rect x=".5" y=".5" width="69" height="25" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/></svg></td>
+            <td class="nm">방진층</td>
+            <td class="ds">미네랄울 · 마블 · 슈퍼론 · 방진매트 공통. 녹색 = 스프링.</td>
+          </tr>
+                    <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="점선 박스, 충진재">
+              <rect x=".5" y=".5" width="69" height="25" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7" stroke-dasharray="3 2"/></svg></td>
+            <td class="nm">충진재</td>
+            <td class="ds">공동에 채우는 흡음재. 점선 = 채워 넣은 것.</td>
+          </tr>
+          <tr class="new">
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="아무 표기 없는 빈 공간, 공기층">
+              <rect x=".5" y=".5" width="69" height="25" fill="none" stroke="none"/>
+              <text x="35" y="17" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#B8B6B0">비움</text></svg></td>
+            <td class="nm">공기층</td>
+            <td class="ds">테두리를 두르지 않는다. 점선 박스(충진재)와 명확히 갈린다. <strong>신규</strong></td>
+          </tr>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="분홍 실선 박스, 아이소핑크">
+              <rect x=".5" y=".5" width="69" height="25" fill="#F7E8EF" stroke="#B0537A" stroke-width=".8"/></svg></td>
+            <td class="nm">아이소핑크 (XPS)</td>
+            <td class="ds">두께가 있으므로 실선. 지하 옵션이지만 점선으로 쓰지 않는다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">절연 부재 — 벽 · 천장</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>표기</th><th>부재</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr class="new">
+            <td class="sw"><svg width="70" height="60" viewBox="0 0 70 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="레질리언트 채널. 열린 쪽이 구조체를 향하고 닫힌 평면에 보드가 붙는다.">
+              <rect x="0" y="0" width="70" height="12" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".7"/>
+              <text x="35" y="9" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="7.5" fill="#8E8C84">구조체</text>
+              <path d="M 24 15 L 24 34 L 46 34 L 46 15" fill="none" stroke="#5A5E64" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="24" cy="14" r="1.6" fill="#5A5E64"/>
+              <circle cx="46" cy="14" r="1.6" fill="#5A5E64"/>
+              <rect x="0" y="44" width="70" height="14" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".7"/>
+              <text x="35" y="54" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="7.5" fill="#3E4A6B">보드</text>
+            </svg></td>
+            <td class="nm">레질리언트 채널</td>
+            <td class="ds"><strong>열린 쪽이 구조체를 향한다.</strong> 양쪽 플랜지가 구조체에 피스로 고정되고, 반대편 닫힌 평면에 보드를 친다. 뒤집어 시공하면 고정할 플랜지가 없고 눌릴 여지도 사라져 스프링으로 작동하지 않는다. 방향이 성능을 좌우하므로 문자가 아니라 <strong>형상으로 표기</strong>한다. 벽 단면에서는 90° 회전하여 열린 쪽이 구조벽을 향하게 그린다. <strong>신규</strong></td>
+          </tr>
+          <tr class="new">
+            <td class="sw"><svg width="70" height="60" viewBox="0 0 70 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="방진행거. 슬래브에서 내려오는 선 중간에 방진 요소가 있다.">
+              <rect x="0" y="0" width="70" height="12" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".7"/>
+              <text x="35" y="9" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="7.5" fill="#8E8C84">슬래브</text>
+              <line x1="35" y1="12" x2="35" y2="23" stroke="#5A5E64" stroke-width="1.6"/>
+              <rect x="26" y="23" width="18" height="12" rx="2" fill="#E6EFEC" stroke="#2F6E62" stroke-width="1"/>
+              <line x1="35" y1="35" x2="35" y2="44" stroke="#5A5E64" stroke-width="1.6"/>
+              <rect x="0" y="44" width="70" height="14" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".7"/>
+              <text x="35" y="54" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="7.5" fill="#3E4A6B">반자틀</text>
+            </svg></td>
+            <td class="nm">방진행거</td>
+            <td class="ds">별도 심볼을 만들지 않는다. 슬래브에서 내려오는 선 중간에 <strong>방진층 색 요소</strong>를 두면 그 자체로 읽힌다. <strong>신규</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="flag warn">
+        <b>방진행거와 레질리언트 채널을 함께 쓰지 않는다.</b> 두 부재 모두 구조체와 보드 사이를 끊는 역할이므로, 병용하면 스프링이 직렬로 두 개가 되어 질량이 하나 더 생긴다. 공진 모드가 늘고 그 사이에 딥이 발생한다. 도면에 두 부재를 나란히 그려 보면 이 문제가 형상으로 드러난다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">마감 · 구조체</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>표기</th><th>재료</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="마감재. 분할선이 층 두께 방향으로 세워져 있다.">
+              <rect x=".5" y=".5" width="69" height="25" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+              <line x1="14" y1=".5" x2="14" y2="25.5" stroke="#8E8C84" stroke-width=".6"/>
+              <line x1="28" y1=".5" x2="28" y2="25.5" stroke="#8E8C84" stroke-width=".6"/>
+              <line x1="42" y1=".5" x2="42" y2="25.5" stroke="#8E8C84" stroke-width=".6"/>
+              <line x1="56" y1=".5" x2="56" y2="25.5" stroke="#8E8C84" stroke-width=".6"/>
+            </svg></td>
+            <td class="nm">마감재</td>
+            <td class="ds">바닥 · 벽 · 천장 공통. 분할선은 항상 <strong>층의 짧은 쪽(두께 방향)으로 세운다.</strong> 부위가 달라도 표기는 동일하며, 도면이 회전하면 선도 함께 회전한다. 강화마루 · 데코타일 · 카페트 · 흡음 마감 모두 같다.</td>
+          </tr>
+                              <tr>
+            <td class="sw"><svg width="70" height="26" viewBox="0 0 70 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="회색 민무늬, 구조 슬래브">
+              <rect x=".5" y=".5" width="69" height="25" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/></svg></td>
+            <td class="nm">구조 슬래브 · 구조벽</td>
+            <td class="ds">회색 민무늬. 기존 구조체는 부위를 불문하고 동일하게 표기한다.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>기존 구조벽과 마감재가 같은 색인 이유.</b> 둘 다 음향 설계의 대상이 아니라 조건이기 때문이다. 구조체는 하부 질량(M₁)으로 주어지고, 마감재는 성능에 거의 기여하지 않는다. 설계 대상인 층에만 색과 무늬를 부여해 도면에서 판단이 필요한 부분이 즉시 드러나게 한다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">코드 블록 — 신규 시트 작성용</span></div>
+    <div class="sec-body">
+      <div class="pre-cap">패턴 정의 · svg 태그 직후 삽입</div>
+<pre>&lt;defs&gt;
+  &lt;!-- 목재 빗금 (합판) --&gt;
+  &lt;pattern id="pw{U}" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"&gt;
+    &lt;line x1="0" y1="0" x2="0" y2="5" stroke="#3E4A6B" stroke-width=".7" opacity=".5"/&gt;&lt;/pattern&gt;
+  &lt;!-- 파티클 점 (PB) --&gt;
+  &lt;pattern id="pp{U}" patternUnits="userSpaceOnUse" width="4" height="4"&gt;
+    &lt;circle cx="2" cy="2" r=".85" fill="#3E4A6B" opacity=".45"/&gt;&lt;/pattern&gt;
+  &lt;!-- 목재 빗금 (장선 · 목재 스터드) --&gt;
+  &lt;pattern id="pj{U}" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"&gt;
+    &lt;line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/&gt;&lt;/pattern&gt;
+  &lt;!-- 금속 교차빗금 (경량스터드) --&gt;
+  &lt;pattern id="pm{U}" patternUnits="userSpaceOnUse" width="5" height="5"&gt;
+    &lt;line x1="0" y1="0" x2="5" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/&gt;
+    &lt;line x1="5" y1="0" x2="0" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/&gt;&lt;/pattern&gt;
+&lt;/defs&gt;</pre>
+
+      <div class="pre-cap">색상값</div>
+<pre>질량판          fill #E7EAF2   stroke #3E4A6B
+장선 · 목재스터드  fill #F1E9DC   stroke #7A5B34
+경량스터드       fill #DFE1E4   stroke #4A4E54
+방진층          fill #E6EFEC   stroke #2F6E62
+돌차음판        fill #5A3A22   stroke #3D2716
+그린글루        fill #3F7A3A   stroke #2C4F29
+아이소핑크       fill #F7E8EF   stroke #B0537A
+슬래브 · 마감재   fill #EDEBE5   stroke #8E8C84
+실란트          fill #2A2A28
+PE 방습필름     stroke #8A5A2B  dasharray 5 3
+은박 EPE       stroke #4A8FA8  dasharray 5 3
+레질리언트 채널   stroke #5A5E64  width 2.2  fill none</pre>
+
+      <div class="flag warn">
+        <b>패턴 id는 한 페이지 안에서 유일해야 한다.</b> 같은 id가 두 번 정의되면 브라우저가 먼저 만난 것만 적용하므로 무늬가 어긋난다. <code>{U}</code> 자리에 <b>부위 + 등급 코드</b>를 넣어 구분한다 — 예: <code>pw-w3</code>, <code>pp-c1</code>, <code>pm-w5</code>. 여러 시트를 한 페이지에 합칠 때도 안전하다.
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-00 &nbsp;/&nbsp; REV A</span>
+    <span>내부 도면 작성 기준</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

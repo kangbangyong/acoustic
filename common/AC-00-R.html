@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-00-R — 법규 근거 (전 시리즈 공통)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --pb:#7A5B34;--pb-bg:#F1E9DC;
+  --damp:#8A5A2B;--damp-bg:#F4EBE0;
+  --foil:#5E7A8A;--foil-bg:#E6EDF1;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab:#8E8C84;--slab-bg:#EDEBE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:32%;color:var(--ink-2)}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
+tr.total td{border-top:1px solid var(--rule);font-weight:600}
+tr.hi td{background:var(--spring-bg)}
+tr.hi td.v,tr.hi td.k{color:#1C4A41;font-weight:600}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.est td.mono{color:var(--ink-3)}
+.quote{border-left:3px solid var(--ink-3);padding:10px 0 10px 16px;margin:14px 0 0;
+  font-size:13px;color:var(--ink-2);line-height:1.7}
+.quote b{color:var(--ink);font-weight:600}
+.src{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;
+  color:var(--ink-3);margin-top:7px;display:block}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:var(--damp)}
+.flag.warn{border-color:var(--stop);background:var(--stop-bg);color:#6E2418}
+.flag.warn b{color:var(--stop)}
+.flag.sp{border-color:var(--spring);background:var(--spring-bg);color:#1C4A41}
+.flag.sp b{color:var(--spring)}
+.flag.foil{border-color:var(--foil);background:var(--foil-bg);color:#37505C}
+.flag.foil b{color:var(--foil)}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav"><a class="acnav-home" href="../index.html">← AC 목록</a><span class="acnav-code">AC-00-R</span><span class="acnav-move"><a href="../common/AC-00.html">← AC-00</a><a href="../w/AC-W-00.html">AC-W-00 →</a></span></div>
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-00-R</div>
+      <div class="tb-name">법규 근거 · 전 시리즈 공통 참조</div>
+      <div class="tb-en">Regulatory reference / common to all AC series</div>
+    </div>
+    <div class="tb-meta">
+      <div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">공통 Common</span></div>
+      <div class="tb-cell"><span class="tb-k">Type</span><span class="tb-v">참조 문서</span></div>
+      <div class="tb-cell"><span class="tb-k">기준일</span><span class="tb-v">2026. 8.</span></div>
+      <div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">00</span><span class="sec-t">이 문서의 목적</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">용도</td><td class="v">AC-F · AC-W · AC-C · AC-D · AC-G · AC-M · AC-J · AC-AB 전 시리즈가 참조하는 법규 근거</td></tr>
+          <tr><td class="k">범위</td><td class="v">실내 벽체 · 천장 · 바닥 기준. 외벽 마감재료 규정(건축법 §52②)은 대상 아님</td></tr>
+          <tr><td class="k">원칙</td><td class="v">조문 원문과 확인된 행정 회신만 기재. 해석이 갈리는 항목은 §06에 분리</td></tr>
+          <tr><td class="k">갱신</td><td class="v">법령 개정 시 조번호·수치 재확인 필요. 각 조문에 개정일 병기</td></tr>
+        </tbody>
+      </table>
+      <div class="flag warn">
+        <b>인용 시 조문 번호에 주의한다.</b> 방염 관련 조문은 2021년 법률 분법으로 위치가 바뀌었다.
+        구 「화재예방, 소방시설 설치·유지 및 안전관리에 관한 법률」 시행령 §19 · §20 →
+        현 「소방시설 설치 및 관리에 관한 법률」 시행령 <b>§30 · §31</b>.
+        견적서 · 시방서 · 감리 제출 문서에 폐지된 법령명이나 구 조번호를 쓰지 않는다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">내부마감재료 — 건축법</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">근거</td><td class="v">건축법 §52① / 같은 법 시행령 §61① / 건축물의 피난·방화구조 등의 기준에 관한 규칙 §24</td></tr>
+          <tr class="hi"><td class="k">대상 부위</td><td class="v">벽 · 반자 · 지붕(반자가 없는 경우에 한정) 등 내부의 마감재료</td></tr>
+          <tr class="hi"><td class="k">바닥</td><td class="v">대상 아님 — 조문에 열거되지 않음</td></tr>
+          <tr><td class="k">정의</td><td class="v">건축물 내부의 천장 · 반자 · 벽(경계벽 포함) · 기둥 등에 부착되는 마감재료. 다만 실내장식물은 제외</td></tr>
+          <tr><td class="k">적용 범위</td><td class="v">거실의 벽 및 반자의 <strong>실내에 접하는 부분</strong>(반자돌림대 · 창대 기타 이와 유사한 것 제외)</td></tr>
+          <tr><td class="k">요구 성능</td><td class="v">불연재료 · 준불연재료 또는 난연재료</td></tr>
+          <tr class="warn-row"><td class="k">강화 부분</td><td class="v">거실에서 지상으로 통하는 주된 복도 · 계단 등은 불연재료 또는 준불연재료</td></tr>
+          <tr><td class="k">단열재 포함</td><td class="v">영 §61①4호(공장 · 창고 · 위험물 · 자동차 관련 시설)에 한해 단열재를 포함</td></tr>
+        </tbody>
+      </table>
+
+      <div class="quote">
+        대통령령으로 정하는 용도 및 규모의 건축물의 <b>벽, 반자, 지붕(반자가 없는 경우에 한정한다) 등 내부의 마감재료</b>는
+        방화에 지장이 없는 재료로 하되 (…) 국토교통부령으로 정하는 기준에 따른 것이어야 한다.
+        <span class="src">건축법 제52조 제1항</span>
+      </div>
+
+      <div class="quote">
+        거실의 <b>벽 및 반자의 실내에 접하는 부분</b>(반자돌림대 · 창대 기타 이와 유사한 것을 제외한다)의 마감재료는
+        불연재료 · 준불연재료 또는 난연재료를 사용해야 한다.
+        <span class="src">피난·방화구조 규칙 제24조 제1항</span>
+      </div>
+
+      <div class="flag sp">
+        <b>대상 판정은 세 가지를 본다.</b> ① 부위가 벽 · 반자 · 천장 · 기둥인가(바닥은 아님)
+        ② <b>실내에 접하는가</b> ③ 부착되는 마감재료인가.
+        세 가지를 모두 충족해야 내부마감재료다. 중공층에 매립되어 실내에 접하지 않는 재료는 여기에 해당하지 않는다.
+      </div>
+
+      <div class="flag">
+        <b>단열재를 특정 용도에서만 "포함한다"고 별도로 적었다.</b> 공장 · 창고 · 위험물 · 자동차 관련 시설(영 §61①4호)에 한해
+        단열재를 마감재료에 포함하도록 규정한다. 그 외 용도에서는 단열재 · 충진재가 마감재료에 포함되지 않는다는 반대해석의 근거가 된다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01b</span><span class="sec-t">대상 건축물과 200㎡ 단서</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>호</th><th>대상 건축물</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="v">단독주택 중 다중주택 · 다가구주택</td></tr>
+          <tr><td class="num">1-2</td><td class="v">공동주택</td></tr>
+          <tr><td class="num">2</td><td class="v">제2종 근린생활시설 중 공연장 · 종교집회장 · 인터넷컴퓨터게임시설제공업소 · <strong>학원</strong> · 독서실 · 당구장 · 다중생활시설</td></tr>
+          <tr><td class="num">4</td><td class="v">공장 · 창고시설 · 위험물 저장 및 처리 시설 · 자동차 관련 시설 <span style="color:var(--ink-3)">(단열재 포함 대상)</span></td></tr>
+          <tr><td class="num">5</td><td class="v">5층 이상인 층 거실의 바닥면적 합계가 500㎡ 이상인 건축물</td></tr>
+          <tr><td class="num">8</td><td class="v">별도 규정 — 단서 적용 제외</td></tr>
+        </tbody>
+      </table>
+
+      <div class="quote">
+        다만, 제1호, 제1호의2, 제2호부터 제7호까지의 어느 하나에 해당하는 건축물(제8호에 해당하는 건축물은 제외한다)의
+        <b>주요구조부가 내화구조 또는 불연재료로 되어 있고</b> 그 거실의 바닥면적
+        (스프링클러나 그 밖에 이와 비슷한 자동식 소화설비를 설치한 바닥면적을 뺀 면적으로 한다)
+        <b>200제곱미터 이내마다 방화구획이 되어 있는 건축물은 제외한다.</b>
+        <span class="src">건축법 시행령 제61조 제1항 단서</span>
+      </div>
+
+      <div class="flag sp">
+        <b>아파트 세대는 대체로 이 단서에 해당한다.</b> 주요구조부가 철근콘크리트(내화구조)이고 세대별로 방화구획되며
+        세대 면적이 200㎡ 미만이므로 규정 적용에서 제외된다. 아파트 인테리어에서 목질계 마감이 널리 쓰이는 근거가 여기에 있다.
+      </div>
+
+      <div class="flag warn">
+        <b>오피스텔 · 상업시설은 현장별 확인이 필요하다.</b> 방화구획이 호실 단위가 아니라 층 단위인 경우,
+        또는 근생 · 지식산업센터 용도가 혼재된 경우 단서 적용 여부가 달라진다.
+        <b>단서 적용을 전제로 목질계 마감을 계획하기 전에 방화구획도를 확인한다.</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">실내장식물 — 다중이용업소법</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">근거</td><td class="v">다중이용업소의 안전관리에 관한 특별법 시행령 §3</td></tr>
+          <tr><td class="k">정의</td><td class="v">건축물 내부의 <strong>천장이나 벽에 붙이는(설치하는) 것</strong>으로서 다음 각 호의 것</td></tr>
+          <tr><td class="k">1호</td><td class="v">종이류(두께 2mm 이상) · 합성수지류 또는 섬유류를 주원료로 한 물품</td></tr>
+          <tr><td class="k">2호</td><td class="v">합판이나 목재</td></tr>
+          <tr><td class="k">3호</td><td class="v">공간을 구획하기 위하여 설치하는 <strong>간이 칸막이</strong> — 접이식 등 이동 가능한 벽체나, 천장 또는 반자가 실내에 접하는 부분까지 구획하지 아니하는 벽체</td></tr>
+          <tr class="hi"><td class="k">4호</td><td class="v"><strong>흡음이나 방음을 위하여 설치하는 흡음재(흡음용 커튼 포함) 또는 방음재(방음용 커튼 포함)</strong></td></tr>
+          <tr class="warn-row"><td class="k">제외</td><td class="v">가구류(옷장 · 찬장 · 식탁 · 식탁용 의자 · 사무용 책상 · 사무용 의자 · 계산대 등) · 너비 10cm 이하 반자돌림대 등 · <strong>건축법 §52에 따른 내부마감재료</strong></td></tr>
+          <tr><td class="k">적용 범위</td><td class="v"><strong>다중이용업소에 한함</strong> — 일반 주거 · 사무실에는 적용되지 않음</td></tr>
+          <tr><td class="k">요구 성능</td><td class="v">불연 · 준불연재료. 합판 · 목재로 설치하는 경우에 한해 방염성능기준 이상</td></tr>
+        </tbody>
+      </table>
+
+      <div class="flag sp">
+        <b>두 제도는 서로를 배제한다.</b> 내부마감재료 정의에서 실내장식물을 제외하고,
+        실내장식물 정의에서 내부마감재료를 제외한다. <b>하나로 분류되면 다른 하나가 아니다.</b>
+        기존 마감면 위에 덧붙이는 것은 실내장식물, 마감면 자체를 이루는 것은 내부마감재료로 갈린다.
+      </div>
+
+      <div class="flag">
+        <b>3호가 AC-WP의 슬래브 도달 요건과 맞물린다.</b> 천장 속까지만 올린 칸막이는 간이칸막이로 분류되어
+        실내장식물 규정을 받는다. AC-WP는 측면전달음 차단을 위해 슬래브 도달을 필수로 하고 있으며,
+        그 결과 <b>음향 요건과 법적 분류가 같은 선에서 갈린다.</b> 시방서에 이 근거를 병기하면 감리 협의가 수월하다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">방염 — 대상 시설</span></div>
+    <div class="sec-body">
+      <div class="flag sp" style="margin-top:0;margin-bottom:18px">
+        <b>방염은 두 조건이 모두 맞아야 의무가 발생한다.</b>
+        <div style="margin:10px 0;padding:11px 14px;background:rgba(255,255,255,.55);border:1px solid rgba(47,110,98,.3);
+          font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-align:center;letter-spacing:.02em">
+          방염 = ① 방염 대상 <b>건물</b> (영 §30) &nbsp;×&nbsp; ② 방염 대상 <b>물품</b> (영 §31)
+        </div>
+        하나만 해당하면 적용되지 않는다. 한의원(건물 ○) + 노출 커튼(물품 ○) → 방염 대상.
+        한의원 + 가구류(제외 품목) → 대상 아님. 단독주택(건물 ×) + 커튼 → 대상 아님.
+      </div>
+      <div class="flag">
+        <b>"특정소방대상물"은 특수한 건물이 아니라 법으로 정해 놓은 건물이다.</b>
+        소방시설을 설치해야 하는 건물을 말하며(소방시설법 시행령 별표 2), 단독주택 정도를 제외하면
+        상가 · 사무실 · 병원 · 아파트 등 사실상 대부분의 건물이 여기에 포함된다.
+        따라서 <b>"이 건물이 특정소방대상물인가"는 실효 있는 질문이 아니다.</b>
+        방염 판정에서 실제로 봐야 하는 것은 아래 §30에 열거된 <b>방염 대상 시설에 해당하는가</b>이다.
+      </div>
+      <table>
+        <thead><tr><th>호</th><th>특정소방대상물</th></tr></thead>
+        <tbody>
+          <tr class="hi"><td class="num">1</td><td class="v">근린생활시설 중 의원 · <strong>치과의원 · 한의원</strong> · 조산원 · 산후조리원 · 체력단련장 · 공연장 및 종교집회장</td></tr>
+          <tr><td class="num">2</td><td class="v">건축물의 옥내에 있는 문화 및 집회시설 · 종교시설 · 운동시설(수영장 제외)</td></tr>
+          <tr><td class="num">3</td><td class="v">의료시설</td></tr>
+          <tr><td class="num">4</td><td class="v">교육연구시설 중 <strong>합숙소</strong></td></tr>
+          <tr><td class="num">5</td><td class="v">노유자 시설</td></tr>
+          <tr><td class="num">6</td><td class="v">숙박이 가능한 수련시설</td></tr>
+          <tr><td class="num">7</td><td class="v">숙박시설</td></tr>
+          <tr><td class="num">8</td><td class="v">방송통신시설 중 방송국 및 촬영소</td></tr>
+          <tr class="hi"><td class="num">9</td><td class="v"><strong>다중이용업소</strong></td></tr>
+          <tr><td class="num">10</td><td class="v">제1호부터 제9호까지에 해당하지 않는 것으로서 층수가 <strong>11층 이상</strong>인 것(<strong>아파트등은 제외</strong>)</td></tr>
+        </tbody>
+      </table>
+      <span class="src">소방시설 설치 및 관리에 관한 법률 시행령 제30조 · 2024. 12. 31. 개정</span>
+
+      <div class="flag warn">
+        <b>치과의원 · 한의원이 신규 추가되었다.</b> 2024. 12. 31. 개정으로 제1호에 추가되었으며,
+        부칙 적용례에 따라 <b>시행 이후 치과의원 · 한의원에 실내장식물 등을 설치하는 경우(이미 설치되어 있는 것을 교체하는 경우를 포함)</b>부터 적용한다.
+        신규 개원뿐 아니라 <b>마감 교체 공사도 대상</b>이므로 병의원 리모델링 문의 시 최우선 확인 항목이다.
+      </div>
+
+      <div class="flag">
+        <b>학원은 그 자체로는 방염 대상이 아니다.</b> 교육연구시설 중 <b>합숙소</b>만 해당한다.
+        다만 학원이 다중이용업 등록 대상이면 제9호 경로로 방염 대상이 된다. 규모 · 용도에 따라 갈리므로 현장별 확인이 필요하다.
+      </div>
+
+      <div class="flag sp">
+        <b>아파트는 명시적으로 제외된다.</b> 제10호 괄호에 "아파트등은 제외"로 규정되어 있다.
+        AC-F-M · AC-W-M · AC-C-M 등 아파트 대상 사양은 방염 검토가 불필요하다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03b</span><span class="sec-t">방염 — 대상 물품 · 성능기준 · 검사</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구분</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td class="v">① 제조 · 가공 공정에서 방염처리한 물품</td><td>창문에 설치하는 커튼류(블라인드 포함) / 카펫 / 두께 2mm 미만 벽지류(종이벽지 제외) / 전시용 · 무대용 합판 · 섬유판 / 암막 · 무대막 · 스크린 / 섬유류 · 합성수지류 소파 · 의자(단란주점 · 유흥주점 · 노래연습장에 한함)</td></tr>
+          <tr class="hi"><td class="v">② 천장이나 벽에 부착하거나 설치하는 것</td><td>㉠ 종이류(2mm 이상) · 합성수지류 또는 섬유류를 주원료로 한 물품<br>㉡ 합판이나 목재<br>㉢ 간이 칸막이<br>㉣ <strong>흡음재 또는 방음재</strong></td></tr>
+          <tr class="warn-row"><td class="v">②의 제외</td><td>가구류 · 너비 10cm 이하 반자돌림대 등 · <strong>건축법 §52에 따른 내부마감재료</strong></td></tr>
+        </tbody>
+      </table>
+      <span class="src">소방시설 설치 및 관리에 관한 법률 시행령 제31조 제1항</span>
+
+      <table style="margin-top:20px">
+        <thead><tr><th>방염성능기준</th><th>기준값</th></tr></thead>
+        <tbody>
+          <tr><td class="v">불꽃을 올리며 연소하는 상태가 그칠 때까지</td><td class="mono">20초 이내</td></tr>
+          <tr><td class="v">불꽃을 올리지 않고 연소하는 상태가 그칠 때까지</td><td class="mono">30초 이내</td></tr>
+          <tr><td class="v">탄화 면적 / 탄화 길이</td><td class="mono">50㎠ 이내 / 20cm 이내</td></tr>
+          <tr><td class="v">불꽃 접촉 횟수</td><td class="mono">3회 이상</td></tr>
+          <tr><td class="v">최대연기밀도</td><td class="mono">400 이하</td></tr>
+        </tbody>
+      </table>
+      <span class="src">같은 조 제2항 · 구체적 기준은 소방청장 고시</span>
+
+      <table style="margin-top:20px">
+        <thead><tr><th>구분</th><th>검사 주체</th><th>표시</th></tr></thead>
+        <tbody>
+          <tr><td class="v">선처리물품 (제조 · 가공 단계)</td><td>소방청장</td><td>방염성능검사 <strong>합격표시</strong></td></tr>
+          <tr class="hi"><td class="v">현장처리물품 (설치 현장 방염처리 합판 · 목재류)</td><td><strong>시 · 도지사</strong></td><td>방염성능검사 <strong>확인표시</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="flag warn">
+        <b>현장 방염처리는 도포로 끝나지 않는다.</b> 설치 현장에서 방염처리하는 합판 · 목재류는
+        시 · 도지사가 실시하는 방염성능검사를 받고 확인표시를 부착해야 한다.
+        <b>검사 신청 · 판정 기간을 공정표에 반영</b>해야 하며, 오픈 일정이 촉박한 상업시설에서 특히 주의한다.
+      </div>
+
+      <div class="flag sp">
+        <b>벽체 내부 프레임은 방염 규정과 무관하다 — 확정.</b> §31②는 "천장이나 벽에 부착하거나 설치하는 것"을 대상으로 하며,
+        천장 · 벽을 구성하는 부재는 이에 해당하지 않는다. 마감판 배면에 매립되는 벽체틀과 충진재는
+        방염 대상 물품이 아니므로, <b>특정소방대상물이라는 이유만으로 LS를 강제하지 않는다.</b>
+        방염이 실제로 적용되는 것은 노출 마감 · 실내장식물(AC-AB 계열)이다.
+      </div>
+      <div class="flag">
+        <b>다만 노출 목재 마감은 별개다.</b> 마감면에 합판 · 목재를 노출 시공하면 §31②㉡에 해당하므로
+        방염 합판을 쓰거나 현장 방염처리 후 시 · 도지사 검사를 받아야 한다.
+        벽체틀(매립)과 마감재(노출)를 혼동하지 않는다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">방화구획 · 내화구조</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">근거</td><td class="v">건축법 §49② / 같은 법 시행령 §46① / 피난·방화구조 규칙 §14①</td></tr>
+          <tr class="hi"><td class="k">적용 전제</td><td class="v">주요구조부가 내화구조 또는 불연재료이고 <strong>연면적 1,000㎡를 넘는</strong> 건축물</td></tr>
+          <tr><td class="k">구획 방법</td><td class="v">내화구조로 된 바닥 · 벽 및 60분+ 방화문 · 60분 방화문 또는 자동방화셔터</td></tr>
+        </tbody>
+      </table>
+
+      <table style="margin-top:20px">
+        <thead><tr><th>층</th><th>기본</th><th>스프링클러 설치</th></tr></thead>
+        <tbody>
+          <tr><td class="v">10층 이하</td><td class="mono">1,000㎡</td><td class="mono">3,000㎡</td></tr>
+          <tr><td class="v">매 층마다 구획</td><td class="mono" colspan="2">지하 1층에서 지상으로 직접 연결하는 경사로 부위는 제외</td></tr>
+          <tr><td class="v">11층 이상</td><td class="mono">200㎡</td><td class="mono">600㎡</td></tr>
+          <tr class="hi"><td class="v">11층 이상 — <strong>벽 및 반자의 실내에 접하는 부분의 마감을 불연재료로 한 경우</strong></td><td class="mono">500㎡</td><td class="mono">1,500㎡</td></tr>
+        </tbody>
+      </table>
+      <span class="src">피난·방화구조 규칙 제14조 제1항 제1호~제3호</span>
+
+      <div class="flag warn">
+        <b>"11층 이상이면 모든 벽이 내화구조"는 오해다.</b> 내화구조가 요구되는 것은
+        <b>방화구획선상의 바닥 · 벽</b>이다. 구획 내부에 설치하는 일반 칸막이는 여기에 해당하지 않는다.
+        AC-WP(칸막이형)를 계획할 때 해당 벽이 방화구획선상에 있는지부터 도면에서 확인한다.
+      </div>
+
+      <div class="flag sp">
+        <b>불연 마감이 구획 면적을 2.5배로 완화한다.</b> 11층 이상에서 벽 · 반자 실내 접면을 불연재료로 마감하면
+        구획 면적이 200 → 500㎡(스프링클러 시 600 → 1,500㎡)로 완화된다.
+        <b>석고보드 마감이 설계상 이점을 만드는 지점</b>이므로 설계자와 협의 시 활용할 수 있다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">AC 시리즈 요소별 분류</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구성 요소</th><th>위치</th><th>분류</th><th>적용 법규</th></tr></thead>
+        <tbody>
+          <tr><td class="v">벽체틀 (투바이 · 경량스터드)</td><td>중공층</td><td class="mono">해당 없음</td><td>— <span style="color:var(--ink-3)">§06 참조</span></td></tr>
+          <tr><td class="v">충진재 (미네랄울 · PET · 마블)</td><td>중공층</td><td class="mono">해당 없음</td><td>— <span style="color:var(--ink-3)">§06 참조</span></td></tr>
+          <tr><td class="v">돌차음판 (판간 삽입)</td><td>마감판 사이</td><td class="mono">해당 없음</td><td>—</td></tr>
+          <tr><td class="v">그린글루</td><td>마감판 사이</td><td class="mono">해당 없음</td><td>—</td></tr>
+          <tr class="hi"><td class="v">마감판 표면 (석고 · PB)</td><td>실내 접면</td><td class="mono">내부마감재료</td><td>건축법 §52① <span style="color:var(--ink-3)">(영 §61① 단서 확인)</span></td></tr>
+          <tr class="hi"><td class="v">AC-AB 노출 흡음 마감</td><td>마감면 위</td><td class="mono">실내장식물 · 방염대상물품</td><td>다중이용업소법 §3 / 소방시설법 시행령 §31</td></tr>
+          <tr class="warn-row"><td class="v">AC-WP 슬래브 미도달 시</td><td>—</td><td class="mono">간이 칸막이</td><td>다중이용업소법 §3 3호</td></tr>
+          <tr><td class="v">바닥 전체 (AC-F)</td><td>—</td><td class="mono">해당 없음</td><td>건축법 §52① 부위에 바닥 없음</td></tr>
+        </tbody>
+      </table>
+
+      <table style="margin-top:20px">
+        <thead><tr><th>현장</th><th>방염 대상 시설<br>(영 §30)</th><th>내부마감재료<br>(건축법 §52)</th><th>실내장식물<br>(다중법 §3)</th></tr></thead>
+        <tbody>
+          <tr><td class="v">아파트 세대</td><td class="mono">제외 (명시)</td><td class="mono">200㎡ 단서 제외</td><td class="mono">—</td></tr>
+          <tr><td class="v">단독주택</td><td class="mono">해당 없음</td><td class="mono">다중 · 다가구만 해당</td><td class="mono">—</td></tr>
+          <tr><td class="v">오피스텔</td><td class="mono">11층↑ 해당</td><td class="mono">구획 단위 확인</td><td class="mono">—</td></tr>
+          <tr><td class="v">학원 · 교습소</td><td class="mono">합숙소만 해당<br><span style="color:var(--ink-3)">다중이용업 등록 시 해당</span></td><td class="mono">해당</td><td class="mono">다중이용업 시 해당</td></tr>
+          <tr class="warn-row"><td class="v">치과의원 · 한의원 · 의원</td><td class="mono">해당</td><td class="mono">해당</td><td class="mono">—</td></tr>
+          <tr class="warn-row"><td class="v">다중이용업소 (식당 · 노래연습장 등)</td><td class="mono">해당</td><td class="mono">해당</td><td class="mono">해당</td></tr>
+          <tr><td class="v">일반 사무실 · 상가</td><td class="mono">11층↑ 해당</td><td class="mono">규모 확인</td><td class="mono">—</td></tr>
+          <tr><td class="v">스튜디오 (방송국 · 촬영소)</td><td class="mono">해당</td><td class="mono">해당</td><td class="mono">—</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>이 표는 노출 물품에 대한 판정이다.</b> 방염 · 내부마감재료 · 실내장식물은 모두
+        <b>실내에 접하거나 마감면 위에 설치되는 것</b>을 대상으로 한다.
+        벽체틀 · 충진재 등 매립 요소는 이 표의 판정과 무관하며, 벽체틀 선택은 아래 별도 기준을 따른다.
+      </div>
+
+      <table style="margin-top:20px">
+        <thead><tr><th>벽체틀 선택</th><th>조건</th><th>근거</th></tr></thead>
+        <tbody>
+          <tr><td class="v">LT (목재)</td><td>아래 LS 조건에 해당하지 않는 모든 경우</td><td class="mono">기본</td></tr>
+          <tr class="hi"><td class="v">LS (경량스터드)</td><td>① 내화구조가 요구되는 벽체<br>② 방화구획선상의 벽체<br>③ 발주처 · 감리가 불연 하지를 요구하는 경우</td><td class="mono">건축법 §49② · 영 §46①<br>／ 계약 조건</td></tr>
+        </tbody>
+      </table>
+
+      <div class="flag sp">
+        <b>LT / LS 선택 기준 — 확정.</b> 벽체틀은 방염 대상이 아니므로 방염 여부로 판정하지 않는다.
+        아래 세 가지 중 하나에 해당하면 <b>LS(경량스터드)</b>를 적용하고, 그 외에는 현장 조건에 따라 선택한다.
+        <table style="margin-top:12px;background:rgba(255,255,255,.5)">
+          <tbody>
+            <tr><td class="k" style="width:22%"><strong>① 내화구조</strong></td><td>해당 벽체가 내화구조로 요구되는 경우 — 목재 벽체틀로는 내화구조 인정을 받을 수 없다</td></tr>
+            <tr><td class="k"><strong>② 방화구획</strong></td><td>방화구획선상의 벽체 — 내화구조로 된 벽으로 구획해야 한다(건축법 영 §46①)</td></tr>
+            <tr><td class="k"><strong>③ 발주처 요구</strong></td><td>입점 매뉴얼 · 시방 · 감리 지침으로 불연 하지를 요구하는 경우</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flag">
+        <b>구획 내부의 일반 칸막이는 해당하지 않는다.</b> 내화구조가 요구되는 것은 방화구획선상의 바닥 · 벽이며,
+        구획 내부에 세우는 칸막이는 대상이 아니다. AC-WP 계획 시 <b>해당 벽이 방화구획선상에 있는지 도면에서 먼저 확인</b>한다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">매립 요소 판정 — 확정</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>항목</th><th>쟁점</th><th>판정</th></tr></thead>
+        <tbody>
+          <tr class="hi"><td class="v">벽체 내부 프레임 (벽체틀)</td><td>§31②㉡(합판이나 목재)이 마감판 배면 매립재까지 미치는지</td><td class="mono">비해당 — 확정</td></tr>
+          <tr class="hi"><td class="v">중공층 충진재</td><td>§31②㉣(흡음재 또는 방음재)이 중공층 매립재까지 미치는지</td><td class="mono">비해당 — 확정</td></tr>
+          <tr class="hi"><td class="v">돌차음판 · 제진재 (판간 삽입)</td><td>마감판 사이 삽입재의 규제 대상 여부</td><td class="mono">비해당 — 확정</td></tr>
+          <tr class="warn-row"><td class="v">노출 목재 마감</td><td>마감면에 합판 · 목재를 노출 시공하는 경우</td><td class="mono">해당 — 방염 필요</td></tr>
+          <tr class="warn-row"><td class="v">노출 흡음재 · 방음재 (AC-AB)</td><td>마감면 위에 설치하는 흡음 · 방음 패널</td><td class="mono">해당 — 방염 필요</td></tr>
+        </tbody>
+      </table>
+      <div class="flag sp">
+        <b>기준은 노출 여부 하나다.</b> 마감판 배면에 가려져 실내에 접하지 않는 요소는
+        내부마감재료 · 실내장식물 · 방염대상물품 어디에도 해당하지 않는다.
+        마감면에 드러나는 순간 세 제도의 판정 대상이 된다.
+        <b>벽체틀은 방염이 아니라 내화 · 방화구획 요건으로 재료를 정한다(§05 참조).</b>
+      </div>
+
+      <div class="flag">
+        <b>판정 근거</b>
+        <ul class="notes" style="margin-top:10px">
+          <li><span class="mk">01</span><span><strong>§31② 문언</strong> — "천장이나 벽에 <strong>부착하거나 설치하는 것</strong>"은 천장 · 벽이 이미 존재함을 전제한다. 천장 · 벽을 구성하는 부재는 벽에 부착된 것이 아니라 벽 그 자체다.</span></li>
+          <li><span class="mk">02</span><span><strong>제외 항목의 성격</strong> — 제외되는 가구류와 반자돌림대는 모두 실내 쪽 물품이다. 매립재가 제외 목록에 없는 것은 애초에 대상 범위가 실내 쪽 물품이어서 제외할 필요가 없었다고 읽는 것이 자연스럽다.</span></li>
+          <li><span class="mk">03</span><span><strong>방염성능기준의 취지</strong> — 착화 지연과 초기 연소 확대 억제를 목적으로 하는 기준이다. 불연 · 준불연 마감판 배면에 밀폐된 재료에 적용하는 것은 취지에 부합하지 않는다.</span></li>
+          <li><span class="mk">04</span><span><strong>제품 규격 구분</strong> — PET 흡음단열재는 매립용 450×1000(비방염)과 표면용 1000×2000(방염)으로 규격이 나뉜다. 450×1000은 스터드 간격에 맞춘 충진 전용 치수이며 방염 제품군에는 존재하지 않는다.</span></li>
+          <li><span class="mk">05</span><span><strong>소방청 회신 (CPVC 배관 기준)</strong> — 천장 내부에 각목으로 고정된 경우에도 적용 가능하며 "석고보드 고정용 각목은 큰 문제가 되지 않는다", "상층바닥 하단에 <strong>단열재는 포함하지 않는 개념</strong>"이라고 답변. 방염 규정에 대한 직접 답변은 아니나 매립 부재에 대한 행정청 입장을 보여준다.</span></li>
+          <li><span class="mk">06</span><span><strong>법원 판단 사례</strong> — 규정 문언상 천장과 반자 사이 천장틀의 재질까지 규제한다고 볼 수 없으며, 소방방재청 유권해석상 목재 지지대 · 천장틀은 반자에 포함되지 않고 가연재로 보지 않는다는 점, 슬래브와 석고보드가 화재 시 목재 천장틀을 화기로부터 차단한다는 점을 인정. <span style="color:var(--stop)">※ 사건번호 미확인 · CPVC 배관 기준 사건 · 법무법인 화인 게재 사례(2026.6)</span></span></li>
+        </ul>
+      </div>
+
+      <div class="flag">
+        <b>발주처 · 감리가 이견을 제기하는 경우</b>에는 국민신문고 → 소방청 화재예방과 경로로 질의회신을 받아 근거로 제시한다.
+        <div style="margin-top:10px;padding:10px 14px;background:rgba(255,255,255,.5);border:1px solid rgba(138,90,43,.3);font-size:12.5px;line-height:1.7">
+          경량 벽체 구조에서 실내측 마감을 준불연 석고보드로 하고 그 배면 중공층에 목재 벽체틀 및 흡음 충진재를 매립하는 경우<br>
+          1. 매립된 목재 벽체틀이 「소방시설 설치 및 관리에 관한 법률 시행령」 제31조제1항제2호나목(합판이나 목재)에 해당하는지<br>
+          2. 매립된 흡음 · 방음 충진재가 같은 호 라목(흡음재 또는 방음재)에 해당하는지
+        </div>
+      </div>
+      <div class="flag foil">
+        <b>발주처 자체 기준과 법정 요구를 구분한다.</b> 백화점 등 대형 상업시설은 입점 매뉴얼로
+        벽체틀 목재의 방염처리를 요구하는 경우가 있다. 다만 점포마다 요구가 달랐고 검사 · 제출 · 도면 표기가 없었다면
+        법정 요구가 아니라 <b>발주처 내부 기준</b>이다. 견적 단계에서 입점 매뉴얼을 확인하고
+        <b>「벽체틀 목재 방염처리 — 발주처 요구 시 별도」</b>로 항목을 분리해 계상한다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">시방서 표기 문안</span></div>
+    <div class="sec-body">
+      <ul class="notes">
+        <li><span class="mk">01</span><span><strong>적용 범위</strong> — 본 사양은 실내 벽체 · 천장 기준이며, 외벽 마감재료 규정(건축법 §52②)의 적용 대상이 아니다.</span></li>
+        <li><span class="mk">02</span><span><strong>매립 자재</strong> — 중공층 충진재 · 벽체틀 · 판간 삽입재는 실내에 접하지 않으므로 내부마감재료(건축법 §52①, 피난·방화구조 규칙 §24)에 해당하지 않는다.</span></li>
+        <li><span class="mk">03</span><span><strong>칸막이 요건</strong> — AC-WP는 슬래브 도달을 필수로 하여 간이칸막이(다중이용업소법 시행령 §3 3호) 분류를 벗어난다.</span></li>
+        <li><span class="mk">04</span><span><strong>벽체틀 선택</strong> — 벽체 내부 프레임은 방염 대상이 아니다. 내화구조가 요구되는 벽체, 방화구획선상의 벽체, 발주처가 불연 하지를 요구하는 경우에 한해 LS(경량스터드)를 적용한다.</span></li>
+        <li><span class="mk">04b</span><span><strong>매립과 노출</strong> — 마감판 배면에 매립되는 벽체틀 · 충진재 · 판간 삽입재는 방염 대상 물품이 아니다. 마감면에 노출되는 목재 · 흡음재 · 방음재는 대상이 된다.</span></li>
+        <li><span class="mk">05</span><span><strong>흡음 마감</strong> — 노출 흡음 마감은 실내장식물에 해당한다. 다중이용업소는 불연 · 준불연이 필요하며 방염으로 대체할 수 없다(합판 · 목재만 방염 예외). AC-AB 참조.</span></li>
+        <li><span class="mk">06</span><span><strong>별도 계상</strong> — 벽체틀 목재 방염처리는 발주처 요구 시 별도 항목으로 계상한다. 현장 방염처리는 시 · 도지사 방염성능검사 기간을 공정에 반영한다.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">08</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body">
+      <ul class="stop-list">
+        <li><span class="a">구 법령명 · 구 조번호 인용</span><span class="b">화재예방소방시설법 §19 · §20 → 소방시설법 시행령 §30 · §31</span></li>
+        <li><span class="a">방염을 불연 · 준불연의 대체로 표기</span><span class="b">별개 제도. 다중이용업소 실내장식물은 불연 · 준불연 필요</span></li>
+        <li><span class="a">200㎡ 단서를 확인 없이 적용</span><span class="b">오피스텔 · 상업시설은 방화구획 단위 확인 필요</span></li>
+        <li><span class="a">매립 요소에 방염을 요구</span><span class="b">벽체틀 · 충진재는 방염 대상 아님 — 불필요한 단가 상승</span></li>
+        <li><span class="a">방염 대상 시설이라는 이유로 LS 강제</span><span class="b">벽체틀 재료는 내화 · 방화구획 · 발주처 요구로 판정</span></li>
+        <li><span class="a">노출 목재 마감에 방염 미적용</span><span class="b">매립과 노출을 혼동 — 노출 목재는 §31②㉡ 대상</span></li>
+        <li><span class="a">발주처 기준을 법정 요구로 견적 반영</span><span class="b">기본 견적 단가 상승 — 별도 항목 분리</span></li>
+        <li><span class="a">사건번호 미확인 사례를 판례로 인용</span><span class="b">참고자료로만 사용</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-00-R &nbsp;/&nbsp; REV A &nbsp;/&nbsp; 기준일 2026. 8.</span>
+    <span>그리드에이포유 · 내부 기준 자료 · 대외 배포 금지</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

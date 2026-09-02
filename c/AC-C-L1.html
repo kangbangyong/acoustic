@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AC-C-L1 — 기존 천장고 유지형</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,11 +62,12 @@ td.k{width:34%;color:var(--ink-2)}
 td.v{font-weight:500}
 td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
 td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
-tr.total td{border-top:1px solid var(--rule);font-weight:600}
-tr.opt td{background:var(--xps-bg)}
-tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
-.warn-row td{color:var(--stop)}
-.warn-row td.v{font-weight:600}
+.legend table{font-size:13px}
+.legend td{vertical-align:middle;padding:9px 12px}
+.legend td.sw{width:74px}
+.legend td.sw svg{display:block}
+.legend td.nm{font-weight:600;width:24%;color:var(--ink)}
+.legend td.ds{color:var(--ink-2)}
 .notes{list-style:none;display:grid;gap:11px}
 .notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
 .notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
@@ -79,6 +80,7 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
 .flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
   font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
 .flag b{color:var(--damp)}
+.flag code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;background:rgba(0,0,0,.05);padding:1px 4px}
 .flag.gg{border-color:var(--gg);background:var(--gg-bg);color:#2C4F29}
 .flag.gg b{color:var(--gg)}
 .flag.opt{border-color:#B0537A;background:var(--xps-bg);color:#7A2B4C}
@@ -89,19 +91,12 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
   font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
   color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 @media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+
 </style>
 <link rel="stylesheet" href="../assets/ac-nav.css">
 </head>
 <body>
-<div class="acnav">
-  <a class="acnav-home" href="../index.html">← AC 목록</a>
-  <span class="acnav-code">AC-C-L1</span>
-  <span class="acnav-move">
-    <a href="AC-C-L0.html">← L0</a>
-    <a href="AC-C-L2.html">L2 →</a>
-  </span>
-</div>
-
+<div class="acnav"><a class="acnav-home" href="../index.html">← AC 목록</a><span class="acnav-code">AC-C-L1</span><span class="acnav-move"><a href="../c/AC-C-L0.html">← L0</a><a href="../c/AC-C-L2.html">L2 →</a></span></div>
 
 <div class="sheet">
 
@@ -111,7 +106,7 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
       <div class="tb-name">기존 천장고 유지형</div>
       <div class="tb-en">Resilient channel / height-neutral</div>
     </div>
-    <div class="tb-meta"><div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">천장 Ceiling</span></div><div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">1</span></div><div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">13 mm</span></div><div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (중고역)</span></div><div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-J-03</span></div><div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div></div>
+    <div class="tb-meta"><div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">천장 Ceiling</span></div><div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">1</span></div><div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">13 mm</span></div><div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (중고역)</span></div><div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-00 · AC-J-03</span></div><div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">B</span></div></div>
   </div>
 
   <div class="sec">
@@ -119,54 +114,73 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
     <div class="sec-body">
       <div class="draw-wrap">
         <div>
-          <div class="draw"><svg viewBox="-56 0 476 155" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-C-L1 단면. 기존 천장틀에 충진재를 넣고 레질리언트 채널로 마감판을 절연한다."><rect x="30" y="30" width="250" height="22" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="41.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">기존 슬래브</text><rect x="30" y="52" width="250" height="30" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="62.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">기존 천장틀 20~40</text><text x="155.0" y="74.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 최대 충진</text><rect x="30" y="82" width="250" height="9" fill="#F4EBE0" stroke="#8A5A2B" stroke-width=".8"/><text x="155.0" y="86.5" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">레질리언트 채널 13T</text><rect x="30" y="91" width="250" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="96.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">일반석고 9.5T</text><rect x="30" y="101" width="250" height="12" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="107.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><line x1="280" y1="67" x2="288" y2="67" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="67" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">기존 달대 재사용 — 슬래브 강결</text><line x1="280" y1="86" x2="288" y2="86" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="86" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">마감판 · 하지 절연 — L1 핵심</text><line x1="280" y1="107" x2="288" y2="107" stroke="#8E8C84" stroke-width=".6"/><text x="292" y="107" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">피스는 채널에만 체결</text><line x1="18" y1="82" x2="18" y2="113" stroke="#8E8C84" stroke-width=".6"/><line x1="13" y1="82" x2="23" y2="82" stroke="#8E8C84" stroke-width=".6"/><line x1="13" y1="113" x2="23" y2="113" stroke="#8E8C84" stroke-width=".6"/><text x="10" y="97.5" text-anchor="end" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Mono,monospace">13</text><line x1="30" y1="127" x2="280" y2="127" stroke="#D5D2C9" stroke-width=".6" stroke-dasharray="3 3"/><text x="155.0" y="139" text-anchor="middle" font-size="8" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">실내</text></svg></div>
+          <div class="draw"><svg viewBox="-58 0 478 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-C-L1 단면. 기존 천장틀에 충진재를 넣고 레질리언트 채널로 마감판을 절연한다. 채널의 열린 쪽이 천장틀을 향한다."><defs><pattern id="pw-c1" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#3E4A6B" stroke-width=".7" opacity=".5"/></pattern><pattern id="pj-c1" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/></pattern></defs><rect x="30" y="26" width="250" height="20" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="36.0" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">슬래브</text><rect x="30" y="46" width="250" height="26" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7" stroke-dasharray="3 2"/><rect x="40" y="46" width="13" height="26" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="40" y="46" width="13" height="26" fill="url(#pj-c1)"/><rect x="100" y="46" width="13" height="26" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="100" y="46" width="13" height="26" fill="url(#pj-c1)"/><rect x="210" y="46" width="13" height="26" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="210" y="46" width="13" height="26" fill="url(#pj-c1)"/><rect x="262" y="46" width="13" height="26" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="262" y="46" width="13" height="26" fill="url(#pj-c1)"/><text x="161" y="54.0" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">기존 천장틀 + 충진재</text><text x="161" y="65.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">기존 공간 두께에 맞춤</text><path d="M 55 72 L 55 81 L 75 81 L 75 72" fill="none" stroke="#5A5E64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="55" cy="70.6" r="1.4" fill="#5A5E64"/><circle cx="75" cy="70.6" r="1.4" fill="#5A5E64"/><path d="M 140 72 L 140 81 L 160 81 L 160 72" fill="none" stroke="#5A5E64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="140" cy="70.6" r="1.4" fill="#5A5E64"/><circle cx="160" cy="70.6" r="1.4" fill="#5A5E64"/><path d="M 225 72 L 225 81 L 245 81 L 245 72" fill="none" stroke="#5A5E64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="225" cy="70.6" r="1.4" fill="#5A5E64"/><circle cx="245" cy="70.6" r="1.4" fill="#5A5E64"/><rect x="30" y="81" width="250" height="11" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="86.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">일반석고 9.5T</text><rect x="30" y="92" width="250" height="13" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="98.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><path d="M 30 105 L 30 96 L 39 105 Z" fill="#2A2A28"/><path d="M 280 105 L 280 96 L 271 105 Z" fill="#2A2A28"/><line x1="280" y1="59" x2="289" y2="59" stroke="#8E8C84" stroke-width=".6"/><text x="294" y="59" text-anchor="start" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">기존 달대 재사용 — 슬래브 강결</text><line x1="280" y1="76" x2="289" y2="76" stroke="#8E8C84" stroke-width=".6"/><text x="294" y="76" text-anchor="start" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">레질리언트 채널 — 열린 쪽이 틀 방향</text><line x1="280" y1="98" x2="289" y2="98" stroke="#8E8C84" stroke-width=".6"/><text x="294" y="98" text-anchor="start" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">피스는 채널에만 체결</text><line x1="14" y1="72" x2="14" y2="105" stroke="#8E8C84" stroke-width=".6"/><line x1="9" y1="72" x2="19" y2="72" stroke="#8E8C84" stroke-width=".6"/><line x1="9" y1="105" x2="19" y2="105" stroke="#8E8C84" stroke-width=".6"/><text x="6" y="88.5" text-anchor="end" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Mono,monospace">13</text><line x1="30" y1="118" x2="280" y2="118" stroke="#D5D2C9" stroke-width=".6" stroke-dasharray="3 3"/><text x="155.0" y="130" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">실내</text></svg></div>
           <div class="draw-cap">AC-C-L1 SECTION — RESILIENT CHANNEL</div>
         </div>
         <div><p style="font-size:13.5px;line-height:1.7">L1의 핵심은 <strong>레질리언트 채널</strong>이다. 기존 달대가 슬래브에 강결되어 상부 전달 경로가 살아 있는데, 채널이 마감판과 하지를 분리해 이 경로를 얇게 만든다.</p>
 <div class="flag gg"><b>투입 대비 효율 최고</b> — 천장고를 13mm만 소모하면서 5~8dB 개선이 가능하다. L1에서 가장 효율이 높은 항목이며, 채널 없이는 L0과 실질 차이가 크지 않다.</div>
-<div class="flag warn"><b>천장고를 못 내주는 현장의 최선</b> — 저렴한 방음이 아니다. 공기층 20~40mm 고정으로 f₀가 100Hz대에 머물러 저역은 구조적으로 대응할 수 없다. 위층 소음이 주 민원이면 L2 이상이 필요하다.</div></div>
+<div class="flag warn"><b>채널 방향이 성능을 좌우한다</b> — 열린 쪽이 구조체(천장틀)를 향하고, 양쪽 플랜지를 천장틀에 고정한 뒤 반대편 닫힌 평면에 보드를 친다. 뒤집으면 스프링으로 작동하지 않는다.</div></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
-    <div class="sec-body"><table><tbody><tr><td class="k">명칭</td><td class="v">기존 천장고 유지형</td></tr><tr><td class="k">소요 천장고</td><td class="v">13 mm (채널 두께)</td></tr><tr><td class="k">구성</td><td class="v">기존 달대 + 천장틀 + 충진재 + 레질리언트 채널 13T + 일반석고 9.5T + 차음석고 12.5T</td></tr><tr><td class="k">지지</td><td class="v">기존 달대 재사용 (슬래브 강결)</td></tr><tr><td class="k">중공층</td><td class="v">20~40 mm (기존 공간)</td></tr><tr><td class="k">흡음 충진</td><td class="v">충진재 20~40T · 기존 공간 두께에 맞춰 최대</td></tr><tr><td class="k">절연층</td><td class="v">레질리언트 채널 13T · 천장틀 직각 @400~450</td></tr><tr><td class="k">마감판</td><td class="v">일반석고 9.5T + 차음석고 12.5T</td></tr><tr><td class="k">f₀ (개략)</td><td class="v">약 100~110 Hz</td></tr><tr><td class="k">대응</td><td class="v">공기음 중고역</td></tr><tr><td class="k">비대응</td><td class="v">저역 · 상부 충격음 (제한적)</td></tr><tr><td class="k">적용</td><td class="v">독서실 · 주식방 · 게이밍룸 · 어쿠스틱 악기 · 음성 녹음</td></tr></tbody></table></div>
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">범례 — AC-00 준용</span></div>
+    <div class="sec-body legend"><table>
+<thead><tr><th>표기</th><th>재료</th><th>단면 내 위치</th></tr></thead><tbody>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/></svg></td><td class="nm">차음석고 · 일반석고</td><td class="ds">무늬 없음 = 질량판 기본형</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="lj" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/></pattern></defs><rect x=".5" y=".5" width="59" height="21" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/><rect x=".5" y=".5" width="59" height="21" fill="url(#lj)"/></svg></td><td class="nm">천장틀 · 박스빔</td><td class="ds">빗금 = 목재. 단면에 잘린 부재로 표기</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7" stroke-dasharray="3 2"/></svg></td><td class="nm">충진재</td><td class="ds">점선 = 채워 넣은 것. 천장틀 캐비티 · 설비층</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><text x="30" y="13" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#B8B6B0">비움</text></svg></td><td class="nm">공기층 · 이격층</td><td class="ds">테두리 없음. 충진재와 명확히 갈린다</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y="8" width="59" height="5" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/></svg></td><td class="nm">돌차음판 4T</td><td class="ds">진한 갈색 얇은 띠. L0 · L5</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y="8.5" width="59" height="4" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/></svg></td><td class="nm">그린글루</td><td class="ds">녹색 얇은 띠. L3 이상 마감판 사이</td></tr>
+<tr><td class="sw"><svg width="60" height="34" viewBox="0 0 60 34" xmlns="http://www.w3.org/2000/svg"><path d="M 16 6 L 16 20 L 44 20 L 44 6" fill="none" stroke="#5A5E64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="16" cy="4.6" r="1.4" fill="#5A5E64"/><circle cx="44" cy="4.6" r="1.4" fill="#5A5E64"/><line x1="0" y1="28" x2="60" y2="28" stroke="#3E4A6B" stroke-width=".7"/></svg></td><td class="nm">레질리언트 채널</td><td class="ds"><strong>열린 쪽이 천장틀을 향한다.</strong> 방향이 성능을 좌우하므로 형상으로 표기. L1 전용</td></tr>
+<tr><td class="sw"><svg width="60" height="34" viewBox="0 0 60 34" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="2" x2="30" y2="11" stroke="#5A5E64" stroke-width="1.5"/><rect x="21" y="11" width="18" height="10" rx="2" fill="#E6EFEC" stroke="#2F6E62" stroke-width="1"/><line x1="30" y1="21" x2="30" y2="31" stroke="#5A5E64" stroke-width="1.5"/></svg></td><td class="nm">방진행거 · 방진 달대</td><td class="ds">내려오는 선 중간의 방진층 색 요소. L4 · L5 · M2</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="16" x2="60" y2="16" stroke="#8E8C84" stroke-width=".8"/><path d="M 20 16 L 38 16 L 20 5 Z" fill="#2A2A28"/><line x1="20" y1="16" x2="20" y2="3" stroke="#8E8C84" stroke-width=".8"/></svg></td><td class="nm">실란트</td><td class="ds">모서리 삼각 비드. 연변 이격부 · 관통부</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><line x1="12" y1=".5" x2="12" y2="21.5" stroke="#8E8C84" stroke-width=".55"/><line x1="24" y1=".5" x2="24" y2="21.5" stroke="#8E8C84" stroke-width=".55"/><line x1="36" y1=".5" x2="36" y2="21.5" stroke="#8E8C84" stroke-width=".55"/><line x1="48" y1=".5" x2="48" y2="21.5" stroke="#8E8C84" stroke-width=".55"/></svg></td><td class="nm">마감재</td><td class="ds">분할선은 층의 짧은 쪽(두께 방향)으로 세운다</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/></svg></td><td class="nm">슬래브 · 기존 구조체</td><td class="ds">회색 민무늬. 설계 대상이 아니라 조건</td></tr>
+</tbody></table>
+<div class="flag"><b>표기는 AC-00 도면 표기 규칙을 따른다.</b> 패턴 id는 부위 + 등급 코드로 구분한다 — 천장은 <code>pj-c3</code>, <code>pw-cm1</code> 형식. 여러 시트를 한 페이지에 합칠 때도 무늬가 어긋나지 않는다.</div></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">설계 근거</span></div>
-    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>레질리언트 채널이 L1을 성립시킨다.</strong> 기존 달대가 슬래브에 강결되어 상부 전달 경로가 살아 있는데, 채널이 마감판과 하지를 분리해 이 경로를 얇게 만든다. 천장고 13mm로 5~8dB을 얻으므로 투입 대비 효율이 가장 높다.</span></li><li><span class="mk">02</span><span><strong>적용 가능한 악기는 제한적이다.</strong> 저역이 없고 앰프 · 스피커를 쓰지 않는 것에 한한다 — 어쿠스틱 기타, 바이올린, 관악기, 보컬 연습, 음성 녹음. 드럼 · 베이스 · 피아노 · 앰프 사용 기타 · 모니터 스피커 작업은 L2 이상이 필요하다.</span></li><li><span class="mk">03</span><span><strong>장래 용도를 확인한다.</strong> 지금은 어쿠스틱만 해도 앰프나 스피커를 들이면 L1으로는 감당할 수 없다. 나중에 등급을 올리려면 전면 철거가 필요하므로 계약 전에 반드시 확인한다.</span></li></ul></div>
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">사양</span></div>
+    <div class="sec-body"><table><tbody><tr><td class="k">명칭</td><td class="v">기존 천장고 유지형</td></tr><tr><td class="k">소요 천장고</td><td class="v">13 mm (채널 두께)</td></tr><tr><td class="k">구성</td><td class="v">기존 달대 + 천장틀 + 충진재 + 레질리언트 채널 13T + 일반석고 9.5T + 차음석고 12.5T</td></tr><tr><td class="k">지지</td><td class="v">기존 달대 재사용 (슬래브 강결)</td></tr><tr><td class="k">중공층</td><td class="v">20~40 mm (기존 공간)</td></tr><tr><td class="k">흡음 충진</td><td class="v">충진재 20~40T · 기존 공간 두께에 맞춰 최대</td></tr><tr><td class="k">절연층</td><td class="v">레질리언트 채널 13T · 천장틀 직각 @400~450</td></tr><tr><td class="k">채널 방향</td><td class="v">열린 쪽이 천장틀을 향함 — 플랜지 고정, 닫힌 면에 보드</td></tr><tr><td class="k">마감판</td><td class="v">일반석고 9.5T + 차음석고 12.5T</td></tr><tr><td class="k">f₀ (개략)</td><td class="v">약 100~110 Hz</td></tr><tr><td class="k">대응</td><td class="v">공기음 중고역</td></tr><tr><td class="k">비대응</td><td class="v">저역 · 상부 충격음 (제한적)</td></tr><tr><td class="k">적용</td><td class="v">독서실 · 주식방 · 게이밍룸 · 어쿠스틱 악기 · 음성 녹음</td></tr></tbody></table></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">자재</span></div>
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">설계 근거</span></div>
+    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>레질리언트 채널이 L1을 성립시킨다.</strong> 기존 달대가 슬래브에 강결되어 상부 전달 경로가 살아 있는데, 채널이 마감판과 하지를 분리해 이 경로를 얇게 만든다. 천장고 13mm로 5~8dB을 얻으므로 투입 대비 효율이 가장 높다.</span></li><li><span class="mk">02</span><span><strong>채널 방향</strong> — 열린 쪽이 천장틀을 향하고 양쪽 플랜지를 틀에 고정한 뒤, 반대편 닫힌 평면에 보드를 친다. 뒤집으면 고정할 플랜지가 없고 눌릴 여지도 사라져 스프링으로 작동하지 않는다. 도면에는 형상으로 표기한다.</span></li><li><span class="mk">03</span><span><strong>적용 가능한 악기는 제한적이다.</strong> 저역이 없고 앰프 · 스피커를 쓰지 않는 것에 한한다 — 어쿠스틱 기타, 바이올린, 관악기, 보컬 연습, 음성 녹음. 드럼 · 베이스 · 피아노 · 앰프 사용 기타 · 모니터 스피커 작업은 L2 이상이 필요하다.</span></li><li><span class="mk">04</span><span><strong>장래 용도를 확인한다.</strong> 지금은 어쿠스틱만 해도 앰프나 스피커를 들이면 L1으로는 감당할 수 없다. 나중에 등급을 올리려면 전면 철거가 필요하므로 계약 전에 반드시 확인한다.</span></li></ul></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">자재</span></div>
     <div class="sec-body"><table>
       <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
       <tbody><tr><td class="k">레질리언트 채널</td><td class="mono">13T</td><td>천장틀 직각 @400~450</td></tr><tr><td class="k">충진재</td><td class="mono">20~40T</td><td>기존 공간 두께에 맞춤</td></tr><tr><td class="k">일반석고보드</td><td class="mono">9.5T</td><td>채널에 체결</td></tr><tr><td class="k">차음석고보드</td><td class="mono">12.5T</td><td>최종 마감면</td></tr><tr><td class="k">피스</td><td class="mono">채널 전용 길이</td><td>천장틀 관통 금지</td></tr><tr><td class="k">탄성 실란트</td><td class="mono">—</td><td>벽 접합부 · 관통부</td></tr></tbody></table>
-      <div class="flag"><b>충진재</b> — 미네랄울 48K 보드형 표준. 벽 · 천장 자재 통합을 위해 폴리에스터 흡음단열재(KS F 5660) 50T 40K 대체를 검토 중이며, 저역(125 · 250Hz) 흡음률 비교 데이터 확보 후 확정한다. 인허가 시설(학원 · 어린이집 · 다중이용업소)은 화재 규정상 미네랄울을 유지한다.</div>
+      <div class="flag"><b>충진재</b> — 미네랄울 48K 보드형 표준. 벽 · 천장 자재 통합을 위해 폴리에스터 흡음단열재(KS F 5660) 50T 40K 대체를 검토 중이며, 저역(125 · 250Hz) 흡음률 비교 데이터 확보 후 확정한다. 인허가 시설은 미네랄울을 유지한다.</div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">시공 순서</span></div>
     <div class="sec-body"><table>
       <thead><tr><th>No</th><th>작업</th><th>확인사항</th></tr></thead>
-      <tbody><tr><td class="num">1</td><td class="v">기존 마감판 철거</td><td>천장틀 · 달대 존치</td></tr><tr><td class="num">2</td><td class="v">천장틀 상태 확인</td><td>처짐 · 이완 구간 보강</td></tr><tr><td class="num">3</td><td class="v">충진재 충진</td><td>기존 공간 두께 이내 · 압축 금지</td></tr><tr><td class="num">4</td><td class="v">레질리언트 채널</td><td>천장틀 직각 @400~450 · 이음부 맞대기</td></tr><tr><td class="num">5</td><td class="v">벽면 이격 확인</td><td>채널 끝단 벽에서 5mm 이격</td></tr><tr><td class="num">6</td><td class="v">일반석고 9.5T</td><td>채널에만 체결</td></tr><tr><td class="num">7</td><td class="v">차음석고 12.5T</td><td>이음선 엇갈림</td></tr><tr><td class="num">8</td><td class="v">관통부 · 연변 실링</td><td>조명 · 감지기 · 벽 접합부</td></tr></tbody></table></div>
+      <tbody><tr><td class="num">1</td><td class="v">기존 마감판 철거</td><td>천장틀 · 달대 존치</td></tr><tr><td class="num">2</td><td class="v">천장틀 상태 확인</td><td>처짐 · 이완 구간 보강</td></tr><tr><td class="num">3</td><td class="v">충진재 충진</td><td>기존 공간 두께 이내 · 압축 금지</td></tr><tr><td class="num">4</td><td class="v">레질리언트 채널</td><td>열린 쪽을 틀 방향으로 · 직각 @400~450</td></tr><tr><td class="num">5</td><td class="v">벽면 이격 확인</td><td>채널 끝단 벽에서 5mm 이격</td></tr><tr><td class="num">6</td><td class="v">일반석고 9.5T</td><td>채널에만 체결</td></tr><tr><td class="num">7</td><td class="v">차음석고 12.5T</td><td>이음선 엇갈림</td></tr><tr><td class="num">8</td><td class="v">관통부 · 연변 실링</td><td>조명 · 감지기 · 벽 접합부</td></tr></tbody></table></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">시공상 유의사항</span></div>
-    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>피스는 채널에만</strong> — 마감판 피스가 천장틀까지 관통하면 채널이 무효화된다. L1 최대 실패 요인.</span></li><li><span class="mk">02</span><span><strong>피스 길이 관리</strong> — 채널 두께 + 마감판 두께 기준으로 산정하고 현장에 단일 길이만 반입한다.</span></li><li><span class="mk">03</span><span><strong>매입 조명 사전 조율</strong> — 다운라이트는 채널 위치를 피해 배치한다. 조명 배치도와 채널 간격을 착공 전 조율한다.</span></li><li><span class="mk">04</span><span><strong>채널 벽면 이격</strong> — 채널이 벽에 직접 닿으면 우회 경로가 생긴다. 끝단 5mm 이격 후 실링.</span></li><li><span class="mk">05</span><span><strong>충진재 압축 금지</strong> — 기존 공간이 얕으므로 두꺼운 제품을 우겨넣지 않는다. 마감판을 밀어 처짐이 발생한다.</span></li><li><span class="mk">06</span><span><strong>성능 범위 고지</strong> — 위층 소음 대응이 목적이면 L2 이상을 안내한다.</span></li></ul></div>
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>채널 방향 확인</strong> — 열린 쪽이 천장틀을 향해야 한다. 뒤집어 시공하면 고정할 플랜지가 없고 스프링으로 작동하지 않는다.</span></li><li><span class="mk">02</span><span><strong>피스는 채널에만</strong> — 마감판 피스가 천장틀까지 관통하면 채널이 무효화된다. L1 최대 실패 요인.</span></li><li><span class="mk">03</span><span><strong>피스 길이 관리</strong> — 채널 두께 + 마감판 두께 기준으로 산정하고 현장에 단일 길이만 반입한다.</span></li><li><span class="mk">04</span><span><strong>매입 조명 사전 조율</strong> — 다운라이트는 채널 위치를 피해 배치한다. 조명 배치도와 채널 간격을 착공 전 조율한다.</span></li><li><span class="mk">05</span><span><strong>채널 벽면 이격</strong> — 채널이 벽에 직접 닿으면 우회 경로가 생긴다. 끝단 5mm 이격 후 실링.</span></li><li><span class="mk">06</span><span><strong>충진재 압축 금지</strong> — 기존 공간이 얕으므로 두꺼운 제품을 우겨넣지 않는다. 마감판을 밀어 처짐이 발생한다.</span></li><li><span class="mk">07</span><span><strong>성능 범위 고지</strong> — 위층 소음 대응이 목적이면 L2 이상을 안내한다.</span></li></ul></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">금지사항</span></div>
-    <div class="sec-body"><ul class="stop-list"><li><span class="a">마감판 피스 천장틀 관통</span><span class="b">채널 무효화 — L1 최대 실패 요인</span></li><li><span class="a">채널 벽면 직접 접촉</span><span class="b">우회 전달 경로 발생</span></li><li><span class="a">충진재 압축 충전</span><span class="b">마감판 처짐 · 들뜸</span></li><li><span class="a">위층 충격음 대응 목적 판매</span><span class="b">강결 구조로 차단 불가</span></li><li><span class="a">저역 발생 용도 적용</span><span class="b">드럼 · 베이스 · 피아노 · 앰프 · 스피커</span></li></ul></div>
+    <div class="sec-h"><span class="sec-n">08</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body"><ul class="stop-list"><li><span class="a">채널 역방향 시공</span><span class="b">스프링 미작동 — 형상 확인 필수</span></li><li><span class="a">마감판 피스 천장틀 관통</span><span class="b">채널 무효화 — L1 최대 실패 요인</span></li><li><span class="a">방진행거와 병용</span><span class="b">스프링 직렬 — 공진 모드 증가</span></li><li><span class="a">채널 벽면 직접 접촉</span><span class="b">우회 전달 경로 발생</span></li><li><span class="a">PB · MDF 마감판 사용</span><span class="b">면밀도 절반 · 판 공진 · 가연재</span></li><li><span class="a">위층 충격음 대응 목적 판매</span><span class="b">강결 구조로 차단 불가</span></li><li><span class="a">저역 발생 용도 적용</span><span class="b">드럼 · 베이스 · 피아노 · 앰프 · 스피커</span></li></ul></div>
   </div>
 
   <div class="footnote">
-    <span>AC-C-L1 &nbsp;/&nbsp; REV A</span>
+    <span>AC-C-L1 &nbsp;/&nbsp; REV B</span>
     <span>내부 견적 · 시공 기준 자료</span>
   </div>
 

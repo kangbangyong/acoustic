@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-W-00 — 벽체 등급 개요</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --pb:#7A5B34;--pb-bg:#F1E9DC;
+  --damp:#8A5A2B;--damp-bg:#F4EBE0;
+  --steel:#4A4E54;--steel-bg:#DFE1E4;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab:#8E8C84;--slab-bg:#EDEBE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.tb-v.warn{color:var(--stop)}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+.draw-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:800px){.draw-wrap{grid-template-columns:1fr}}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:34%;color:var(--ink-2)}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
+tr.total td{border-top:1px solid var(--rule);font-weight:600}
+tr.up td{background:#E6EFEC}
+tr.up td.k,tr.up td.v{color:#1C4A41;font-weight:600}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.est td.mono{color:var(--ink-3)}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:var(--damp)}
+.flag.warn{border-color:var(--stop);background:var(--stop-bg);color:#6E2418}
+.flag.warn b{color:var(--stop)}
+.flag.sp{border-color:var(--spring);background:var(--spring-bg);color:#1C4A41}
+.flag.sp b{color:var(--spring)}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.matlgd{display:flex;flex-wrap:wrap;gap:9px 18px;margin-bottom:16px;
+  padding-bottom:13px;border-bottom:1px solid var(--rule-soft)}
+.matlgd .mi{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-2)}
+.matlgd svg{display:block;flex:none}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav"><a class="acnav-home" href="../index.html">← AC 목록</a><span class="acnav-code">AC-W-00</span><span class="acnav-move"><a href="../common/AC-00-R.html">← AC-00-R</a><a class="off">→</a></span></div>
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-W-00</div>
+      <div class="tb-name">벽체 등급 개요</div>
+      <div class="tb-en">Wall assemblies / series overview</div>
+    </div>
+    <div class="tb-meta">
+      <div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">벽 Wall</span></div>
+      <div class="tb-cell"><span class="tb-k">Series</span><span class="tb-v">WS · WP · M</span></div>
+      <div class="tb-cell"><span class="tb-k">Grades</span><span class="tb-v">13</span></div>
+      <div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">계열 구성</span></div>
+    <div class="sec-body">
+      <div class="draw-wrap">
+        <div>
+          <div class="draw"><svg viewBox="0 0 660 296" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="벽체 열세 개 등급의 총 두께 막대 비교. 56mm에서 280mm까지 분포한다.">
+<text x="330" y="24" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600" fill="#1C1C1A">등급별 총 두께</text>
+<rect x="34" y="218.0" width="34" height="32.0" fill="#3E4A6B" opacity=".18" stroke="#3E4A6B" stroke-width=".9" rx="2"/>
+<text x="51.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#3E4A6B">WS-L1</text>
+<text x="51.0" y="212.0" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">56</text>
+<rect x="80" y="196.9" width="34" height="53.1" fill="#3E4A6B" opacity=".18" stroke="#3E4A6B" stroke-width=".9" rx="2"/>
+<text x="97.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#3E4A6B">WS-L2</text>
+<text x="97.0" y="190.9" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">93</text>
+<rect x="126" y="167.1" width="34" height="82.9" fill="#3E4A6B" opacity=".18" stroke="#3E4A6B" stroke-width=".9" rx="2"/>
+<text x="143.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#3E4A6B">WS-L3</text>
+<text x="143.0" y="161.1" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">145</text>
+<rect x="172" y="126.6" width="34" height="123.4" fill="#3E4A6B" opacity=".18" stroke="#3E4A6B" stroke-width=".9" rx="2"/>
+<text x="189.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#3E4A6B">WS-L4</text>
+<text x="189.0" y="120.6" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">216</text>
+<rect x="218" y="124.3" width="34" height="125.7" fill="#3E4A6B" opacity=".18" stroke="#3E4A6B" stroke-width=".9" rx="2"/>
+<text x="235.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#3E4A6B">WS-L5</text>
+<text x="235.0" y="118.3" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">220</text>
+<rect x="264" y="174.0" width="34" height="76.0" fill="#7A5B34" opacity=".18" stroke="#7A5B34" stroke-width=".9" rx="2"/>
+<text x="281.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#7A5B34">WP-L1</text>
+<text x="281.0" y="168.0" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">133</text>
+<rect x="310" y="144.9" width="34" height="105.1" fill="#7A5B34" opacity=".18" stroke="#7A5B34" stroke-width=".9" rx="2"/>
+<text x="327.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#7A5B34">WP-L2</text>
+<text x="327.0" y="138.9" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">184</text>
+<rect x="356" y="106.0" width="34" height="144.0" fill="#7A5B34" opacity=".18" stroke="#7A5B34" stroke-width=".9" rx="2"/>
+<text x="373.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#7A5B34">WP-L3</text>
+<text x="373.0" y="100.0" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">252</text>
+<rect x="402" y="94.6" width="34" height="155.4" fill="#7A5B34" opacity=".18" stroke="#7A5B34" stroke-width=".9" rx="2"/>
+<text x="419.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#7A5B34">WP-L4</text>
+<text x="419.0" y="88.6" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">272</text>
+<rect x="448" y="90.0" width="34" height="160.0" fill="#7A5B34" opacity=".18" stroke="#7A5B34" stroke-width=".9" rx="2"/>
+<text x="465.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#7A5B34">WP-L5</text>
+<text x="465.0" y="84.0" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">280</text>
+<rect x="494" y="167.1" width="34" height="82.9" fill="#2F6E62" opacity=".18" stroke="#2F6E62" stroke-width=".9" rx="2"/>
+<text x="511.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#2F6E62">M1</text>
+<text x="511.0" y="161.1" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">145</text>
+<rect x="540" y="168.3" width="34" height="81.7" fill="#2F6E62" opacity=".18" stroke="#2F6E62" stroke-width=".9" rx="2"/>
+<text x="557.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#2F6E62">M2</text>
+<text x="557.0" y="162.3" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">143</text>
+<rect x="586" y="161.4" width="34" height="88.6" fill="#2F6E62" opacity=".18" stroke="#2F6E62" stroke-width=".9" rx="2"/>
+<text x="603.0" y="265.0" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#2F6E62">M3</text>
+<text x="603.0" y="155.4" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">155</text>
+<line x1="24" y1="250.0" x2="638" y2="250.0" stroke="#8E8C84" stroke-width="1"/>
+<text x="90" y="282" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#3E4A6B">■ WS 구조벽면형</text>
+<text x="270" y="282" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#7A5B34">■ WP 칸막이형</text>
+<text x="430" y="282" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#2F6E62">■ M 유닛 조립형</text>
+</svg></div>
+          <div class="draw-cap">두께 비교</div>
+        </div>
+        <div>
+          <div class="draw"><svg viewBox="0 0 340 334" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="계열 판정 순서 세 단계">
+<text x="170" y="24" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600" fill="#1C1C1A">계열 판정 순서</text>
+<line x1="30" y1="40" x2="310" y2="40" stroke="#D5D2C9" stroke-width="1"/>
+<rect x="30" y="54" width="280" height="66" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8" rx="4"/>
+<text x="42" y="74" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#1C4A41">① 아파트 · 오피스텔인가</text>
+<text x="42" y="93" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#2F6E62">예 → M 계열 (유닛 조립형)</text>
+<text x="42" y="111" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#2F6E62">아니오 → 다음</text>
+<rect x="30" y="132" width="280" height="66" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8" rx="4"/>
+<text x="42" y="152" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#2B3450">② 기존 벽이 있는 면인가</text>
+<text x="42" y="171" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3E4A6B">예 → WS 구조벽면형</text>
+<text x="42" y="189" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3E4A6B">아니오 → WP 칸막이형</text>
+<rect x="30" y="210" width="280" height="84" fill="#DFE1E4" stroke="#4A4E54" stroke-width=".8" rx="4"/>
+<text x="42" y="230" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#33363B">③ 벽체틀 재료</text>
+<text x="42" y="249" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#4A4E54">내화구조 · 방화구획 · 발주처 요구</text>
+<text x="42" y="267" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#4A4E54">→ LS 경량스터드</text>
+<text x="42" y="285" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#4A4E54">그 외 → LT 목재</text>
+<text x="170" y="320" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" fill="#8E8C84">등급은 음원과 실 조건으로 별도 결정</text>
+</svg></div>
+          <div class="draw-cap">판정 순서</div>
+        </div>
+      </div>
+      <div class="flag sp">
+        <b>계열은 현장 조건이, 등급은 음원이 결정한다.</b> 아파트 · 오피스텔이면 유닛 조립형(M),
+        일반 현장에서 기존 벽이 있으면 구조벽면형(WS), 새로 세우면 칸막이형(WP)이다.
+        <b>WS와 WP는 같은 등급이라도 두께가 다르다.</b> 구조벽면형은 기존 구조체가 질량을 갖고 있어 한쪽만 보강하면 되지만,
+        칸막이형은 0에서 시작해 양면을 모두 만들어야 하기 때문이다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">AC-WS · 구조벽면형</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>도면번호</th><th>등급</th><th>명칭</th><th>두께(mm)</th><th>성격</th><th>구분</th><th>적용</th></tr></thead>
+        <tbody><tr><td class="mono">AC-WS-L1</td><td class="mono">1</td><td class="v">이격 없는 부착형</td><td class="mono">56</td><td>차음 (제한적)</td><td class="mono">두께 대안</td><td>두께 제약 현장 · 사무실 실간</td></tr>
+<tr><td class="mono">AC-WS-L2</td><td class="mono">2</td><td class="v">표준 부착형</td><td class="mono">93</td><td>차음</td><td class="mono">주력</td><td>세대간벽 · 복도벽 · 일반 학원</td></tr>
+<tr><td class="mono">AC-WS-L3</td><td class="mono">3</td><td class="v">이격 독립형</td><td class="mono">145</td><td>차음 (강화)</td><td class="mono">주력</td><td>피아노 · 보컬 학원 · 개인 작업실</td></tr>
+<tr><td class="mono">AC-WS-L4</td><td class="mono">4</td><td class="v">이격 확대형</td><td class="mono">216</td><td>차음 (저역 대응)</td><td class="mono">전문</td><td>밴드 연습실 · 소형 스튜디오</td></tr>
+<tr class="warn-row"><td class="mono">AC-WS-L5</td><td class="mono">5</td><td class="v">이격 확대형 (질량 보강)</td><td class="mono">220</td><td>차음 (AC-A 상한)</td><td class="mono">전문</td><td>드럼실 · 합주실 · 녹음실</td></tr>
+</tbody>
+      </table>
+      <div class="flag">
+        <b>기존 구조체가 있는 면에 적용한다.</b> 세대간벽 · 외벽 · 복도벽 · 코어벽이 대상이다.
+        전 등급 공통으로 돌차음판 4T를 구조체 면에 자착하고, 상 · 하부 런너에 고무패드 3T를 개재한다.
+        <b>L2 → L3에서 벽체틀이 구조체에서 떨어지며</b> 면접촉 전달이 사라지고 저역이 처음으로 열린다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">AC-WP · 칸막이형</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>도면번호</th><th>등급</th><th>명칭</th><th>두께(mm)</th><th>성격</th><th>구분</th><th>적용</th></tr></thead>
+        <tbody><tr><td class="mono">AC-WP-L1</td><td class="mono">1</td><td class="v">단일 벽체틀</td><td class="mono">133</td><td>차음 (제한적)</td><td class="mono">두께 대안</td><td>사무실 실간 · 상담실 · 어학원</td></tr>
+<tr><td class="mono">AC-WP-L2</td><td class="mono">2</td><td class="v">단일 벽체틀 (확대)</td><td class="mono">184</td><td>차음</td><td class="mono">주력</td><td>강의실 실간 · 성악 · 관악</td></tr>
+<tr><td class="mono">AC-WP-L3</td><td class="mono">3</td><td class="v">이중 벽체틀</td><td class="mono">252</td><td>차음 (강화)</td><td class="mono">주력</td><td>피아노 · 보컬 학원 실간</td></tr>
+<tr><td class="mono">AC-WP-L4</td><td class="mono">4</td><td class="v">이중 벽체틀 (분리 확대)</td><td class="mono">272</td><td>차음 (저역 대응)</td><td class="mono">전문</td><td>밴드 연습실 · 댄스학원 실간</td></tr>
+<tr class="warn-row"><td class="mono">AC-WP-L5</td><td class="mono">5</td><td class="v">이중 벽체틀 (질량 보강)</td><td class="mono">280</td><td>차음 (AC-A 상한)</td><td class="mono">전문</td><td>드럼실 · 합주실 · 녹음실 실간</td></tr>
+</tbody>
+      </table>
+      <div class="flag">
+        <b>구조체 없이 새로 세우는 실간벽이다.</b> 양면 대칭이 원칙이며 한쪽만 판을 늘리면
+        가벼운 면이 성능을 결정한다. <b>슬래브 도달이 등급 성립 조건</b>이며,
+        천장 속까지만 올리면 간이칸막이(다중이용업소법 시행령 §3 3호)로 분류되어 별도 규제를 받는다.
+        L2 → L3에서 벽체틀이 두 열로 갈라지며 관통 전달이 사라진다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">AC-W-M · 유닛 조립형</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>도면번호</th><th>등급</th><th>명칭</th><th>두께(mm)</th><th>성격</th><th>현장</th><th>적용</th></tr></thead>
+        <tbody><tr class="up"><td class="mono">AC-W-M1</td><td class="mono">M1</td><td class="v">유닛 조립형 · 내부벽</td><td class="mono">145</td><td>흡음 + 차음</td><td class="mono">아파트</td><td>같은 세대 내부와 맞닿은 벽</td></tr>
+<tr class="up"><td class="mono">AC-W-M2</td><td class="mono">M2</td><td class="v">유닛 조립형 · 콘크리트 경계벽</td><td class="mono">143</td><td>차음</td><td class="mono">아파트</td><td>타세대 콘크리트 경계벽</td></tr>
+<tr class="up"><td class="mono">AC-W-M3</td><td class="mono">M3</td><td class="v">유닛 조립형 · 건식 경계벽</td><td class="mono">155</td><td>차음 (기존 벽 보강)</td><td class="mono">아파트</td><td>주상복합 등 건식 경계벽</td></tr>
+</tbody>
+      </table>
+      <div class="flag sp">
+        <b>아파트 · 오피스텔 전용 공법이다.</b> 600×1200 유닛(PB 15T + 프레임 + 마블 50T)을 작업장에서 선제작하고
+        현장에서는 조립만 하므로 <b>3일 내외로 시공이 끝난다.</b> 1인 운반이 가능해 엘리베이터 반입에 제약이 없고,
+        전 부재를 피스로 체결해 <b>해체 후 회수 · 재사용</b>할 수 있다. 전 등급 유닛 2겹이 기본이다.
+      </div>
+      <div class="flag">
+        <b>선택 기준은 맞닿은 대상과 기존 벽의 무게다.</b> 같은 세대 내부는 민원이 없으므로 흡음에 투자하고(M1),
+        타세대와 맞닿은 면은 차음에 투자한다(M2 · M3). 경계벽이 콘크리트면 460 kg/㎡로 이미 충분하지만
+        건식이면 19 kg/㎡에 불과하므로 <b>기존 벽면 보강이 먼저</b>다. 현장에서 벽을 두드려보면 즉시 판정된다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">코드 체계</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k mono">AC-WS-L?</td><td class="v">구조벽면형 — 기존 구조체가 있는 면</td></tr>
+          <tr><td class="k mono">AC-WP-L?</td><td class="v">칸막이형 — 구조체 없이 새로 세우는 실간벽 (양면 대칭)</td></tr>
+          <tr><td class="k mono">AC-W-M?</td><td class="v">유닛 조립형 — 아파트 · 오피스텔 전용. 선제작 · 현장 조립 · 재사용</td></tr>
+          <tr><td class="k mono">LT</td><td class="v">목재 벽체틀 (Timber) — 투바이 각재</td></tr>
+          <tr><td class="k mono">LS</td><td class="v">경량스터드 벽체틀 (Steel) — 내화구조 · 방화구획 · 발주처 요구 시</td></tr>
+          <tr><td class="k mono">표기 예</td><td class="v">AC-WS-LT-3 · AC-WP-LS-4 · AC-W-M2</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>LT / LS는 성능이 아니라 법규가 결정한다.</b> 벽체 내부 벽체틀은 방염 대상 물품이 아니므로
+        방염 여부로 판정하지 않는다. ① 내화구조가 요구되는 벽체 ② 방화구획선상의 벽체
+        ③ 발주처 · 감리가 불연 하지를 요구하는 경우에 한해 LS를 적용한다. 상세는 AC-00-R 참조.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">설계 상한 · 공통 규칙</span></div>
+    <div class="sec-body">
+      <ul class="notes">
+        <li><span class="mk">01</span><span><strong>이격 · 열간 분리 최대 50mm</strong> — 초과 시 수확체감. 두께가 더 필요하면 벽체틀 규격 상향이 유리하다.</span></li>
+        <li><span class="mk">02</span><span><strong>미네랄울 충진 최대 100T</strong> — 흡음은 100T에서 포화한다. 남는 공간은 f₀를 결정하는 거리로 작동한다.</span></li>
+        <li><span class="mk">03</span><span><strong>충진재는 소음원 쪽에 밀착</strong> — 실내측 마감판 뒷면과 접촉하면 판이 구속되어 제진이 무효화된다.</span></li>
+        <li><span class="mk">04</span><span><strong>마감판은 등급별 고정</strong> — 같은 등급이면 WS · WP 어느 면이든 동일 구성으로 4면 마감선을 일관되게 유지한다.</span></li>
+        <li><span class="mk">05</span><span><strong>그린글루는 L3부터</strong> — 구조 전달이 지배적인 L1 · L2에서는 같은 예산을 중공층에 투입하는 것이 효율적이다.</span></li>
+        <li><span class="mk">06</span><span><strong>삼중 구성 금지</strong> — 공기층이 둘로 쪼개져 저역에서 15~20dB 악화된다. 그 이상이 필요하면 AC-B로 계열을 바꾼다.</span></li>
+        <li><span class="mk">07</span><span><strong>벽체틀은 눕혀 짜고 세운다</strong> — 스태거드 스터드는 눕혀 짤 수 없고 빗각 타카로 고정해야 하므로 표준에서 제외한다.</span></li>
+        <li><span class="mk">08</span><span><strong>실 단위 등급 우선</strong> — 실을 감싸는 6면 중 한 면이라도 낮으면 그 면이 실 성능을 결정한다. 견적 · 도면에 실 등급을 먼저 표기한다.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">절벽 구간</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구간</th><th>성격</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">WS-L1 → L2</td><td class="v">성능의 절벽</td><td>이격 유무 — 차음 성립 여부가 갈린다</td></tr>
+          <tr><td class="mono">WS-L2 → L3</td><td class="v">구조의 절벽</td><td>구조체 접촉 소멸 — 저역이 열리는 지점</td></tr>
+          <tr><td class="mono">WP-L2 → L3</td><td class="v">구조의 절벽</td><td>벽체틀 관통 전달 소멸 — 단일에서 이중으로</td></tr>
+          <tr><td class="mono">M1 → M2</td><td class="v">역할의 절벽</td><td>흡음에서 차음으로 — 실내측 10.2 → 23.2 kg/㎡</td></tr>
+          <tr class="warn-row"><td class="mono">L5 → AC-B</td><td class="v">공법의 절벽</td><td>직접 시공 상한 — 6면 독립계로 전환</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">08</span><span class="sec-t">미확정 항목</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>항목</th><th>내용</th><th>조치</th></tr></thead>
+        <tbody>
+          <tr class="warn-row"><td class="v">유닛 프레임 재료</td><td>다루끼 + 합판 / PB 15T</td><td class="mono">실물 확인</td></tr>
+          <tr class="warn-row"><td class="v">유닛 상부 턱</td><td>천장 보 지지부 — 유닛 포함 / 현장 시공</td><td class="mono">실물 확인</td></tr>
+          <tr class="warn-row"><td class="v">마블 흡음 데이터</td><td>중마 70K의 흐름저항 · NRC 미확보</td><td class="mono">판매처 성적서</td></tr>
+          <tr class="warn-row"><td class="v">LS 65형 · 150형 유통</td><td>WS-L2 · L4 · L5의 LS 대응 규격</td><td class="mono">자재상 확인</td></tr>
+          <tr class="warn-row"><td class="v">WP-L3 / L4 통합 검토</td><td>분리 30 → 50mm, f₀ 차이 3Hz</td><td class="mono">등급 통합 여부</td></tr>
+          <tr class="warn-row"><td class="v">PET 대체재 미반영</td><td>WS · WP L1 · L2 시트</td><td class="mono">시트 갱신</td></tr>
+        </tbody>
+      </table>
+      <div class="flag warn">
+        <b>추정 성능 수치는 대외 자료에 기재하지 않는다.</b> 각 시트의 f₀와 면밀도는 중공층 깊이와
+        자재 규격으로부터의 계산 추정값이며 실측 성적서가 아니다. 내부 등급 비교와 상담 설명 목적으로만 사용하고,
+        성능 보증이 필요한 현장은 시공 후 실측을 별도 항목으로 계상한다.
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-W-00 &nbsp;/&nbsp; REV A</span>
+    <span>내부 견적 · 시공 기준 자료</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

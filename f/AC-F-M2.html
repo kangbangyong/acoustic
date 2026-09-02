@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AC-F-M2 — 아파트형 부유바닥 (더블레이어)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;--ink:#1C1C1A;--ink-2:#5A5852;--ink-3:#8E8C84;
+  --rule:#D5D2C9;--rule-soft:#E8E5DD;
+  --spring:#2F6E62;--spring-bg:#E6EFEC;
+  --spring2:#4E8C6A;--spring2-bg:#EBF2EC;
+  --mass:#3E4A6B;--mass-bg:#E7EAF2;
+  --pb:#7A5B34;--pb-bg:#F1E9DC;
+  --damp:#8A5A2B;--damp-bg:#F4EBE0;
+  --foil:#5E7A8A;--foil-bg:#E6EDF1;
+  --stop:#9E3324;--stop-bg:#F6E9E6;
+  --slab:#8E8C84;--slab-bg:#EDEBE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;
+  line-height:1.65;padding:32px 20px 80px}
+.sheet{max-width:1080px;margin:0 auto;border:1.5px solid var(--ink);background:var(--paper)}
+.titleblock{display:grid;grid-template-columns:1fr auto;border-bottom:1.5px solid var(--ink)}
+.tb-main{padding:26px 28px 22px;border-right:1px solid var(--rule)}
+.tb-code{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:38px;letter-spacing:.06em;line-height:1.1}
+.tb-name{font-size:19px;font-weight:500;margin-top:6px}
+.tb-en{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.tb-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:280px}
+.tb-cell{padding:11px 16px;border-bottom:1px solid var(--rule-soft);border-left:1px solid var(--rule-soft)}
+.tb-k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.tb-v{font-size:14px;font-weight:500;margin-top:1px}
+.tb-v.warn{color:var(--stop)}
+.sec{border-bottom:1px solid var(--rule)}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;align-items:baseline;gap:12px;padding:14px 28px;
+  border-bottom:1px solid var(--rule-soft);background:rgba(0,0,0,.018)}
+.sec-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:.1em}
+.sec-t{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.sec-body{padding:24px 28px 28px}
+.draw-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:800px){.draw-wrap{grid-template-columns:1fr}}
+.draw{border:1px solid var(--rule);padding:18px;background:#fff}
+.draw svg{display:block;width:100%;height:auto}
+.draw-cap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:12px;text-align:center}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:500;
+  border-bottom:1px solid var(--rule);padding-bottom:7px}
+tbody tr:last-child td{border-bottom:0}
+td.k{width:34%;color:var(--ink-2)}
+td.v{font-weight:500}
+td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
+td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
+tr.total td{border-top:1px solid var(--rule);font-weight:600}
+tr.up td{background:#EBF2EC}
+tr.up td.k,tr.up td.v{color:#2E5C42;font-weight:600}
+.warn-row td{color:var(--stop)}
+.warn-row td.v{font-weight:600}
+.est td.mono{color:var(--ink-3)}
+.notes{list-style:none;display:grid;gap:11px}
+.notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
+.notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
+.notes strong{font-weight:600}
+.stop-list{list-style:none;border:1px solid var(--stop);background:var(--stop-bg)}
+.stop-list li{display:grid;grid-template-columns:minmax(0,38%) 1fr;border-bottom:1px solid rgba(158,51,36,.22)}
+.stop-list li:last-child{border-bottom:0}
+.stop-list .a{padding:11px 14px;font-weight:600;font-size:13.5px;color:var(--stop);border-right:1px solid rgba(158,51,36,.22)}
+.stop-list .b{padding:11px 14px;font-size:13.5px;color:#6E2418}
+.flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
+  font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
+.flag b{color:var(--damp)}
+.flag.warn{border-color:var(--stop);background:var(--stop-bg);color:#6E2418}
+.flag.warn b{color:var(--stop)}
+.flag.sp{border-color:#4E8C6A;background:#EBF2EC;color:#2E5C42}
+.flag.sp b{color:#3D7355}
+.footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+.matlgd{display:flex;flex-wrap:wrap;gap:9px 18px;margin-bottom:16px;
+  padding-bottom:13px;border-bottom:1px solid var(--rule-soft)}
+.matlgd .mi{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-2)}
+.matlgd svg{display:block;flex:none}
+@media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+</style>
+<link rel="stylesheet" href="../assets/ac-nav.css">
+</head>
+<body>
+<div class="acnav"><a class="acnav-home" href="../index.html">← AC 목록</a><span class="acnav-code">AC-F-M2</span><span class="acnav-move"><a href="../f/AC-F-M1.html">← M1</a><a class="off">→</a></span></div>
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <div class="tb-code">AC-F-M2</div>
+      <div class="tb-name">아파트형 부유바닥 · 더블레이어</div>
+      <div class="tb-en">Residential floating floor / dual resilient layer</div>
+    </div>
+    <div class="tb-meta">
+      <div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">바닥 Floor</span></div>
+      <div class="tb-cell"><span class="tb-k">Type</span><span class="tb-v">M2</span></div>
+      <div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">162 mm</span></div>
+      <div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (2단 절연)</span></div>
+      <div class="tb-cell"><span class="tb-k">Site</span><span class="tb-v">아파트 · 오피스텔</span></div>
+      <div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">단면 &amp; 2단 절연 구조</span></div>
+    <div class="sec-body">
+      <div class="matlgd">
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><pattern id="LGWM2" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#3E4A6B" stroke-width=".8" opacity=".55"/></pattern></defs><rect x=".5" y=".5" width="21" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".7"/><rect x=".5" y=".5" width="21" height="10" fill="url(#LGWM2)"/></svg>합판 · 장선</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y=".5" width="21" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".7"/></svg>차음석고</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><pattern id="LGPM2" patternUnits="userSpaceOnUse" width="4" height="4"><circle cx="2" cy="2" r=".85" fill="#3E4A6B" opacity=".5"/></pattern></defs><rect x=".5" y=".5" width="21" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".7"/><rect x=".5" y=".5" width="21" height="10" fill="url(#LGPM2)"/></svg>PB</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y="3.5" width="21" height="4" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/></svg>돌차음판</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y="3.5" width="21" height="4" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/></svg>그린글루</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y=".5" width="21" height="10" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7"/></svg>방진층</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><line x1="0" y1="5.5" x2="22" y2="5.5" stroke="#4A8FA8" stroke-width="1.6" stroke-dasharray="4 3"/></svg>은박 EPE</span>
+      </div>
+      <div class="draw-wrap">
+        <div>
+          <div class="draw">
+            <svg viewBox="-56 0 476 386" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-F-M2 단면. 슬래브 위 은박 EPE, 마블 특마 50T, 합판 12T, PB 15T, 마블 중마 50T, PB 15T, 돌차음판 4T, PB 15T, 강화마루 순으로 두 개의 방진층을 갖는다.">
+            <defs>
+              <pattern id="pw7" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="5" stroke="#3E4A6B" stroke-width=".7" opacity=".5"/></pattern>
+              <pattern id="pp7" patternUnits="userSpaceOnUse" width="4" height="4">
+                <circle cx="2" cy="2" r=".85" fill="#3E4A6B" opacity=".45"/></pattern>
+              <pattern id="pj7" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/></pattern>
+            </defs>
+            
+              <rect x="30" y="40" width="250" height="12" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+              <line x1="80.0" y1="40" x2="80.0" y2="52" stroke="#8E8C84" stroke-width=".6"/>
+              <line x1="130.0" y1="40" x2="130.0" y2="52" stroke="#8E8C84" stroke-width=".6"/>
+              <line x1="180.0" y1="40" x2="180.0" y2="52" stroke="#8E8C84" stroke-width=".6"/>
+              <line x1="230.0" y1="40" x2="230.0" y2="52" stroke="#8E8C84" stroke-width=".6"/>
+              <rect x="30" y="52" width="250" height="24" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x="30" y="52" width="250" height="24" fill="url(#pp7)"/>
+              <rect x="30" y="76" width="250" height="6" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/>
+              <rect x="30" y="82" width="250" height="27" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x="30" y="82" width="250" height="27" fill="url(#pp7)"/>
+              <rect x="30" y="109" width="250" height="70" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/>
+              <rect x="30" y="179" width="250" height="24" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x="30" y="179" width="250" height="24" fill="url(#pp7)"/>
+              <rect x="30" y="203" width="250" height="20" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
+              <rect x="30" y="203" width="250" height="20" fill="url(#pw7)"/>
+              <rect x="30" y="223" width="250" height="70" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/>
+              <rect x="30" y="293" width="250" height="42" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+              <line x1="30" y1="293" x2="280" y2="293" stroke="#4A8FA8" stroke-width="1.8" stroke-dasharray="5 3"/>
+
+              <rect x="112" y="46" width="18" height="5" rx="2" fill="#5F5E5A"/>
+              <rect x="118" y="50" width="5" height="48" rx="2" fill="#5F5E5A"/>
+              <rect x="112" y="176" width="18" height="4" rx="2" fill="#5F5E5A"/>
+              <rect x="118" y="179" width="5" height="32" rx="2" fill="#5F5E5A"/>
+
+              <line x1="282" y1="46" x2="292" y2="46" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="49" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">강화마루 8T</text>
+              <line x1="282" y1="64" x2="292" y2="64" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="67" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#2B3450">PB 15T</text>
+              <line x1="282" y1="81" x2="292" y2="81" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="84" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A3A22">돌차음판 4T</text>
+              <line x1="282" y1="97" x2="292" y2="97" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="100" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#2B3450">PB 15T</text>
+              <line x1="282" y1="144" x2="292" y2="144" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="143" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" font-weight="600" fill="#1C4A41">마블 중마 70K</text>
+              <text x="297" y="157" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#2F6E62">50T · 방진층 2</text>
+              <line x1="282" y1="191" x2="292" y2="191" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="194" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#2B3450">PB 15T</text>
+              <line x1="282" y1="213" x2="292" y2="213" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="216" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#2B3450">합판 12T</text>
+              <line x1="282" y1="258" x2="292" y2="258" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="257" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" font-weight="600" fill="#1C4A41">마블 특마 110K</text>
+              <text x="297" y="271" font-family="IBM Plex Sans KR,sans-serif" font-size="10" fill="#2F6E62">50T · 방진층 1</text>
+              <line x1="282" y1="298" x2="292" y2="298" stroke="#5E7A8A" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="301" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" font-weight="600" fill="#37718C">은박 EPE 3T</text>
+              <line x1="282" y1="319" x2="292" y2="319" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+              <text x="297" y="322" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">구조 슬래브</text>
+
+              <path d="M -6 40 L -14 40 L -14 109 L -6 109" fill="none" stroke="#3E4A6B" stroke-width="1"/>
+              <text x="-24" y="74" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 74)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#3E4A6B">상부 라프트</text>
+              <text x="-38" y="74" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 74)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#3E4A6B">M₃ · 34 kg/㎡</text>
+              <path d="M -6 109 L -14 109 L -14 179 L -6 179" fill="none" stroke="#2F6E62" stroke-width="1"/>
+              <text x="-24" y="144" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 144)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#2F6E62">S₂</text>
+              <path d="M -6 179 L -14 179 L -14 223 L -6 223" fill="none" stroke="#3E4A6B" stroke-width="1"/>
+              <text x="-24" y="201" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 201)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#3E4A6B">중간</text>
+              <text x="-38" y="201" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 201)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#3E4A6B">M₂ · 17</text>
+              <path d="M -6 223 L -14 223 L -14 293 L -6 293" fill="none" stroke="#2F6E62" stroke-width="1"/>
+              <text x="-24" y="258" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 258)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#2F6E62">S₁</text>
+              <path d="M -6 293 L -14 293 L -14 335 L -6 335" fill="none" stroke="#8E8C84" stroke-width="1"/>
+              <text x="-24" y="314" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 314)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#8E8C84">M₁</text>
+
+              <text x="155" y="360" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">질량 3 · 스프링 2 · 총 162mm</text>
+              <text x="155" y="376" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" fill="#9E3324">두 라프트를 연결하는 피스 금지</text>
+            </svg>
+          </div>
+          <div class="draw-cap">AC-F-M2 단면</div>
+        </div>
+        <div>
+          <div class="draw">
+            <svg viewBox="0 0 340 386" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="M1과 M2의 차이. 스프링이 하나에서 둘로 늘어나며 하중이 큰 하부에 단단한 특마, 하중이 작은 상부에 무른 중마를 배치한다.">
+              <text x="170" y="26" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600" fill="#1C1C1A">M1 → M2 설계 논리</text>
+              <line x1="30" y1="44" x2="310" y2="44" stroke="#D5D2C9" stroke-width="1"/>
+
+              <rect x="30" y="58" width="280" height="80" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8" rx="4"/>
+              <text x="42" y="78" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#2E5C42">① 스프링 1개 → 2개</text>
+              <text x="42" y="97" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3D7355">첫 공진이 내려가고 그 위로</text>
+              <text x="42" y="115" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3D7355">감쇠 기울기가 가팔라진다</text>
+              <text x="42" y="132" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#4E8C6A">대가 : 두 공진 사이 딥 발생</text>
+
+              <rect x="30" y="150" width="280" height="98" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8" rx="4"/>
+              <text x="42" y="170" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#2E5C42">② 하중에 맞춘 밀도 배분</text>
+              <text x="42" y="189" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3D7355">하부 S₁ : 45 kg/㎡ 부담 → 특마 110K</text>
+              <text x="42" y="207" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3D7355">상부 S₂ : 34 kg/㎡ 부담 → 중마 70K</text>
+              <text x="42" y="226" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#4E8C6A">강성이 달라져 두 공진이 벌어지고</text>
+              <text x="42" y="242" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#4E8C6A">딥이 완만해진다</text>
+
+              <rect x="30" y="260" width="280" height="80" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8" rx="4"/>
+              <text x="42" y="280" font-family="IBM Plex Sans KR,sans-serif" font-size="12" font-weight="600" fill="#2B3450">③ 비대칭 질량 배분</text>
+              <text x="42" y="299" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3E4A6B">중간 17 / 상부 34 kg/㎡</text>
+              <text x="42" y="317" font-family="IBM Plex Sans KR,sans-serif" font-size="11.5" fill="#3E4A6B">대칭이면 두 공진이 가까워져 불리</text>
+              <text x="42" y="334" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#3E4A6B">중간은 가볍게, 상부는 무겁게</text>
+
+              <text x="170" y="364" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="10.5" fill="#8E8C84">M1 대비 +55mm · 자재는 동일 6종</text>
+            </svg>
+          </div>
+          <div class="draw-cap">설계 논리</div>
+        </div>
+      </div>
+      <div class="flag sp">
+        <b>스프링을 직렬로 두는 것이 항상 유리하지는 않다.</b> 질량이 3개가 되면 공진 모드도 2개로 늘어난다. 첫 공진은 M1보다 내려가고 두 번째 공진 위로는 감쇠가 가팔라지지만, <b>두 공진 사이에 딥이 생긴다.</b> 이 딥을 완만하게 만들기 위해 두 스프링의 밀도(110K / 70K)와 두 질량(17 / 34 kg/㎡)을 모두 비대칭으로 배분한다. 대칭 구성은 두 공진이 근접해 오히려 불리하다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">명칭</td><td class="v">아파트형 부유바닥 · 더블레이어</td></tr>
+          <tr><td class="k">총 두께</td><td class="v">162 mm</td></tr>
+          <tr><td class="k">구성</td><td class="v">은박 EPE 3T + 마블 특마 50T + 합판 12T + PB 15T + 마블 중마 50T + PB 15T + 돌차음판 4T + PB 15T + 강화마루 8T</td></tr>
+          <tr class="up"><td class="k">방진층 1 (하부)</td><td class="v">마블 특마 110K · 50T</td></tr>
+          <tr class="up"><td class="k">방진층 2 (상부)</td><td class="v">마블 중마 70K · 50T</td></tr>
+          <tr><td class="k">중간 라프트</td><td class="v">합판 12T + PB 15T · 약 17 kg/㎡</td></tr>
+          <tr><td class="k">상부 라프트</td><td class="v">PB 15T + 돌차음판 4T + PB 15T + 마루 · 약 34 kg/㎡</td></tr>
+          <tr><td class="k">체결</td><td class="v">목공본드 + 피스 3.9×25 / 3.9×32 · 라프트별 독립</td></tr>
+          <tr><td class="k">마감</td><td class="v">강화마루 클릭 부동 시공</td></tr>
+          <tr><td class="k">대응</td><td class="v">첼로 · 콘트라베이스 · 그랜드피아노 · 전자드럼 · 소출력 앰프 · 야간 사용</td></tr>
+          <tr class="warn-row"><td class="k">비대응</td><td class="v">어쿠스틱 드럼 · 서브우퍼 (아파트에서 대응 불가)</td></tr>
+          <tr><td class="k">적용</td><td class="v">아파트 · 오피스텔 — 바닥 직접 가진 음원 또는 저역 지배 음원</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">질량 배분</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구분</th><th>구성</th><th>면밀도</th><th>부담 스프링</th></tr></thead>
+        <tbody>
+          <tr><td class="v">상부 라프트 M₃</td><td>마루 8 + PB 15 + 돌판 4 + PB 15</td><td class="mono">약 34 kg/㎡</td><td>S₂ (중마)</td></tr>
+          <tr><td class="v">중간 라프트 M₂</td><td>PB 15 + 합판 12</td><td class="mono">약 17 kg/㎡</td><td>—</td></tr>
+          <tr class="total"><td class="v">S₁ 부담 하중</td><td>M₂ + M₃</td><td class="mono">약 51 kg/㎡</td><td>S₁ (특마)</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>하부 스프링이 두 배 이상의 하중을 받는다.</b> S₂는 상부 라프트(34)만 지지하지만 S₁은 중간과 상부를 모두(51) 받는다. 따라서 <b>하부에 단단한 특마(110K), 상부에 무른 중마(70K)</b>를 배치하는 것이 하중 배분에 맞다. 반대로 하면 하부가 과압축되어 바닥칠 위험이 커진다.
+      </div>
+      <div class="flag">
+        <b>중간 라프트를 가볍게 두는 이유.</b> 중간이 무거워지면 두 공진주파수가 근접해 그 사이 딥이 깊고 좁아진다. 중간은 합판 + PB 최소 구성(17)으로 두고 질량을 상부(34)에 몰아 <b>공진 간격을 벌린다.</b> 상부에 돌차음판을 배치한 것도 같은 이유다.
+      </div>
+    </div>
+  </div>
+
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03b</span><span class="sec-t">M1 · M2 선택 기준</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>조건</th><th>M1</th><th>M2</th></tr></thead>
+        <tbody>
+          <tr><td class="v">바이올린 · 비올라 · 관악 · 성악</td><td class="mono">○</td><td class="mono">—</td></tr>
+          <tr><td class="v">업라이트 피아노</td><td class="mono">○</td><td class="mono">—</td></tr>
+          <tr><td class="v">소출력 모니터 · 헤드폰 작업</td><td class="mono">○</td><td class="mono">—</td></tr>
+          <tr><td class="v">첼로 · 콘트라베이스 (엔드핀 바닥 가진)</td><td class="mono">△</td><td class="mono">◎</td></tr>
+          <tr><td class="v">그랜드피아노 (다리 하중 · 저역)</td><td class="mono">△</td><td class="mono">◎</td></tr>
+          <tr><td class="v">전자드럼 (패드 타격)</td><td class="mono">✕</td><td class="mono">◎</td></tr>
+          <tr><td class="v">기타 · 베이스 앰프 (소출력)</td><td class="mono">△</td><td class="mono">◎</td></tr>
+          <tr><td class="v">야간 사용 · 아래층 민감</td><td class="mono">△</td><td class="mono">◎</td></tr>
+          <tr class="warn-row"><td class="v">어쿠스틱 드럼 · 서브우퍼</td><td class="mono">✕</td><td class="mono">✕</td></tr>
+        </tbody>
+      </table>
+      <div class="flag">
+        <b>선택 기준은 층고가 아니라 음원이다.</b> 아파트 · 오피스텔은 층고가 대체로 정해져 있으므로 층고를 기준으로 등급을 나누는 것은 실효가 없다. 판단 기준은 <b>바닥을 직접 가진하는가</b>와 <b>저역이 지배적인가</b>이다. 엔드핀이 바닥에 꽂히는 현악기(첼로 · 콘트라베이스), 다리로 하중을 전달하는 그랜드피아노, 패드 타격이 바닥으로 전달되는 전자드럼은 <b>M2</b>를 적용한다. 야간 사용이나 아래층 민감도가 높은 경우에도 M2가 안전하다.
+      </div>
+      <div class="flag warn">
+        <b>어쿠스틱 드럼과 서브우퍼는 M1 · M2 모두 대응할 수 없다.</b> 킥 드럼은 40~60Hz에 에너지가 집중되고 페달이 바닥을 물리적으로 가진하므로, 아파트 구조에서는 어떤 바닥 사양으로도 민원을 피하기 어렵다. 해당 음원은 <b>아파트가 아닌 현장</b>에서 AC-F-L5 + 방식 B로 계획한다. 상담 단계에서 명확히 선을 긋는다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">방진층 · 은박 EPE</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구분</th><th>하부 S₁</th><th>상부 S₂</th></tr></thead>
+        <tbody>
+          <tr><td class="v">제품</td><td>마블 특마</td><td>마블 중마</td></tr>
+          <tr><td class="v">밀도</td><td class="mono">110 kg/㎥</td><td class="mono">70 kg/㎥</td></tr>
+          <tr><td class="v">두께</td><td class="mono">50T</td><td class="mono">50T</td></tr>
+          <tr><td class="v">부담 하중</td><td class="mono">약 51 kg/㎡</td><td class="mono">약 34 kg/㎡</td></tr>
+          <tr class="est"><td class="v">동탄성계수</td><td class="mono">데이터 미확보</td><td class="mono">데이터 미확보</td></tr>
+          <tr class="est"><td class="v">압축영구변형률</td><td class="mono">데이터 미확보</td><td class="mono">데이터 미확보</td></tr>
+        </tbody>
+      </table>
+      <div class="flag warn">
+        <b>재생폼 데이터 미확보 — 선결 과제.</b> 마블충진재의 동탄성계수 · 압축률 · 압축영구변형률을 확보하지 못했다. 특히 M2는 하부 스프링이 51 kg/㎡를 받으므로 M1(41)보다 압축 조건이 가혹하다. 판매처로부터 <b>하중 4~5kPa에서의 압축률과 압축영구변형률</b>을 확보하기 전까지 성능 수치를 대외 자료에 기재하지 않는다. 중마 70K는 특마보다 무르므로 상부 국부 하중(가구 다리 등)에 대한 확인이 특히 필요하다.
+      </div>
+      <div class="flag">
+        <b>은박 EPE 3T는 M1과 동일하다.</b> 슬래브 상부 전면에 포설하여 폼이 슬래브에 직접 닿지 않게 한다. 단열이 목적이 아니라 접촉 완충 · 방습 · 요철 흡수가 목적이다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">바닥난방 안내</span></div>
+    <div class="sec-body">
+      <table>
+        <tbody>
+          <tr><td class="k">난방 효율</td><td class="v">M1보다 열저항이 크므로 온돌 난방이 사실상 전달되지 않음</td></tr>
+          <tr><td class="k">권장</td><td class="v">냉난방 겸용 에어컨 등 별도 냉난방 계획</td></tr>
+          <tr><td class="k">온돌 유지 시</td><td class="v">저온 운전 권장</td></tr>
+          <tr><td class="k">사전 협의</td><td class="v">계약 단계에서 명확히 고지</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">자재</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr class="up"><td class="v">마블충진재 특마</td><td>110K · 50T · 420×1200</td><td>하부 방진층 S₁</td></tr>
+          <tr class="up"><td class="v">마블충진재 중마</td><td>70K · 50T · 420×1200</td><td>상부 방진층 S₂. 벽 · 천장 공용</td></tr>
+          <tr><td class="v">은박 EPE</td><td>3T</td><td>슬래브 상부 전면</td></tr>
+          <tr><td class="v">합판</td><td>12T</td><td>중간 라프트 하부 1장</td></tr>
+          <tr><td class="v">PB (파티클보드)</td><td>15T</td><td>3장. 벽 · 천장 공용</td></tr>
+          <tr><td class="v">돌차음판</td><td>4T · 자체 점착</td><td>상부 라프트 내부</td></tr>
+          <tr><td class="v">목공본드</td><td>—</td><td>판재 간 전면 도포</td></tr>
+          <tr><td class="v">피스</td><td>3.9 × 25 / 3.9 × 32</td><td>38mm 이상 반입 금지</td></tr>
+          <tr><td class="v">강화마루</td><td>8T · 클릭</td><td>언더레이 포함</td></tr>
+          <tr><td class="v">탄성 실란트</td><td>—</td><td>연변부. 경화형 퍼티 금지</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th style="width:44px">No</th><th>작업</th><th>확인사항</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="v">슬래브 청소 · 평탄도 확인</td><td>3m당 ±3mm 초과 시 레벨링 선행</td></tr>
+          <tr><td class="num">2</td><td class="v">은박 EPE 3T 포설</td><td>은박면 상향 · 이음부 테이프</td></tr>
+          <tr><td class="num">3</td><td class="v">마블 특마 50T 포설</td><td>밀착 맞댐 · <strong>압축 금지</strong></td></tr>
+          <tr><td class="num">4</td><td class="v">연변 세워 올림 (1차)</td><td>중간 라프트 높이까지</td></tr>
+          <tr><td class="num">5</td><td class="v">합판 12T</td><td>이 시점부터 합판 위로만 이동</td></tr>
+          <tr><td class="num">6</td><td class="v">본드 도포 · PB 15T</td><td>피스 3.9×25 · <strong>중간 라프트 완성</strong></td></tr>
+          <tr><td class="num">7</td><td class="v">마블 중마 50T 포설</td><td>밀착 맞댐 · 압축 금지</td></tr>
+          <tr><td class="num">8</td><td class="v">연변 세워 올림 (2차)</td><td>마감면 위 10mm까지 (AC-J-01)</td></tr>
+          <tr><td class="num">9</td><td class="v">PB 15T</td><td>중마 위에 얹음 · 하부와 연결 금지</td></tr>
+          <tr><td class="num">10</td><td class="v">돌차음판 4T 부착</td><td>이형지 20~30cm씩 벗기며 밀착</td></tr>
+          <tr><td class="num">11</td><td class="v">본드 도포 · PB 15T</td><td>피스 3.9×32 · <strong>상부 라프트 완성</strong></td></tr>
+          <tr><td class="num">12</td><td class="v">안정화</td><td>초기 침하 확인. 수일 경과 후 마감</td></tr>
+          <tr><td class="num">13</td><td class="v">강화마루</td><td>클릭 부동 · 벽에서 8~10mm 이격</td></tr>
+          <tr><td class="num">14</td><td class="v">연변 정리 · 걸레받이</td><td>걸레받이는 상부 라프트에만 고정</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">08</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-body">
+      <ul class="notes">
+        <li><span class="mk">01</span><span><strong>두 라프트를 연결하지 않는다</strong> — M2의 핵심이다. 중간 라프트(합판+PB)와 상부 라프트(PB+돌판+PB)는 각각 독립적으로 묶고, <strong>중마를 관통하는 피스는 절대 금지</strong>한다. 하나라도 관통하면 두 스프링이 직결되어 M2가 M1으로 전락한다.</span></li>
+        <li><span class="mk">02</span><span><strong>피스 길이</strong> — 중간 라프트는 3.9×25(PB→합판), 상부 라프트는 3.9×32(PB→돌판→PB). 현장에 32mm 이하만 반입한다.</span></li>
+        <li><span class="mk">03</span><span><strong>상부 라프트는 얹혀만 있다</strong> — 중마 위에 부동 상태로 놓이므로 시공 중이나 중량물 이동 시 밀릴 수 있다. 실사용에서는 자중(34 kg/㎡)으로 안정되나, 시공 중에는 위치 이탈을 수시 확인한다.</span></li>
+        <li><span class="mk">04</span><span><strong>본드가 주력이다</strong> — PB는 나사 유지력이 합판의 60~70% 수준이다. 목공본드를 전면 도포하고 3~4㎡씩 구간을 나눠 한 사이클로 마감한다.</span></li>
+        <li><span class="mk">05</span><span><strong>마블 압축 금지</strong> — 특마 · 중마 모두 50T를 그대로 유지한다. 420×1200 판재를 억지로 밀어 넣지 않고 커터로 재단한다.</span></li>
+        <li><span class="mk">06</span><span><strong>보행 관리</strong> — 마블 위를 직접 밟지 않는다. 하부는 합판, 상부는 PB를 순차 포설하며 그 위로 이동한다.</span></li>
+        <li><span class="mk">07</span><span><strong>연변 이격 2단</strong> — 중간 라프트와 상부 라프트 모두 벽에 닿지 않아야 한다. 마블을 두 번 세워 올린다.</span></li>
+        <li><span class="mk">08</span><span><strong>중량물 구역</strong> — 중마 70K는 특마보다 무르므로 점하중에 더 취약하다. 피아노 등은 하중분산판(합판 18T 이상)을 반드시 병용한다.</span></li>
+        <li><span class="mk">09</span><span><strong>강화마루 평탄도</strong> — 클릭 조인트는 단차에 약하다. 상부 PB 이음부 단차를 3mm 이내로 관리한다.</span></li>
+        <li><span class="mk">10</span><span><strong>바닥은 피스만</strong> — 스테이플 타카 금지. 전 등급 공통 원칙이다.</span></li>
+        <li><span class="mk">11</span><span><strong>층고 검토</strong> — 162mm는 M1(107) 대비 55mm 두껍다. 천장 방음까지 계획한다면 실내 높이를 사전 검토한다.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">09</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body">
+      <ul class="stop-list">
+        <li><span class="a">중마 관통 피스</span><span class="b">두 스프링 직결 — M2 구조 무효화</span></li>
+        <li><span class="a">두 라프트 연결 부재</span><span class="b">어떤 부재로든 상하 라프트 연결 금지</span></li>
+        <li><span class="a">특마 관통 피스</span><span class="b">방진층 손상 · 슬래브 접촉 시 브릿지</span></li>
+        <li><span class="a">스테이플 타카 사용</span><span class="b">핀이 삐져나와 삐걱임 유발 — 바닥은 피스만</span></li>
+        <li><span class="a">특마 · 중마 위치 반전</span><span class="b">하부 과압축 · 바닥칠 위험</span></li>
+        <li><span class="a">마블 압축 시공</span><span class="b">동적강성 급등 · 방진 성능 상실</span></li>
+        <li><span class="a">중간 라프트 질량 증대</span><span class="b">두 공진 근접 — 딥 심화</span></li>
+        <li><span class="a">접착식 마감재 사용</span><span class="b">연변 이격 파괴 — 클릭 부동 마감</span></li>
+        <li><span class="a">저역 음원 현장 적용</span><span class="b">드럼 · 앰프 · 서브우퍼는 아파트에서 대응 불가</span></li>
+        <li><span class="a">추정 성능 대외 기재</span><span class="b">재생폼 압축 데이터 미확보</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>AC-F-M2 &nbsp;/&nbsp; REV A</span>
+    <span>내부 견적 · 시공 기준 자료</span>
+  </div>
+
+</div>
+<script src="../assets/ac-nav.js"></script>
+</body>
+</html>

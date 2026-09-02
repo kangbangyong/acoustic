@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AC-C-L2 — 벽 지지형 독립 천장</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,11 +62,12 @@ td.k{width:34%;color:var(--ink-2)}
 td.v{font-weight:500}
 td.num{font-family:"IBM Plex Mono",monospace;width:44px;color:var(--ink-3);font-weight:500}
 td.mono{font-family:"IBM Plex Mono",monospace;font-weight:500}
-tr.total td{border-top:1px solid var(--rule);font-weight:600}
-tr.opt td{background:var(--xps-bg)}
-tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
-.warn-row td{color:var(--stop)}
-.warn-row td.v{font-weight:600}
+.legend table{font-size:13px}
+.legend td{vertical-align:middle;padding:9px 12px}
+.legend td.sw{width:74px}
+.legend td.sw svg{display:block}
+.legend td.nm{font-weight:600;width:24%;color:var(--ink)}
+.legend td.ds{color:var(--ink-2)}
 .notes{list-style:none;display:grid;gap:11px}
 .notes li{display:grid;grid-template-columns:auto 1fr;gap:12px;font-size:13.5px;line-height:1.6}
 .notes .mk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);padding-top:3px;letter-spacing:.06em}
@@ -79,6 +80,7 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
 .flag{border:1px solid var(--damp);background:var(--damp-bg);padding:13px 16px;
   font-size:13px;color:#5C3C1B;margin-top:16px;line-height:1.6}
 .flag b{color:var(--damp)}
+.flag code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;background:rgba(0,0,0,.05);padding:1px 4px}
 .flag.gg{border-color:var(--gg);background:var(--gg-bg);color:#2C4F29}
 .flag.gg b{color:var(--gg)}
 .flag.opt{border-color:#B0537A;background:var(--xps-bg);color:#7A2B4C}
@@ -89,19 +91,12 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
   font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
   color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 @media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
+
 </style>
 <link rel="stylesheet" href="../assets/ac-nav.css">
 </head>
 <body>
-<div class="acnav">
-  <a class="acnav-home" href="../index.html">← AC 목록</a>
-  <span class="acnav-code">AC-C-L2</span>
-  <span class="acnav-move">
-    <a href="AC-C-L1.html">← L1</a>
-    <a href="AC-C-L3.html">L3 →</a>
-  </span>
-</div>
-
+<div class="acnav"><a class="acnav-home" href="../index.html">← AC 목록</a><span class="acnav-code">AC-C-L2</span><span class="acnav-move"><a href="../c/AC-C-L1.html">← L1</a><a href="../c/AC-C-L3.html">L3 →</a></span></div>
 
 <div class="sheet">
 
@@ -111,7 +106,7 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
       <div class="tb-name">벽 지지형 독립 천장</div>
       <div class="tb-en">Wall-supported independent ceiling</div>
     </div>
-    <div class="tb-meta"><div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">천장 Ceiling</span></div><div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">2</span></div><div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">161~191 mm</span></div><div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (전 대역)</span></div><div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-J-06</span></div><div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">A</span></div></div>
+    <div class="tb-meta"><div class="tb-cell"><span class="tb-k">Part</span><span class="tb-v">천장 Ceiling</span></div><div class="tb-cell"><span class="tb-k">Level</span><span class="tb-v">2</span></div><div class="tb-cell"><span class="tb-k">Total</span><span class="tb-v">161~191 mm</span></div><div class="tb-cell"><span class="tb-k">Class</span><span class="tb-v">차음 (전 대역)</span></div><div class="tb-cell"><span class="tb-k">Ref</span><span class="tb-v">AC-00 · AC-J-06</span></div><div class="tb-cell"><span class="tb-k">Rev</span><span class="tb-v">B</span></div></div>
   </div>
 
   <div class="sec">
@@ -119,7 +114,7 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
     <div class="sec-body">
       <div class="draw-wrap">
         <div>
-          <div class="draw"><svg viewBox="-70 0 490 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-C-L2 단면. 슬래브와 접촉하지 않고 양단 벽체에 고정한 독립 천장."><rect x="30" y="26" width="250" height="18" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><text x="155" y="35" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">슬래브</text><rect x="30" y="44" width="250" height="30" fill="#FFFFFF" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="54.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">이격층 50~80 · 비움</text><text x="155.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">배관 · 배선 통과</text><rect x="12" y="74" width="18" height="46" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/><rect x="280" y="74" width="18" height="46" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/><rect x="30" y="74" width="250" height="34" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/><text x="155.0" y="86.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">천장틀 2×4 89</text><text x="155.0" y="98.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">충진재 50T</text><rect x="30" y="108" width="250" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="113.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">일반석고 9.5T</text><rect x="30" y="118" width="250" height="12" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="124.0" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><line x1="298" y1="35" x2="306" y2="35" stroke="#8E8C84" stroke-width=".6"/><text x="310" y="35" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">접촉 없음</text><line x1="298" y1="59" x2="306" y2="59" stroke="#8E8C84" stroke-width=".6"/><text x="310" y="59" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">설비 통과 공간</text><line x1="298" y1="91" x2="306" y2="91" stroke="#8E8C84" stroke-width=".6"/><text x="310" y="91" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">양단 벽체 고정 · 스팬 3m</text><line x1="298" y1="124" x2="306" y2="124" stroke="#8E8C84" stroke-width=".6"/><text x="310" y="124" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">마감판 2겹</text><line x1="4" y1="44" x2="4" y2="130" stroke="#8E8C84" stroke-width=".6"/><line x1="-1" y1="44" x2="9" y2="44" stroke="#8E8C84" stroke-width=".6"/><line x1="-1" y1="130" x2="9" y2="130" stroke="#8E8C84" stroke-width=".6"/><text x="-4" y="87.0" text-anchor="end" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Mono,monospace">161~191</text><line x1="30" y1="144" x2="280" y2="144" stroke="#D5D2C9" stroke-width=".6" stroke-dasharray="3 3"/><text x="155.0" y="156" text-anchor="middle" font-size="8" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">실내</text></svg></div>
+          <div class="draw"><svg viewBox="-58 0 500 164" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-C-L2 단면. 슬래브와 접촉하지 않고 양단 벽체에 고정한 독립 천장. 이격층은 비어 있다."><defs><pattern id="pw-c2" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#3E4A6B" stroke-width=".7" opacity=".5"/></pattern><pattern id="pj-c2" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/></pattern></defs><rect x="30" y="24" width="250" height="18" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><text x="155.0" y="33.0" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">슬래브</text><circle cx="60" cy="57.0" r="5" fill="none" stroke="#8E8C84" stroke-width=".8"/><circle cx="248" cy="57.0" r="4" fill="none" stroke="#8E8C84" stroke-width=".8"/><text x="161" y="52.0" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">이격층 50~80 · 비움</text><text x="161" y="63.0" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">배관 · 배선 통과</text><rect x="10" y="72" width="20" height="58" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/><rect x="280" y="72" width="20" height="58" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/><rect x="30" y="72" width="250" height="32" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7" stroke-dasharray="3 2"/><rect x="40" y="72" width="13" height="32" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="40" y="72" width="13" height="32" fill="url(#pj-c2)"/><rect x="100" y="72" width="13" height="32" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="100" y="72" width="13" height="32" fill="url(#pj-c2)"/><rect x="210" y="72" width="13" height="32" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="210" y="72" width="13" height="32" fill="url(#pj-c2)"/><rect x="262" y="72" width="13" height="32" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x="262" y="72" width="13" height="32" fill="url(#pj-c2)"/><text x="161" y="88.0" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">천장틀 2×4 89 + 충진재 50T</text><rect x="30" y="104" width="250" height="11" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="109.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">일반석고 9.5T</text><rect x="30" y="115" width="250" height="13" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/><text x="155.0" y="121.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1C1C1A" font-family="IBM Plex Sans KR,sans-serif">차음석고 12.5T</text><path d="M 30 128 L 30 119 L 39 128 Z" fill="#2A2A28"/><path d="M 280 128 L 280 119 L 271 128 Z" fill="#2A2A28"/><line x1="300" y1="33" x2="309" y2="33" stroke="#8E8C84" stroke-width=".6"/><text x="314" y="33" text-anchor="start" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">접촉 없음</text><line x1="300" y1="88" x2="309" y2="88" stroke="#8E8C84" stroke-width=".6"/><text x="314" y="88" text-anchor="start" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">양단 벽체 고정 · 스팬 3m</text><line x1="300" y1="121" x2="309" y2="121" stroke="#8E8C84" stroke-width=".6"/><text x="314" y="121" text-anchor="start" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Sans KR,sans-serif">마감판 2겹</text><line x1="14" y1="42" x2="14" y2="128" stroke="#8E8C84" stroke-width=".6"/><line x1="9" y1="42" x2="19" y2="42" stroke="#8E8C84" stroke-width=".6"/><line x1="9" y1="128" x2="19" y2="128" stroke="#8E8C84" stroke-width=".6"/><text x="6" y="85.0" text-anchor="end" dominant-baseline="middle" font-size="8" fill="#5A5852" font-family="IBM Plex Mono,monospace">161~191</text><line x1="30" y1="141" x2="280" y2="141" stroke="#D5D2C9" stroke-width=".6" stroke-dasharray="3 3"/><text x="155.0" y="153" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="#8E8C84" font-family="IBM Plex Sans KR,sans-serif">실내</text></svg></div>
           <div class="draw-cap">AC-C-L2 SECTION — WALL SUPPORTED</div>
         </div>
         <div><p style="font-size:13.5px;line-height:1.7">L2는 <strong>슬래브와 접촉하지 않는다.</strong> 방진이 진동을 줄이는 것이라면 무접촉은 경로 자체를 없애는 것이므로, 상부 충격음 차단에서는 방진행거보다 우수하다.</p>
@@ -130,43 +125,62 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
+    <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">범례 — AC-00 준용</span></div>
+    <div class="sec-body legend"><table>
+<thead><tr><th>표기</th><th>재료</th><th>단면 내 위치</th></tr></thead><tbody>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/></svg></td><td class="nm">차음석고 · 일반석고</td><td class="ds">무늬 없음 = 질량판 기본형</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="lj" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/></pattern></defs><rect x=".5" y=".5" width="59" height="21" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/><rect x=".5" y=".5" width="59" height="21" fill="url(#lj)"/></svg></td><td class="nm">천장틀 · 박스빔</td><td class="ds">빗금 = 목재. 단면에 잘린 부재로 표기</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7" stroke-dasharray="3 2"/></svg></td><td class="nm">충진재</td><td class="ds">점선 = 채워 넣은 것. 천장틀 캐비티 · 설비층</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><text x="30" y="13" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#B8B6B0">비움</text></svg></td><td class="nm">공기층 · 이격층</td><td class="ds">테두리 없음. 충진재와 명확히 갈린다</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y="8" width="59" height="5" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/></svg></td><td class="nm">돌차음판 4T</td><td class="ds">진한 갈색 얇은 띠. L0 · L5</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y="8.5" width="59" height="4" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/></svg></td><td class="nm">그린글루</td><td class="ds">녹색 얇은 띠. L3 이상 마감판 사이</td></tr>
+<tr><td class="sw"><svg width="60" height="34" viewBox="0 0 60 34" xmlns="http://www.w3.org/2000/svg"><path d="M 16 6 L 16 20 L 44 20 L 44 6" fill="none" stroke="#5A5E64" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="16" cy="4.6" r="1.4" fill="#5A5E64"/><circle cx="44" cy="4.6" r="1.4" fill="#5A5E64"/><line x1="0" y1="28" x2="60" y2="28" stroke="#3E4A6B" stroke-width=".7"/></svg></td><td class="nm">레질리언트 채널</td><td class="ds"><strong>열린 쪽이 천장틀을 향한다.</strong> 방향이 성능을 좌우하므로 형상으로 표기. L1 전용</td></tr>
+<tr><td class="sw"><svg width="60" height="34" viewBox="0 0 60 34" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="2" x2="30" y2="11" stroke="#5A5E64" stroke-width="1.5"/><rect x="21" y="11" width="18" height="10" rx="2" fill="#E6EFEC" stroke="#2F6E62" stroke-width="1"/><line x1="30" y1="21" x2="30" y2="31" stroke="#5A5E64" stroke-width="1.5"/></svg></td><td class="nm">방진행거 · 방진 달대</td><td class="ds">내려오는 선 중간의 방진층 색 요소. L4 · L5 · M2</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="16" x2="60" y2="16" stroke="#8E8C84" stroke-width=".8"/><path d="M 20 16 L 38 16 L 20 5 Z" fill="#2A2A28"/><line x1="20" y1="16" x2="20" y2="3" stroke="#8E8C84" stroke-width=".8"/></svg></td><td class="nm">실란트</td><td class="ds">모서리 삼각 비드. 연변 이격부 · 관통부</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/><line x1="12" y1=".5" x2="12" y2="21.5" stroke="#8E8C84" stroke-width=".55"/><line x1="24" y1=".5" x2="24" y2="21.5" stroke="#8E8C84" stroke-width=".55"/><line x1="36" y1=".5" x2="36" y2="21.5" stroke="#8E8C84" stroke-width=".55"/><line x1="48" y1=".5" x2="48" y2="21.5" stroke="#8E8C84" stroke-width=".55"/></svg></td><td class="nm">마감재</td><td class="ds">분할선은 층의 짧은 쪽(두께 방향)으로 세운다</td></tr>
+<tr><td class="sw"><svg width="60" height="22" viewBox="0 0 60 22" xmlns="http://www.w3.org/2000/svg"><rect x=".5" y=".5" width="59" height="21" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/></svg></td><td class="nm">슬래브 · 기존 구조체</td><td class="ds">회색 민무늬. 설계 대상이 아니라 조건</td></tr>
+</tbody></table>
+<div class="flag"><b>표기는 AC-00 도면 표기 규칙을 따른다.</b> 패턴 id는 부위 + 등급 코드로 구분한다 — 천장은 <code>pj-c3</code>, <code>pw-cm1</code> 형식. 여러 시트를 한 페이지에 합칠 때도 무늬가 어긋나지 않는다.</div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">사양</span></div>
     <div class="sec-body"><table><tbody><tr><td class="k">명칭</td><td class="v">벽 지지형 독립 천장</td></tr><tr><td class="k">소요 천장고</td><td class="v">161~191 mm</td></tr><tr><td class="k">구성</td><td class="v">이격층 50~80 + 천장틀 2×4 89(충진 50T) + 일반석고 9.5T + 차음석고 12.5T</td></tr><tr><td class="k">지지</td><td class="v">양단 벽체 고정 — 슬래브 접촉 없음</td></tr><tr><td class="k">중공층</td><td class="v">139~169 mm (이격층 + 천장틀 춤 전체)</td></tr><tr><td class="k">이격층</td><td class="v">50~80 mm · 실측 · 배관 · 배선 통과 · 비움</td></tr><tr><td class="k">천장틀</td><td class="v">2×4 (38×89) @450 · 개별 시공</td></tr><tr><td class="k">흡음 충진</td><td class="v">충진재 50T · 천장틀 캐비티</td></tr><tr><td class="k">마감판</td><td class="v">일반석고 9.5T + 차음석고 12.5T</td></tr><tr><td class="k">f₀ (개략)</td><td class="v">약 45 Hz</td></tr><tr><td class="k">스팬 한계</td><td class="v">2×4 3m / 제작 박스빔 5m / 초과 시 부분 방진 달대</td></tr><tr><td class="k">대응</td><td class="v">공기음 전 대역 + 상부 충격음 차단</td></tr><tr><td class="k">비대응</td><td class="v">인접 호실 천장 우회 (실간 벽 별도)</td></tr><tr><td class="k">적용</td><td class="v">악기 연습 · 홈시어터 · 홈짐 · 소형 스튜디오</td></tr></tbody></table></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">03</span><span class="sec-t">설계 근거</span></div>
-    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>슬래브 무접촉이 L2의 정체성이다.</strong> 방진이 진동을 줄이는 것이라면 무접촉은 경로 자체를 없애는 것이다. 천장틀 · 배관 새들 · 피스 어느 것도 슬래브에 닿지 않아야 하며, 한 점이라도 접촉하면 이 이점이 사라진다.</span></li><li><span class="mk">02</span><span><strong>벽체 강결은 남는다.</strong> 천장이 벽에 고정되므로 벽을 타고 온 구조음은 천장판으로 전달된다. AC-W 시공면(방음 벽체) 위에 얹는 경우 벽체가 이미 구조와 분리되어 있어 천장도 함께 분리된다.</span></li><li><span class="mk">03</span><span><strong>천장틀 상부 충진재 추가 포설은 표준에서 제외한다.</strong> 시공 순서상 성립하지 않으며 품질 담보가 어렵다. 흡음량 증대가 필요하면 천장틀을 제작 박스빔으로 상향해 캐비티 내에서 해결한다.</span></li><li><span class="mk">04</span><span><strong>견적 차이의 근거</strong> — L1과 자재 목록은 유사하다. 비용 차이는 자재가 아니라 기존 천장 철거와 독립 천장틀 신설이며, 견적 항목을 이 기준으로 분리해 표기한다.</span></li></ul></div>
+    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">설계 근거</span></div>
+    <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>슬래브 무접촉이 L2의 정체성이다.</strong> 방진이 진동을 줄이는 것이라면 무접촉은 경로 자체를 없애는 것이다. 천장틀 · 배관 새들 · 피스 어느 것도 슬래브에 닿지 않아야 하며, 한 점이라도 접촉하면 이 이점이 사라진다.</span></li><li><span class="mk">02</span><span><strong>이격층은 비운다.</strong> 배관 · 배선이 지나가는 공간이며 충진하지 않는다. 도면에서도 테두리 없이 비워 표기해 충진재(점선 박스)와 구분한다.</span></li><li><span class="mk">03</span><span><strong>천장틀 상부 충진재 추가 포설은 표준에서 제외한다.</strong> 시공 순서상 성립하지 않으며 품질 담보가 어렵다. 흡음량 증대가 필요하면 천장틀을 제작 박스빔으로 상향해 캐비티 내에서 해결한다.</span></li><li><span class="mk">04</span><span><strong>견적 차이의 근거</strong> — L1과 자재 목록은 유사하다. 비용 차이는 자재가 아니라 기존 천장 철거와 독립 천장틀 신설이며, 견적 항목을 이 기준으로 분리해 표기한다.</span></li></ul></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">04</span><span class="sec-t">자재</span></div>
+    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">자재</span></div>
     <div class="sec-body"><table>
       <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
       <tbody><tr><td class="k">천장틀</td><td class="mono">2×4 (38×89)</td><td>@450 · 양단 벽체 고정</td></tr><tr><td class="k">— 대안</td><td class="mono">제작 박스빔</td><td>스팬 3m 초과 시 · 춤 현장 산정</td></tr><tr><td class="k">충진재</td><td class="mono">50T</td><td>천장틀 캐비티</td></tr><tr><td class="k">일반석고보드</td><td class="mono">9.5T</td><td>천장틀 직결</td></tr><tr><td class="k">차음석고보드</td><td class="mono">12.5T</td><td>최종 마감면</td></tr><tr><td class="k">방진 달대</td><td class="mono">—</td><td>처짐 보강 시 · 강결 달대 금지</td></tr><tr><td class="k">방진 마운트</td><td class="mono">—</td><td>드레인 펌프 · 실내기 본체</td></tr><tr><td class="k">탄성 실란트</td><td class="mono">—</td><td>벽 접합부 · 관통부</td></tr></tbody></table>
-      <div class="flag"><b>충진재</b> — 미네랄울 48K 보드형 표준. 벽 · 천장 자재 통합을 위해 폴리에스터 흡음단열재(KS F 5660) 50T 40K 대체를 검토 중이며, 저역(125 · 250Hz) 흡음률 비교 데이터 확보 후 확정한다. 인허가 시설(학원 · 어린이집 · 다중이용업소)은 화재 규정상 미네랄울을 유지한다.</div>
+      <div class="flag"><b>충진재</b> — 미네랄울 48K 보드형 표준. 벽 · 천장 자재 통합을 위해 폴리에스터 흡음단열재(KS F 5660) 50T 40K 대체를 검토 중이며, 저역(125 · 250Hz) 흡음률 비교 데이터 확보 후 확정한다. 인허가 시설은 미네랄울을 유지한다.</div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">05</span><span class="sec-t">시공 순서</span></div>
+    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">시공 순서</span></div>
     <div class="sec-body"><table>
       <thead><tr><th>No</th><th>작업</th><th>확인사항</th></tr></thead>
       <tbody><tr><td class="num">1</td><td class="v">기존 천장 전면 철거</td><td>달대 · 목조틀 포함</td></tr><tr><td class="num">2</td><td class="v">설비 현황 실측</td><td>배관 · 배선 · 냉매관 최하단 레벨</td></tr><tr><td class="num">3</td><td class="v">이격층 두께 확정</td><td>설비 최하단 + 여유 = 50~80mm</td></tr><tr><td class="num">4</td><td class="v">벽체 지지재 설치</td><td>양단 · 레벨 확인</td></tr><tr><td class="num">5</td><td class="v">천장틀 설치</td><td>2×4 @450 · 개별 시공 · 슬래브 비접촉 확인</td></tr><tr><td class="num">6</td><td class="v">처짐 검토</td><td>스팬 3m 초과 시 박스빔 또는 방진 달대</td></tr><tr><td class="num">7</td><td class="v">배관 · 배선 정리</td><td>천장틀 관통 시 부재 중앙 · 춤 1/3 이내</td></tr><tr><td class="num">8</td><td class="v">충진재 50T</td><td>캐비티 밀실 충진 · 압축 금지</td></tr><tr><td class="num">9</td><td class="v">일반석고 9.5T</td><td>이음선 천장틀 위</td></tr><tr><td class="num">10</td><td class="v">차음석고 12.5T</td><td>하부와 이음선 엇갈림</td></tr><tr><td class="num">11</td><td class="v">관통부 · 연변 실링</td><td>조명 · 디퓨저 · 벽 접합부</td></tr></tbody></table></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">06</span><span class="sec-t">시공상 유의사항</span></div>
+    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">시공상 유의사항</span></div>
     <div class="sec-body"><ul class="notes"><li><span class="mk">01</span><span><strong>슬래브 비접촉 확인</strong> — 천장틀 · 배관 새들 · 피스 어느 것도 슬래브에 닿지 않아야 한다. 한 점이라도 접촉하면 무접촉의 이점이 사라진다.</span></li><li><span class="mk">02</span><span><strong>스팬 한계 준수</strong> — 2×4는 3m 내외가 한계다. 초과 시 제작 박스빔 또는 방진 달대로 보강하며 강결 달대는 사용하지 않는다.</span></li><li><span class="mk">03</span><span><strong>방진 달대 하중 대역</strong> — 보강용 달대는 개수가 적어 개당 하중이 크다. 실하중에 맞는 사양을 선정한다.</span></li><li><span class="mk">04</span><span><strong>드레인 펌프식 전제</strong> — 자연구배는 이격층을 초과 소모한다. 펌프 본체는 하지 직결 금지, 방진 마운트를 개재한다.</span></li><li><span class="mk">05</span><span><strong>실내기 본체 방진</strong> — 4웨이 등 매입 기기는 팬 진동원이다. 하지 직결 시 저주파 잔류음이 발생한다.</span></li><li><span class="mk">06</span><span><strong>천장틀 관통 위치</strong> — 배관 · 배선이 천장틀을 관통할 경우 부재 중앙, 춤의 1/3 이내로 제한한다.</span></li><li><span class="mk">07</span><span><strong>벽체 지지력 확인</strong> — 조적 · 경량벽 지지 시 지지력을 검토한다. 방음 벽체 상부에 얹는 경우 벽체 사양을 확인한다.</span></li></ul></div>
   </div>
 
   <div class="sec">
-    <div class="sec-h"><span class="sec-n">07</span><span class="sec-t">금지사항</span></div>
-    <div class="sec-body"><ul class="stop-list"><li><span class="a">천장틀 슬래브 앵커 고정</span><span class="b">무접촉 원칙 위반 — 전 시스템 무효화</span></li><li><span class="a">강결 달대 보강</span><span class="b">구조적 단락 — 방진 달대만 허용</span></li><li><span class="a">천장틀 상부 충진재 추가 포설</span><span class="b">시공 성립 불가 — 캐비티 내 해결</span></li><li><span class="a">충진재 압축 충전</span><span class="b">마감판 처짐 · 들뜸</span></li><li><span class="a">자연구배 드레인</span><span class="b">이격층 초과 소모</span></li><li><span class="a">실내기 · 펌프 하지 직결</span><span class="b">진동 직접 전달</span></li><li><span class="a">연변 이격 생략</span><span class="b">측면전달음 발생</span></li><li><span class="a">스팬 초과 상태 2×4 강행</span><span class="b">장기 처짐 — 이격층 소멸</span></li></ul></div>
+    <div class="sec-h"><span class="sec-n">08</span><span class="sec-t">금지사항</span></div>
+    <div class="sec-body"><ul class="stop-list"><li><span class="a">천장틀 슬래브 앵커 고정</span><span class="b">무접촉 원칙 위반 — 전 시스템 무효화</span></li><li><span class="a">강결 달대 보강</span><span class="b">구조적 단락 — 방진 달대만 허용</span></li><li><span class="a">천장틀 상부 충진재 추가 포설</span><span class="b">시공 성립 불가 — 캐비티 내 해결</span></li><li><span class="a">이격층 충진</span><span class="b">배관 점검 불가 · 성능 기여 미미</span></li><li><span class="a">PB · MDF 마감판 사용</span><span class="b">면밀도 절반 · 판 공진 · 가연재</span></li><li><span class="a">자연구배 드레인</span><span class="b">이격층 초과 소모</span></li><li><span class="a">실내기 · 펌프 하지 직결</span><span class="b">진동 직접 전달</span></li><li><span class="a">연변 이격 생략</span><span class="b">측면전달음 발생</span></li><li><span class="a">스팬 초과 상태 2×4 강행</span><span class="b">장기 처짐 — 이격층 소멸</span></li></ul></div>
   </div>
 
   <div class="footnote">
-    <span>AC-C-L2 &nbsp;/&nbsp; REV A</span>
+    <span>AC-C-L2 &nbsp;/&nbsp; REV B</span>
     <span>내부 견적 · 시공 기준 자료</span>
   </div>
 

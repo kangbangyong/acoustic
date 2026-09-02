@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AC-WP-L5 — 이중 하지 칸막이 (질량 보강)</title>
+<title>AC-WP-L5 — 이중 벽체틀 (질량 보강)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -89,27 +89,24 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
 .footnote{padding:16px 28px;border-top:1.5px solid var(--ink);
   font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
   color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+.matlgd{display:flex;flex-wrap:wrap;gap:9px 18px;margin-bottom:16px;
+  padding-bottom:13px;border-bottom:1px solid var(--rule-soft)}
+.matlgd .mi{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-2)}
+.matlgd svg{display:block;flex:none}
 @media print{body{padding:0;background:#fff}.sheet{border-color:#000}}
 </style>
 <link rel="stylesheet" href="../assets/ac-nav.css">
 </head>
 <body>
-<div class="acnav">
-  <a class="acnav-home" href="../index.html">← AC 목록</a>
-  <span class="acnav-code">AC-WP-L5</span>
-  <span class="acnav-move">
-    <a href="AC-WP-L4.html">← L4</a>
-    <span class="off">→</span>
-  </span>
-</div>
-
+<div class="acnav"><a class="acnav-home" href="../index.html">← AC 목록</a><span class="acnav-code">AC-WP-L5</span><span class="acnav-move"><a href="../w/AC-WP-L4.html">← L4</a><a class="off">→</a></span></div>
 
 <div class="sheet">
 
   <div class="titleblock">
     <div class="tb-main">
       <div class="tb-code">AC-WP-L5</div>
-      <div class="tb-name">이중 하지 칸막이 (질량 보강)</div>
+      <div class="tb-name">이중 벽체틀 (질량 보강)</div>
       <div class="tb-en">Double-stud partition / added mass</div>
     </div>
     <div class="tb-meta">
@@ -125,70 +122,95 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
   <div class="sec">
     <div class="sec-h"><span class="sec-n">01</span><span class="sec-t">단면 &amp; 등급 위치</span></div>
     <div class="sec-body">
+      <div class="matlgd"><span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y=".5" width="21" height="10" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".7"/></svg>구조체</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y="3.5" width="21" height="4" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/></svg>돌차음판</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><pattern id="lgj-wp-l5" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/></pattern></defs><rect x=".5" y=".5" width="21" height="10" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".7"/><rect x=".5" y=".5" width="21" height="10" fill="url(#lgj-wp-l5)"/></svg>목재 벽체틀</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><pattern id="lgm-wp-l5" patternUnits="userSpaceOnUse" width="5" height="5"><line x1="0" y1="0" x2="5" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/><line x1="5" y1="0" x2="0" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/></pattern></defs><rect x=".5" y=".5" width="21" height="10" fill="#DFE1E4" stroke="#4A4E54" stroke-width=".7"/><rect x=".5" y=".5" width="21" height="10" fill="url(#lgm-wp-l5)"/></svg>경량 벽체틀</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y=".5" width="21" height="10" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7" stroke-dasharray="3 2"/></svg>충진재</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y=".5" width="21" height="10" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".7"/></svg>석고보드</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y="3.5" width="21" height="4" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/></svg>그린글루</span>
+        <span class="mi"><svg width="22" height="11" viewBox="0 0 22 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x=".5" y=".5" width="21" height="10" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".7"/><line x1="5.7" y1=".5" x2="5.7" y2="10.5" stroke="#8E8C84" stroke-width=".6"/><line x1="11" y1=".5" x2="11" y2="10.5" stroke="#8E8C84" stroke-width=".6"/><line x1="16.3" y1=".5" x2="16.3" y2="10.5" stroke="#8E8C84" stroke-width=".6"/></svg>지정 마감</span></div>
       <div class="draw-wrap">
         <div>
-          <div class="draw"><svg viewBox="-56 20 476 304" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-WP-L5 단면. [양면] 차음석고 12.5T + 그린글루 + 돌차음판 4T + 일반석고 9.5T + 투바이포 38×89 + 분리 50 + 투바이포 38×89 (미네랄울 100T)">
+          <div class="draw"><svg viewBox="-56 20 476 313" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AC-WP-L5 단면. [양면] 차음석고 12.5T + 그린글루 + 돌차음판 4T + 일반석고 9.5T + 투바이포 38×89 + 분리 50 + 투바이포 38×89 (미네랄울 100T)">
+<defs>
+<pattern id="pj-wp-l5" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+<line x1="0" y1="0" x2="0" y2="5" stroke="#7A5B34" stroke-width=".8" opacity=".6"/></pattern>
+<pattern id="pm-wp-l5" patternUnits="userSpaceOnUse" width="5" height="5">
+<line x1="0" y1="0" x2="5" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/>
+<line x1="5" y1="0" x2="0" y2="5" stroke="#4A4E54" stroke-width=".7" opacity=".7"/></pattern>
+</defs>
 <rect x="30" y="46.0" width="250" height="11.0" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
+<line x1="80" y1="46.0" x2="80" y2="57.0" stroke="#8E8C84" stroke-width=".6"/>
+<line x1="130" y1="46.0" x2="130" y2="57.0" stroke="#8E8C84" stroke-width=".6"/>
+<line x1="180" y1="46.0" x2="180" y2="57.0" stroke="#8E8C84" stroke-width=".6"/>
+<line x1="230" y1="46.0" x2="230" y2="57.0" stroke="#8E8C84" stroke-width=".6"/>
 <rect x="30" y="57.0" width="250" height="7.6" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
 <rect x="30" y="64.6" width="250" height="7.0" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/>
-<rect x="30" y="71.6" width="250" height="7.0" fill="#F4EBE0" stroke="#8A5A2B" stroke-width=".8"/>
+<rect x="30" y="72.1" width="250" height="6.0" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/>
 <rect x="30" y="78.6" width="250" height="7.0" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
 <rect x="30" y="85.6" width="250" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
 <rect x="38" y="85.6" width="26" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+<rect x="38" y="85.6" width="26" height="54.1" fill="url(#pj-wp-l5)"/>
 <rect x="142" y="85.6" width="26" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+<rect x="142" y="85.6" width="26" height="54.1" fill="url(#pj-wp-l5)"/>
 <rect x="246" y="85.6" width="26" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+<rect x="246" y="85.6" width="26" height="54.1" fill="url(#pj-wp-l5)"/>
 <rect x="68" y="89.6" width="70" height="46.1" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".6" stroke-dasharray="3 2"/>
 <rect x="172" y="89.6" width="70" height="46.1" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".6" stroke-dasharray="3 2"/>
 <text x="103" y="116.2" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#2F6E62">충진재</text>
 <text x="207" y="116.2" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#2F6E62">충진재</text>
-<rect x="30" y="139.8" width="250" height="30.4" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".8"/>
+<rect x="30" y="139.8" width="250" height="30.4" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".7" stroke-dasharray="3 2"/>
 <text x="155" y="158.5" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#2F6E62">미네랄울 충진</text>
 <rect x="30" y="170.2" width="250" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
 <rect x="38" y="170.2" width="26" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+<rect x="38" y="170.2" width="26" height="54.1" fill="url(#pj-wp-l5)"/>
 <rect x="142" y="170.2" width="26" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+<rect x="142" y="170.2" width="26" height="54.1" fill="url(#pj-wp-l5)"/>
 <rect x="246" y="170.2" width="26" height="54.1" fill="#F1E9DC" stroke="#7A5B34" stroke-width=".8"/>
+<rect x="246" y="170.2" width="26" height="54.1" fill="url(#pj-wp-l5)"/>
 <rect x="68" y="174.2" width="70" height="46.1" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".6" stroke-dasharray="3 2"/>
 <rect x="172" y="174.2" width="70" height="46.1" fill="#E6EFEC" stroke="#2F6E62" stroke-width=".6" stroke-dasharray="3 2"/>
 <text x="103" y="200.7" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#2F6E62">충진재</text>
 <text x="207" y="200.7" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#2F6E62">충진재</text>
 <rect x="30" y="224.3" width="250" height="7.0" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
-<rect x="30" y="231.3" width="250" height="7.0" fill="#F4EBE0" stroke="#8A5A2B" stroke-width=".8"/>
+<rect x="30" y="231.8" width="250" height="6.0" fill="#5A3A22" stroke="#3D2716" stroke-width=".6"/>
 <rect x="30" y="238.3" width="250" height="7.0" fill="#3F7A3A" stroke="#2C4F29" stroke-width=".6"/>
 <rect x="30" y="245.3" width="250" height="7.6" fill="#E7EAF2" stroke="#3E4A6B" stroke-width=".8"/>
 <rect x="30" y="252.9" width="250" height="11.0" fill="#EDEBE5" stroke="#8E8C84" stroke-width=".8"/>
-<line x1="282" y1="51.5" x2="292" y2="36.6" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="40.1" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">실 A</text>
-<text x="297" y="51.6" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">지정 마감</text>
-<line x1="282" y1="60.8" x2="292" y2="52.1" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="55.6" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">차음석고 12.5T</text>
-<line x1="282" y1="68.1" x2="292" y2="67.6" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="71.1" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#3F7A3A" font-weight="600">그린글루</text>
-<line x1="282" y1="75.1" x2="292" y2="83.1" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="86.6" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8A5A2B" font-weight="600">돌차음판 4T</text>
-<text x="297" y="98.1" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#8A5A2B">판간 자착</text>
-<line x1="282" y1="82.1" x2="292" y2="98.6" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="102.1" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">일반석고 9.5T</text>
-<line x1="282" y1="112.7" x2="292" y2="114.1" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="117.6" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#7A5B34" font-weight="600">투바이포 38×89 (1열)</text>
-<text x="297" y="129.1" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#7A5B34">미네랄울 50T</text>
-<line x1="282" y1="155.0" x2="292" y2="140.1" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="143.6" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#2F6E62" font-weight="600">분리 50</text>
-<text x="297" y="155.1" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#2F6E62">열간 비접촉</text>
-<line x1="282" y1="197.2" x2="292" y2="182.3" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="185.8" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#7A5B34" font-weight="600">투바이포 38×89 (2열)</text>
-<text x="297" y="197.3" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#7A5B34">미네랄울 50T</text>
-<line x1="282" y1="227.8" x2="292" y2="212.9" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="216.4" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">일반석고 9.5T</text>
-<line x1="282" y1="234.8" x2="292" y2="228.4" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="231.9" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8A5A2B" font-weight="600">돌차음판 4T</text>
-<text x="297" y="243.4" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#8A5A2B">판간 자착</text>
-<line x1="282" y1="241.8" x2="292" y2="243.9" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="247.4" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#3F7A3A" font-weight="600">그린글루</text>
-<line x1="282" y1="249.1" x2="292" y2="259.4" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="262.9" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">차음석고 12.5T</text>
-<line x1="282" y1="258.4" x2="292" y2="274.9" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
-<text x="297" y="278.4" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">실 B</text>
-<text x="297" y="289.9" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#5A5852">지정 마감 · 양면 대칭</text>
+<line x1="80" y1="252.9" x2="80" y2="263.9" stroke="#8E8C84" stroke-width=".6"/>
+<line x1="130" y1="252.9" x2="130" y2="263.9" stroke="#8E8C84" stroke-width=".6"/>
+<line x1="180" y1="252.9" x2="180" y2="263.9" stroke="#8E8C84" stroke-width=".6"/>
+<line x1="230" y1="252.9" x2="230" y2="263.9" stroke="#8E8C84" stroke-width=".6"/>
+<line x1="282" y1="51.5" x2="292" y2="51.5" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="55.0" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">실 A · 지정 마감</text>
+<line x1="282" y1="60.8" x2="292" y2="67.5" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="71.0" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">차음석고 12.5T</text>
+<line x1="282" y1="68.1" x2="292" y2="83.5" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="87.0" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#3F7A3A" font-weight="600">그린글루</text>
+<line x1="282" y1="75.1" x2="292" y2="99.5" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="103.0" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8A5A2B" font-weight="600">돌차음판 4T 판간자착</text>
+<line x1="282" y1="82.1" x2="292" y2="115.5" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="119.0" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">일반석고 9.5T</text>
+<line x1="282" y1="112.7" x2="292" y2="131.5" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="135.0" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#7A5B34" font-weight="600">투바이포 38×89 (1열)</text>
+<text x="297" y="146.5" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#7A5B34">미네랄울 50T</text>
+<line x1="282" y1="155.0" x2="292" y2="158.5" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="162.0" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#2F6E62" font-weight="600">분리 50</text>
+<text x="297" y="173.5" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#2F6E62">열간 비접촉</text>
+<line x1="282" y1="197.2" x2="292" y2="197.2" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="200.7" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#7A5B34" font-weight="600">투바이포 38×89 (2열)</text>
+<text x="297" y="212.2" font-family="IBM Plex Sans KR,sans-serif" font-size="9.5" fill="#7A5B34">미네랄울 50T</text>
+<line x1="282" y1="227.8" x2="292" y2="227.8" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="231.3" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">일반석고 9.5T</text>
+<line x1="282" y1="234.8" x2="292" y2="243.8" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="247.3" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8A5A2B" font-weight="600">돌차음판 4T 판간자착</text>
+<line x1="282" y1="241.8" x2="292" y2="259.8" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="263.3" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#3F7A3A" font-weight="600">그린글루</text>
+<line x1="282" y1="249.1" x2="292" y2="275.8" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="279.3" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">차음석고 12.5T</text>
+<line x1="282" y1="258.4" x2="292" y2="291.8" stroke="#8E8C84" stroke-width=".8" stroke-dasharray="2 2"/>
+<text x="297" y="295.3" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#5A5852">실 B · 지정 마감 (대칭)</text>
 <path d="M -6 46.0 L -14 46.0 L -14 85.6 L -6 85.6" fill="none" stroke="#3E4A6B" stroke-width="1"/>
 <text x="-24" y="65.8" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 65.8)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#3E4A6B">A면 판</text>
 <text x="-38" y="65.8" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 65.8)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#3E4A6B">M₁ · 약 27.7 kg/㎡</text>
@@ -198,7 +220,7 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
 <path d="M -6 224.3 L -14 224.3 L -14 263.9 L -6 263.9" fill="none" stroke="#3E4A6B" stroke-width="1"/>
 <text x="-24" y="244.1" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -24 244.1)" font-family="IBM Plex Sans KR,sans-serif" font-size="10" font-weight="600" fill="#3E4A6B">B면 판</text>
 <text x="-38" y="244.1" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 -38 244.1)" font-family="IBM Plex Sans KR,sans-serif" font-size="9" fill="#3E4A6B">M₂ · 동일</text>
-<text x="155" y="309.9" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">WP 마감판 약 27.7 kg/㎡ · 중공층 228 mm · 총 280 mm</text>
+<text x="155" y="319.3" text-anchor="middle" font-family="IBM Plex Sans KR,sans-serif" font-size="11" fill="#8E8C84">WP 마감판 약 27.7 kg/㎡ · 중공층 228 mm · 총 280 mm</text>
 </svg></div>
           <div class="draw-cap">AC-WP-L5 단면</div>
         </div>
@@ -240,17 +262,17 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
     <div class="sec-h"><span class="sec-n">02</span><span class="sec-t">사양</span></div>
     <div class="sec-body">
       <table><tbody>
-        <tr><td class="k">명칭</td><td class="v">이중 하지 칸막이 (질량 보강)</td></tr>
+        <tr><td class="k">명칭</td><td class="v">이중 벽체틀 (질량 보강)</td></tr>
         <tr><td class="k">총 두께 (LT / LS)</td><td class="v">280 mm / 291 mm</td></tr>
         <tr><td class="k">구성</td><td class="v">[양면] 차음석고 12.5T + 그린글루 + 돌차음판 4T + 일반석고 9.5T + 투바이포 38×89 + 분리 50 + 투바이포 38×89 (미네랄울 100T)</td></tr>
-        <tr><td class="k">하지 — LT (목재)</td><td class="v">투바이포 38×89 2열 @400</td></tr>
-        <tr><td class="k">하지 — LS (경량스터드)</td><td class="v">경량스터드 100형 2열 @400</td></tr>
+        <tr><td class="k">벽체틀 — LT (목재)</td><td class="v">투바이포 38×89 2열 @400</td></tr>
+        <tr><td class="k">벽체틀 — LS (경량스터드)</td><td class="v">경량스터드 100형 2열 @400</td></tr>
         <tr><td class="k">열간 분리</td><td class="v">50 mm (열간 분리)</td></tr>
         <tr><td class="k">중공층</td><td class="v">228 mm</td></tr>
-        <tr><td class="k">충진</td><td class="v">미네랄울 48K 50T × 2</td></tr>
+        <tr><td class="k">충진</td><td class="v">미네랄울 50K 50T × 2</td></tr>
         <tr><td class="k">마감판</td><td class="v">[면당] 일반석고 9.5T + 돌차음판 4T + 그린글루 + 차음석고 12.5T</td></tr>
         <tr><td class="k">방진 지지</td><td class="v">열별 독립 런너 · 각각 고무패드 3T</td></tr>
-        <tr><td class="k">공통 사양</td><td class="v">상하부 런너 고무패드 3T · 사방 방음 실란트 · 미네랄울 48K 보드형 · 슬래브 도달 필수 · 양면 대칭</td></tr>
+        <tr><td class="k">공통 사양</td><td class="v">상하부 런너 고무패드 3T · 사방 방음 실란트 · 슬래브 도달 필수 · 양면 대칭</td></tr>
         <tr><td class="k">대응</td><td class="v">드럼 · 베이스앰프 · 서브우퍼 (AC-A 범위 내 최대치)</td></tr>
         <tr class="warn-row"><td class="k">비대응</td><td class="v">지하철·기계실 인접 등 구조전달 진동 — AC-B 필수</td></tr>
         <tr><td class="k">적용</td><td class="v">드럼실, 합주실, 라이브룸, 녹음실 실간 (AC-A 최상단)</td></tr>
@@ -282,7 +304,7 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
       <table class="est"><tbody>
         <tr><td class="k">열간 분리</td><td class="mono">50 mm (열간 분리)</td></tr>
         <tr><td class="k">중공층 총 깊이</td><td class="mono">228 mm</td></tr>
-        <tr><td class="k">충진 두께</td><td class="mono">미네랄울 48K 50T × 2</td></tr>
+        <tr><td class="k">충진 두께</td><td class="mono">미네랄울 50K 50T × 2</td></tr>
         <tr><td class="k">공진주파수 f₀</td><td class="mono">약 62 Hz (추정)</td></tr>
         <tr><td class="k">지배 변수</td><td class="mono">중공층 깊이 · 제진</td></tr>
       </tbody></table>
@@ -299,14 +321,14 @@ tr.opt td.k,tr.opt td.v{color:#7A2B4C;font-weight:600}
         <thead><tr><th>구분</th><th>규격</th><th>비고</th></tr></thead>
         <tbody><tr><td class="v">투바이 각재 (LT)</td><td class="mono">38×89 2열 · 목재</td><td>투바이포 38×89 2열 @400</td></tr>
 <tr><td class="v">경량스터드 (LS)</td><td class="mono">100형 2열</td><td>불연 요구 · 방화구획 · 감리 반려 현장</td></tr>
-<tr><td class="v">미네랄울 보드</td><td class="mono">48K · 50T × 2</td><td>KCC 또는 벽산 · 라이트필 031-604-3000</td></tr>
+<tr><td class="v">미네랄울 보온판 50K</td><td class="mono">50K · 50T · 450×1000 × 2</td><td>벽산 또는 KCC · 라이트필 031-604-3000</td></tr>
 <tr><td class="v">일반석고보드</td><td class="mono">9.5T</td><td>내측 1겹</td></tr>
 <tr><td class="v">돌차음판 (판간)</td><td class="mono">4T · 자체 점착 타입</td><td>일반석고 위 자착 · L5 전용</td></tr>
 <tr><td class="v">그린글루</td><td class="mono">—</td><td>약 0.6~0.8 튜브/㎡ · 15분 내 압착</td></tr>
 <tr><td class="v">차음석고보드</td><td class="mono">12.5T</td><td>외측 1겹 · 이음 600 엇갈림</td></tr>
 <tr><td class="v">고무패드</td><td class="mono">3T</td><td>상하부 런너</td></tr>
 <tr><td class="v">탄성 실란트</td><td class="mono">—</td><td>사방 단부 · 경화형 퍼티 금지</td></tr>
-<tr><td class="v">피스 · 타카핀</td><td class="mono">판 두께 + 하지 물림</td><td>과조임 금지</td></tr>
+<tr><td class="v">피스 · 타카핀</td><td class="mono">판 두께 + 벽체틀 물림</td><td>과조임 금지</td></tr>
 </tbody>
       </table>
     </div>
