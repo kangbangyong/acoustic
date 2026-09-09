@@ -162,6 +162,20 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 .pg-inst tr{break-inside:avoid}
 .pg-inst .cols{break-inside:avoid}
 .pg-inst h1{font-size:20px}}
+.pg-inst .g{margin-top:26px}
+.pg-inst .g h3{font-size:14.5px;margin:0 0 8px;color:var(--navy);display:flex;align-items:baseline;gap:10px}
+.pg-inst .g h3 small{font-weight:500;color:var(--mid);font-size:12px}
+.pg-inst .ac{display:inline-block;padding:1px 7px;border-radius:5px;font-size:11.5px;font-weight:700;
+      background:#EEF2F5;color:var(--navy-2);border:1px solid #D5DEE5;white-space:nowrap}
+.pg-inst .ac.b{background:var(--navy);color:#fff;border-color:var(--navy)}
+.pg-inst .fl{display:inline-block;padding:0 6px;border-radius:4px;font-size:11px;font-weight:600;
+      margin:1px 2px 1px 0;white-space:nowrap}
+.pg-inst .fl.loud{background:#FBE3DC;color:var(--no)}
+.pg-inst .fl.hit{background:#E6EEF5;color:var(--navy-2)}
+.pg-inst .fl.quiet{background:#E4F0EA;color:var(--ok)}
+.pg-inst .fl.bi{background:#F4ECD8;color:var(--warn)}
+.pg-inst .fl.low{background:#EDE7F6;color:#5B3E9B}
+.pg-inst .est{color:var(--warn);font-size:11px;font-weight:600}
 </style>
 </head>
 <body>
@@ -516,7 +530,7 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 <header>
   <div class="brand">GRID-A 4U</div>
   <h1>악기별 방음 설계 비고판</h1>
-  <p class="sub">상담·견적용 현장 참고표 · 천장고는 <strong>방음 시공 완료 후</strong> 실측 기준</p>
+  <p class="sub">상담·견적용 현장 참고표 · 상담신청서 Q2와 동일한 9군 55항목 · 천장고는 <strong>방음 시공 완료 후</strong> 실측 기준</p>
   <p class="sub" style="margin-top:4px">연습 전용은 소리가 흘러가지만, 녹음은 방의 왜곡이 파일에 영구히 남습니다 — 그래서 기준이 다릅니다.</p>
 </header>
 
@@ -524,121 +538,167 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
   <span><span class="pill p-o">O</span> <b>부스 가능</b></span>
   <span><span class="pill p-w">△</span> <b>조건부</b> — 건물 천장고·방진 확인 필요</span>
   <span><span class="pill p-n">X</span> <b>룸 공사</b> — 부스로 불가</span>
-  <span style="flex-basis:100%;margin-top:2px"><b>최저</b>는 그 아래로는 권하지 않는 하한, <b>연습 전용·녹음 겸용</b>은 안심하고 쓸 수 있는 값입니다. 건축법상 거실 천장고 하한은 2.1m(용도에 따라 다름, 관할 확인). 고음 악기는 연습·녹음 값이 같습니다. 대신 녹음 시 마이크 거리만큼 <b>면적</b>이 늘어납니다. 저음 악기만 천장고 기준이 올라갑니다.</span>
+  <span><span class="ac">L2</span> <b>AC 하한</b> — 최저음 기준 내부 로직 (≤35Hz AC-B · ≤50 L4 · ≤80 L3 · ≤150 L2 · 그 이상 L1~L2)</span>
+  <span><span class="fl loud">loud</span> 질량·기밀 우선 <span class="fl hit">hit</span> 바닥 우선 <span class="fl low">low</span> 저역 구조전달 <span class="fl quiet">quiet</span> 외부소음 차단 <span class="fl bi">양방향</span> 유입·유출 동시</span>
+  <span style="flex-basis:100%;margin-top:2px"><b>최저</b>는 그 아래로는 권하지 않는 하한, <b>연습 전용·녹음 겸용</b>은 안심하고 쓸 수 있는 값입니다. 건축법상 거실 천장고 하한은 2.1m(용도에 따라 다름, 관할 확인). 고음 악기는 연습·녹음 값이 같고 대신 녹음 시 마이크 거리만큼 <b>면적</b>이 늘어납니다. 저음 악기만 천장고 기준이 올라갑니다. <span class="est">≈</span> 표시는 조율·기종에 따라 달라 확인이 필요한 값.</span>
 </div>
 
+<!-- ───────── 1 소리를 내지 않는 일 ───────── -->
+<div class="g">
+<h3>1 · 소리를 내지 않는 일 <small>외부소음 차단 기준 — 등급은 유입원(도로·옆집·상하층)에 따라 결정</small></h3>
+<div class="tblwrap">
+<table>
+<thead><tr><th>항목</th><th>목표 배경소음</th><th>AC 하한</th><th>플래그</th><th>주 유입 경로</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td class="inst">공부</td><td class="h">주간 40 / 야간 35dB</td><td><span class="ac">L1~L2</span></td><td><span class="fl quiet">quiet</span></td><td>창·문 (도로), 옆집 말소리</td><td class="note">STC가 유효한 유일한 영역. 대개 창호·문 교체와 기밀로 해결되며 벽 공사는 옆집 TV·말소리가 들릴 때만. 저역 유입(윗집 발소리)은 별개 — 천장 M등급.</td></tr>
+<tr><td class="inst">주식 매매</td><td class="h">주간 40dB</td><td><span class="ac">L1~L2</span></td><td><span class="fl quiet">quiet</span></td><td>창·문, 옆 실 통화</td><td class="note">공부와 동일. 통화·회의가 잦으면 화상회의 행 참조.</td></tr>
+<tr><td class="inst">화상회의</td><td class="h">주간 40dB</td><td><span class="ac">L2</span></td><td><span class="fl bi">양방향</span> <span class="fl quiet">quiet</span></td><td>문·복도, 옆 실</td><td class="note">외부 유입도 막고 내 말소리도 안 나가야 함. 마이크가 잔향을 그대로 잡으므로 흡음 마감 병행. 문이 성패 — 방음문 1중 이상.</td></tr>
+<tr><td class="inst">명상 · 요가</td><td class="h">35dB</td><td><span class="ac">L2</span></td><td><span class="fl quiet">quiet</span></td><td>창, 옆집, 설비 소음</td><td class="note">목표가 낮아 설비(환기 팬·에어컨) 자체 소음이 문제가 됨. 저속 팬, 사일런서. 요가 매트 소리는 무시.</td></tr>
+<tr><td class="inst">수면</td><td class="h">야간 30dB</td><td><span class="ac">L2~L3</span></td><td><span class="fl quiet">quiet</span> <span class="fl low">low</span></td><td>창 (도로·항공), 윗집 발소리, 배관</td><td class="note">가장 낮은 목표치. 도로 저역(트럭·버스)은 창호로 안 막혀 L3 벽까지 가는 경우 있음. 윗집 충격음은 천장 M2 + 그래도 잔존 고지.</td></tr>
+</tbody></table></div></div>
+
+<!-- ───────── 2 목소리 ───────── -->
+<div class="g">
+<h3>2 · 목소리 <small>기본음은 높지만 음압 편차가 큼 — 판소리·성악은 관악급</small></h3>
 <div class="tblwrap">
 <table>
 <thead>
-<tr>
-  <th rowspan="2">악기</th><th rowspan="2">최저음</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
-<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th>
-</tr>
+<tr><th rowspan="2">항목</th><th rowspan="2">최저음</th><th rowspan="2">AC 하한</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">플래그</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
+<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th></tr>
 </thead>
 <tbody>
+<tr><td class="inst">노래 · 보컬</td><td class="hz">82~100Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>녹음: 최대<br>연습: 적당히</td><td class="vib">없음</td><td class="note"><strong>녹음과 연습의 설계가 반대.</strong> 녹음은 최대 흡음, 연습은 흡음 과하면 목 상함. 겸용이면 연습 기준으로 짓고 녹음 시 이동식 흡음 패널.</td></tr>
+<tr><td class="inst">강의 · 회의</td><td class="hz">100Hz+</td><td><span class="ac">L1</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td><span class="fl bi">양방향</span></td><td>중음 (명료도)</td><td class="vib">없음</td><td class="note">차음보다 실내 명료도. RT60 0.6s 이하. 온라인 강의는 화상회의 행 기준 추가.</td></tr>
+<tr><td class="inst">판소리</td><td class="hz">≈100Hz</td><td><span class="ac">L2+</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.6m</td><td><span class="pill p-w">△</span></td><td><span class="fl loud">loud</span></td><td>중고음 (강하게)</td><td class="vib">없음 (북 별도)</td><td class="note"><strong>최저음 기준으로는 L1인데 음압이 110dB급</strong> — 등급 하한을 최소 한 단계 올린다. 목이 상하면 안 되므로 흡음은 적당히, 대신 벽 질량·기밀로 승부. 고수(북) 동반 시 북·대북 행 합산.</td></tr>
+<tr><td class="inst">성악</td><td class="hz">≈80Hz (베이스)</td><td><span class="ac">L2~L3</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.7m</td><td><span class="pill p-w">△</span></td><td><span class="fl loud">loud</span></td><td>중고음 + 확산</td><td class="vib">없음</td><td class="note">100~110dB. 성악은 방이 울려야 연습이 되므로 <strong>흡음 과다 금지, 확산 병행</strong>. 피아노 반주 동반이 대부분 — 업라이트 행 합산.</td></tr>
+<tr><td class="inst">유튜브 · 방송 · 스트리밍</td><td class="hz">100Hz+</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td><span class="fl bi">양방향</span> <span class="fl quiet">quiet</span></td><td>최대 (RT 0.3s)</td><td class="vib">없음</td><td class="note">유출보다 <strong>유입</strong>이 문제 — 마이크가 사이렌·윗집 소리를 다 잡음. 게임 방송이면 모니터 스피커 행 합산, 심야 방송이면 목표 30dB.</td></tr>
+</tbody></table></div></div>
 
-<tr class="grp"><td colspan="9">저역 없음 · 부스로 충분</td></tr>
+<!-- ───────── 3 현악 ───────── -->
+<div class="g">
+<h3>3 · 현악 <small>몸통 공명 악기 — 첼로·베이스는 엔드핀으로 바닥에 직결</small></h3>
+<div class="tblwrap">
+<table>
+<thead>
+<tr><th rowspan="2">항목</th><th rowspan="2">최저음</th><th rowspan="2">AC 하한</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">플래그</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
+<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th></tr>
+</thead>
+<tbody>
+<tr><td class="inst">바이올린</td><td class="hz">196Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span> 연습<br><span class="pill p-w">△</span> 녹음</td><td>—</td><td>중고음</td><td class="vib">없음</td><td class="note"><strong>천장고는 같지만 면적이 달라짐</strong> — 녹음은 마이크 거리 1~2m가 필요해 3평 이상. 좁으면 소리가 얇아짐.</td></tr>
+<tr><td class="inst">비올라</td><td class="hz">131Hz</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span> 연습<br><span class="pill p-w">△</span> 녹음</td><td>—</td><td>중고음</td><td class="vib">없음</td><td class="note">바이올린과 동일 조건.</td></tr>
+<tr><td class="inst">첼로</td><td class="hz">65Hz</td><td><span class="ac">L3</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h tight">2.8m 이상</td><td><span class="pill p-w">△</span></td><td><span class="fl low">low</span></td><td>저음 트랩 필수</td><td class="vib">있음</td><td class="note"><strong>엔드핀이 바닥에 꽂혀 진동이 직접 전달.</strong> 방진 바닥 필수이며 천장 10~15cm 추가 손실. 건물 천장고 3.2m는 되어야 시공 후 2.8m. 2.4m에서 연습은 가능하나 특정 음이 부풀어 연주 습관이 틀어짐 — 전공자·입시생은 반드시 고지.</td></tr>
+<tr><td class="inst">콘트라베이스</td><td class="hz">41Hz</td><td><span class="ac">L4</span></td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.2m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl low">low</span></td><td>저음 트랩</td><td class="vib">있음</td><td class="note">41Hz를 완전히 피하려면 4.2m — 현실적으로 불가. 3.2m는 자주 쓰는 음역을 피하는 절충치. 5현(B0 31Hz)이면 AC-B.</td></tr>
+<tr><td class="inst">통기타</td><td class="hz">82Hz</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.5m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음 + 저음 일부</td><td class="vib">없음</td><td class="note">2~5평 권장. <strong>2.1m 방은 울림이 82Hz로 6번줄 개방현과 정확히 겹침.</strong> 2.4m 이상 권장. 스틸현이라 나일론보다 5~10dB 큼.</td></tr>
+<tr><td class="inst">클래식 기타</td><td class="hz">82Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.5m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음 (적게)</td><td class="vib">없음</td><td class="note">나일론현, 음압 낮음(70~80dB). 최저음은 통기타와 같아도 실무 등급은 한 단계 아래. 흡음 과하면 소리가 죽음.</td></tr>
+<tr><td class="inst">우쿨렐레</td><td class="hz">262Hz (low-G 196)</td><td><span class="ac">L1</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>고음</td><td class="vib">없음</td><td class="note">가장 조건이 느슨한 악기. 학원이면 여러 명 동시 → 실내 명료도만.</td></tr>
+<tr><td class="inst">만돌린</td><td class="hz">196Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>고음 (트레몰로)</td><td class="vib">없음</td><td class="note">바이올린과 동일 조현. 고음 트레몰로가 틈새로 잘 새므로 기밀 우선.</td></tr>
+<tr><td class="inst">하프</td><td class="hz">33Hz (C1)</td><td><span class="ac b">AC-B</span> → 실무 L3</td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl low">low</span></td><td>저음 트랩 + 확산</td><td class="vib">있음 (바닥 접지)</td><td class="note"><strong>로직상 AC-B이지만 음압이 낮아(75~90dB) 실무 하한은 L3.</strong> 악기 높이 1.8m·무게 40kg — 부스 불가, 문 폭 확인. 저역 현은 바닥으로 진동 전달 → 방진 받침.</td></tr>
+</tbody></table></div></div>
 
-<tr>
-  <td class="inst">플루트</td><td class="hz">262Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td>
-  <td><span class="pill p-o">O</span></td>
-  <td>중고음 (섬유형)</td><td class="vib">없음</td>
-  <td class="note">취구가 왼쪽 귀 옆 → 연주자 귀 위치 95dB 이상. 왼쪽 벽·맞은편 벽 우선 흡음. 호흡량 많아 환기 용량 상향.</td>
-</tr>
-<tr>
-  <td class="inst">트럼펫</td><td class="hz">165Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td>
-  <td><span class="pill p-o">O</span></td>
-  <td>중고음 (강하게)</td><td class="vib">없음</td>
-  <td class="note">음압이 가장 높은 악기군. 좁은 방에서 110dB 초과. 흡음을 넉넉히 넣어야 청력 보호.</td>
-</tr>
-<tr>
-  <td class="inst">색소폰 · 클라리넷</td><td class="hz">139~147Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td>
-  <td><span class="pill p-o">O</span></td>
-  <td>중고음</td><td class="vib">없음</td>
-  <td class="note">관악 공통 — 환기 용량 상향. 밀폐 시 이산화탄소 축적으로 호흡이 흔들림.</td>
-</tr>
-<tr>
-  <td class="inst">바이올린</td><td class="hz">196Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td>
-  <td><span class="pill p-o">O</span> 연습<br><span class="pill p-w">△</span> 녹음</td>
-  <td>중고음</td><td class="vib">없음</td>
-  <td class="note"><strong>천장고는 같지만 면적이 달라짐</strong> — 녹음은 마이크 거리 1~2m가 필요해 3평 이상. 좁으면 소리가 얇아짐.</td>
-</tr>
-<tr>
-  <td class="inst">비올라</td><td class="hz">131Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td>
-  <td><span class="pill p-o">O</span> 연습<br><span class="pill p-w">△</span> 녹음</td>
-  <td>중고음</td><td class="vib">없음</td>
-  <td class="note">바이올린과 동일 조건.</td>
-</tr>
-<tr>
-  <td class="inst">보컬</td><td class="hz">82~100Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td>
-  <td><span class="pill p-o">O</span></td>
-  <td>녹음: 최대<br>연습: 적당히</td><td class="vib">없음</td>
-  <td class="note"><strong>녹음과 연습의 설계가 반대.</strong> 녹음은 최대 흡음, 연습은 흡음 과하면 목 상함. 겸용이면 연습 기준으로 짓고 녹음 시 이동식 흡음 패널 사용.</td>
-</tr>
+<!-- ───────── 4 국악 ───────── -->
+<div class="g">
+<h3>4 · 국악 <small>조율이 곡·유파마다 달라 최저음은 근사치 — 타악·태평소·꽹과리는 음압이 서양악기 최상위급</small></h3>
+<div class="tblwrap">
+<table>
+<thead>
+<tr><th rowspan="2">항목</th><th rowspan="2">최저음</th><th rowspan="2">AC 하한</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">플래그</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
+<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th></tr>
+</thead>
+<tbody>
+<tr><td class="inst">가야금</td><td class="hz"><span class="est">≈</span>80~100Hz</td><td><span class="ac">L2~L3</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.5m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음 (적게)</td><td class="vib">약간</td><td class="note">산조 12현 기준. 25현 개량은 더 낮음(≈78Hz) → L3. 음압 낮아 흡음 과하면 죽음. 바닥에 놓고 연주 — 바닥 방진 매트.</td></tr>
+<tr><td class="inst">거문고</td><td class="hz"><span class="est">≈</span>65~80Hz</td><td><span class="ac">L3</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h">2.6m</td><td><span class="pill p-o">O</span></td><td><span class="fl low">low</span> <span class="fl hit">hit</span></td><td>저중음</td><td class="vib">있음</td><td class="note"><strong>술대로 내리치는 타현 악기</strong> — 줄 소리보다 술대가 몸통·바닥을 치는 충격이 아래층으로 감. 바닥 방진이 우선.</td></tr>
+<tr><td class="inst">해금</td><td class="hz"><span class="est">≈</span>200Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음</td><td class="vib">없음</td><td class="note">바이올린 조건과 유사하나 비음 성분이 강해 고음 누설이 두드러짐 — 기밀.</td></tr>
+<tr><td class="inst">아쟁</td><td class="hz"><span class="est">≈</span>55~65Hz (대아쟁)</td><td><span class="ac">L3~L4</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h tight">2.8m 이상</td><td><span class="pill p-w">△</span></td><td><span class="fl low">low</span></td><td>저음 트랩 필수</td><td class="vib">있음</td><td class="note">국악의 콘트라베이스. 첼로와 같은 조건 + 바닥에 놓고 연주하므로 <strong>몸통 전체가 바닥에 접지</strong> — 방진 받침대 필수. 산조아쟁(소아쟁)은 ≈80Hz로 L3.</td></tr>
+<tr><td class="inst">대금</td><td class="hz"><span class="est">≈</span>230Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음</td><td class="vib">없음</td><td class="note">청공(갈대청) 떨림이 2~4kHz — 고음 누설. 관악 공통 환기 상향. 플루트 조건 + 기밀.</td></tr>
+<tr><td class="inst">피리</td><td class="hz"><span class="est">≈</span>300Hz</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td><span class="fl loud">loud</span></td><td>중고음 (강하게)</td><td class="vib">없음</td><td class="note">작지만 겹리드라 음압이 큼(100dB+). 최저음은 높아도 질량·기밀로 등급 하나 올림.</td></tr>
+<tr><td class="inst">태평소</td><td class="hz"><span class="est">≈</span>400Hz</td><td><span class="ac">L2+</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-w">△</span></td><td><span class="fl loud">loud</span></td><td>중고음 (최대)</td><td class="vib">없음</td><td class="note"><strong>국악 최고 음압(110~120dB).</strong> 야외 악기라 실내 연습 자체가 청력 위험 — 흡음 넉넉히. 트럼펫 이상으로 취급, 벽 질량 우선, 문·창 기밀이 성패.</td></tr>
+<tr><td class="inst">장구</td><td class="hz"><span class="est">≈</span>80~150Hz (궁편)</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.5m</td><td><span class="pill p-o">O</span></td><td><span class="fl hit">hit</span> <span class="fl loud">loud</span></td><td>저중음 + 고음</td><td class="vib">있음</td><td class="note">채편(고음 105dB+)과 궁편(저음) 이중. 바닥에 놓고 침 → 방진 매트. 사물놀이 편성이면 북·꽹과리 합산.</td></tr>
+<tr><td class="inst">북 · 대북</td><td class="hz"><span class="est">≈</span>40~60Hz</td><td><span class="ac">L3~L4</span></td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl hit">hit</span> <span class="fl low">low</span></td><td>저음 트랩</td><td class="vib">매우 큼</td><td class="note"><strong>드럼셋 조건.</strong> 대북은 킥드럼 이하 저역 + 충격이 받침대로 직결. 플로팅 바닥 필수, 아래층 있으면 상담 단계에서 한계 고지. 판소리 고수용 소리북은 L3.</td></tr>
+<tr><td class="inst">꽹과리</td><td class="hz">1~4kHz (기본음 없음)</td><td><span class="ac">L2+</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-w">△</span></td><td><span class="fl loud">loud</span></td><td>고음 (최대)</td><td class="vib">없음</td><td class="note"><strong>저역은 없지만 110~120dB 고음.</strong> 벽 두께보다 <strong>틈 하나</strong>가 성패 — 문 가스켓·콘센트·관통부 전수 확인. 실내 흡음 없으면 청력 손상.</td></tr>
+</tbody></table></div></div>
 
-<tr class="grp"><td colspan="9">저역 있음 · 부스 가능하나 조건 확인</td></tr>
+<!-- ───────── 5 관악 ───────── -->
+<div class="g">
+<h3>5 · 관악 <small>음압이 높고 호흡량이 커 환기 용량 상향은 공통</small></h3>
+<div class="tblwrap">
+<table>
+<thead>
+<tr><th rowspan="2">항목</th><th rowspan="2">최저음</th><th rowspan="2">AC 하한</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">플래그</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
+<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th></tr>
+</thead>
+<tbody>
+<tr><td class="inst">플루트</td><td class="hz">262Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음 (섬유형)</td><td class="vib">없음</td><td class="note">취구가 왼쪽 귀 옆 → 연주자 귀 위치 95dB 이상. 왼쪽 벽·맞은편 벽 우선 흡음.</td></tr>
+<tr><td class="inst">클라리넷</td><td class="hz">147Hz</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음</td><td class="vib">없음</td><td class="note">밀폐 시 이산화탄소 축적으로 호흡이 흔들림 — 환기 상향. 베이스 클라리넷은 ≈70Hz → L3.</td></tr>
+<tr><td class="inst">오보에</td><td class="hz">233Hz</td><td><span class="ac">L1~L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td>—</td><td>중고음</td><td class="vib">없음</td><td class="note">겹리드 특유의 비음이 고음 누설로 두드러짐. 리드 깎는 작업 공간·조명 별도.</td></tr>
+<tr><td class="inst">색소폰</td><td class="hz">139Hz (알토)</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td><span class="fl loud">loud</span></td><td>중고음</td><td class="vib">없음</td><td class="note">100~110dB. 테너 ≈104Hz, 바리톤 ≈65Hz → L3. 상담 시 기종 확인.</td></tr>
+<tr><td class="inst">트럼펫</td><td class="hz">165Hz</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td><span class="fl loud">loud</span></td><td>중고음 (강하게)</td><td class="vib">없음</td><td class="note">음압이 가장 높은 악기군. 좁은 방에서 110dB 초과. 흡음을 넉넉히 넣어야 청력 보호. 최저음 기준 L1이지만 loud → L2.</td></tr>
+<tr><td class="inst">트롬본</td><td class="hz">82Hz (E2)</td><td><span class="ac">L2~L3</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.6m</td><td><span class="pill p-w">△</span></td><td><span class="fl loud">loud</span></td><td>중저음 (강하게)</td><td class="vib">없음</td><td class="note">트럼펫 음압 + 저역. 슬라이드 뻗는 길이 포함 <strong>전방 1.5m 여유</strong> — 부스는 폭이 안 나옴. 베이스 트롬본 ≈58Hz → L3.</td></tr>
+<tr><td class="inst">호른</td><td class="hz">≈58Hz (B♭1)</td><td><span class="ac">L3</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h">2.7m</td><td><span class="pill p-w">△</span></td><td><span class="fl loud">loud</span></td><td>중저음 + 후방</td><td class="vib">없음</td><td class="note">벨이 뒤를 향해 <strong>연주자 뒷벽이 1차 반사면</strong> — 뒷벽 흡음·확산 우선. 페달음(≈44Hz)까지 쓰면 L4.</td></tr>
+<tr><td class="inst">튜바</td><td class="hz">≈37Hz (B♭ 튜바 D1)</td><td><span class="ac">L4</span></td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl low">low</span> <span class="fl loud">loud</span></td><td>저음 트랩</td><td class="vib">약간</td><td class="note">관악 중 유일하게 저역 구조전달 영역. 페달음(≈29Hz) 상용 시 AC-B. 악기 크기로도 부스 불가.</td></tr>
+</tbody></table></div></div>
 
-<tr>
-  <td class="inst">어쿠스틱 기타</td><td class="hz">82Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.5m</td>
-  <td><span class="pill p-o">O</span></td>
-  <td>중고음 + 저음 일부</td><td class="vib">없음</td>
-  <td class="note">2~5평 권장. <strong>2.1m 방은 울림이 82Hz로 기타 최저음과 정확히 겹침</strong> — 6번줄 개방현이 부풂. 2.4m 이상 권장.</td>
-</tr>
-<tr>
-  <td class="inst">일렉기타 앰프</td><td class="hz">82Hz</td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td>
-  <td><span class="pill p-o">O</span></td>
-  <td>중음</td><td class="vib">약간</td>
-  <td class="note">앰프 캐비닛이 바닥에 직접 닿으면 진동 전달. 앰프 스탠드나 방진 패드로 띄울 것.</td>
-</tr>
-<tr>
-  <td class="inst">카혼 · 젬베</td><td class="hz">60~80Hz</td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h">2.6m</td>
-  <td><span class="pill p-o">O</span></td>
-  <td>저중음</td><td class="vib">있음</td>
-  <td class="note">손 타격이라 드럼보다 약하지만 바닥 진동 존재. 방진 매트 권장.</td>
-</tr>
-<tr>
-  <td class="inst">업라이트 피아노</td><td class="hz">27Hz</td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h tight">2.8m</td>
-  <td><span class="pill p-w">△</span></td>
-  <td>저음 트랩</td><td class="vib">있음</td>
-  <td class="note">벽에 붙이면 진동이 벽으로 직접 전달. 벽에서 띄우고 방진 캐스터 사용.</td>
-</tr>
-<tr>
-  <td class="inst">첼로</td><td class="hz">65Hz</td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h tight">2.8m 이상</td>
-  <td><span class="pill p-w">△</span></td>
-  <td>저음 트랩 필수</td><td class="vib">있음</td>
-  <td class="note"><strong>엔드핀이 바닥에 꽂혀 진동이 직접 전달.</strong> 방진 바닥 필수이며 이때 천장 10~15cm 추가 손실. <strong>건물 천장고 3.2m는 되어야 시공 후 2.8m 확보.</strong> 2.4m에서도 연습은 가능하나 특정 음이 부풀며, 연주자가 그 음만 약하게 켜는 습관이 생김 — 전공자·입시생은 반드시 고지.</td>
-</tr>
+<!-- ───────── 6 건반 ───────── -->
+<div class="g">
+<h3>6 · 건반 <small>전자 건반은 '음원 변경'이 가능한 유일한 군 — 헤드폰이면 공사 자체가 줄어듦</small></h3>
+<div class="tblwrap">
+<table>
+<thead>
+<tr><th rowspan="2">항목</th><th rowspan="2">최저음</th><th rowspan="2">AC 하한</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">플래그</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
+<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th></tr>
+</thead>
+<tbody>
+<tr><td class="inst">피아노 (그랜드)</td><td class="hz">27Hz</td><td><span class="ac b">AC-B</span> → 실무 L4</td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl low">low</span></td><td>저음 트랩 + 확산</td><td class="vib">있음</td><td class="note">악기 길이 1.8~2.7m로 부스에 물리적으로 안 들어감. 10평 이상 권장. 흡음만 하면 답답해지므로 확산 병행. 최저 3옥타브는 실사용 빈도 낮아 실무 L4.</td></tr>
+<tr><td class="inst">피아노 (업라이트)</td><td class="hz">27Hz</td><td><span class="ac b">AC-B</span> → 실무 L3</td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h tight">2.8m</td><td><span class="pill p-w">△</span></td><td><span class="fl low">low</span></td><td>저음 트랩</td><td class="vib">있음</td><td class="note">벽에 붙이면 진동이 벽으로 직접 전달. <strong>벽에서 10cm 이상 띄우고 방진 캐스터.</strong> 아파트 민원의 대부분은 이 진동.</td></tr>
+<tr><td class="inst">전자피아노</td><td class="hz">27Hz (내장 스피커)</td><td><span class="ac">L2 (스피커) / 없음 (헤드폰)</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">—</td><td><span class="pill p-o">O</span></td><td><span class="fl hit">hit</span></td><td>중음</td><td class="vib">있음 (타건)</td><td class="note"><strong>상담 첫 질문: 헤드폰 쓰시나요?</strong> 헤드폰이면 남는 건 타건 충격음(아래층)뿐 → 방진 매트로 끝. 내장 스피커 사용 시 모니터 스피커 행 기준.</td></tr>
+<tr><td class="inst">신디사이저</td><td class="hz">스피커에 따름 (20Hz~)</td><td><span class="ac">스피커 행 참조</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">—</td><td><span class="pill p-o">O</span></td><td>—</td><td>중음</td><td class="vib">없음</td><td class="note">악기 자체는 무음. 등급은 <strong>연결된 스피커·서브우퍼</strong>가 결정. 서브베이스 음색 상용이면 서브우퍼 행.</td></tr>
+</tbody></table></div></div>
 
-<tr class="grp"><td colspan="9">부스로 불가 · 룸 공사 필요</td></tr>
+<!-- ───────── 7 타악 ───────── -->
+<div class="g">
+<h3>7 · 타악 <small>음향보다 진동 — 플로팅 바닥이 견적의 중심</small></h3>
+<div class="tblwrap">
+<table>
+<thead>
+<tr><th rowspan="2">항목</th><th rowspan="2">최저음</th><th rowspan="2">AC 하한</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">플래그</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
+<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th></tr>
+</thead>
+<tbody>
+<tr><td class="inst">드럼</td><td class="hz">50Hz</td><td><span class="ac">L4</span></td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl hit">hit</span> <span class="fl low">low</span> <span class="fl loud">loud</span></td><td>저음 + 중음</td><td class="vib">매우 큼</td><td class="note"><strong>플로팅 바닥 필수 — 공사비의 절반 가까이.</strong> 아랫집이 있으면 공기음보다 바닥 진동이 주 민원. 전자드럼도 킥 페달 충격은 동일 — 방진 플랫폼.</td></tr>
+<tr><td class="inst">카혼</td><td class="hz">60~80Hz</td><td><span class="ac">L3</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h">2.6m</td><td><span class="pill p-o">O</span></td><td><span class="fl hit">hit</span></td><td>저중음</td><td class="vib">있음</td><td class="note">앉아서 치므로 <strong>몸통이 바닥에 직결</strong> — 방진 매트 필수. 손 타격이라 드럼보다 약함.</td></tr>
+<tr><td class="inst">젬베</td><td class="hz">60~80Hz</td><td><span class="ac">L3</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h">2.6m</td><td><span class="pill p-o">O</span></td><td><span class="fl hit">hit</span> <span class="fl loud">loud</span></td><td>저중음 + 고음</td><td class="vib">있음</td><td class="note">슬랩(고음) 100dB+. 카혼 조건 + 고음 기밀. 수업이면 여러 대 동시 → 합산.</td></tr>
+<tr><td class="inst">팀파니</td><td class="hz">≈65~73Hz</td><td><span class="ac">L3</span></td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl hit">hit</span> <span class="fl low">low</span></td><td>저음 트랩</td><td class="vib">매우 큼</td><td class="note">4대 세트 4평 이상 점유, 부스 불가. 페달 조작 진동 + 저역 지속음. 대북과 같은 바닥 조건.</td></tr>
+<tr><td class="inst">마림바</td><td class="hz">≈65Hz (5옥타브 C2)</td><td><span class="ac">L3</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h">2.7m</td><td><span class="pill p-n">X</span></td><td><span class="fl hit">hit</span></td><td>저중음 + 확산</td><td class="vib">약간</td><td class="note">악기 길이 2.5m 이상 → 부스 불가. 4.3옥타브(A2 110Hz)면 L2. 공명관이 바닥 가까이 — 바닥 반사 관리.</td></tr>
+</tbody></table></div></div>
 
-<tr>
-  <td class="inst">콘트라베이스</td><td class="hz">41Hz</td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.2m 이상</td>
-  <td><span class="pill p-n">X</span></td>
-  <td>저음 트랩</td><td class="vib">있음</td>
-  <td class="note">41Hz를 완전히 피하려면 4.2m가 필요 — 현실적으로 불가. 3.2m는 자주 쓰는 음역을 피하는 절충치.</td>
-</tr>
-<tr>
-  <td class="inst">드럼셋</td><td class="hz">50Hz</td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td>
-  <td><span class="pill p-n">X</span></td>
-  <td>저음 + 중음</td><td class="vib">매우 큼</td>
-  <td class="note"><strong>플로팅 바닥 필수 — 공사비의 절반 가까이 차지.</strong> 아랫집이 있으면 공기 전달음보다 바닥 진동이 주 민원 원인. 천장고를 맞춰도 진동은 별도 항목.</td>
-</tr>
-<tr>
-  <td class="inst">그랜드 피아노</td><td class="hz">27Hz</td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td>
-  <td><span class="pill p-n">X</span></td>
-  <td>저음 트랩 + 확산</td><td class="vib">있음</td>
-  <td class="note">악기 길이만 1.8~2.7m로 부스에 물리적으로 안 들어감. 10평 이상 권장. 흡음만 하면 답답해지므로 확산 병행.</td>
-</tr>
-<tr>
-  <td class="inst">안무 · 댄스</td><td class="hz">—</td><td class="h-min">2.4m</td><td class="h">2.7m 이상</td><td class="h">—</td>
-  <td><span class="pill p-n">X</span></td>
-  <td>거울 반사 대책</td><td class="vib">매우 큼</td>
-  <td class="note"><strong>음향이 아니라 진동 공사.</strong> 점프·발구름 충격은 흡음재로 못 잡음. 플로팅 바닥이 핵심이며 공사비 대부분을 차지. 견적서 별도 항목으로 분리할 것.</td>
-</tr>
+<!-- ───────── 8 앰프 · 스피커 ───────── -->
+<div class="g">
+<h3>8 · 앰프 · 스피커 <small>등급은 악기가 아니라 우퍼 크기와 청취 음량이 결정 — 상담 시 기종·음량 반드시 확인</small></h3>
+<div class="tblwrap">
+<table>
+<thead>
+<tr><th rowspan="2">항목</th><th rowspan="2">최저음</th><th rowspan="2">AC 하한</th><th colspan="3" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3)">필요 천장고</th><th rowspan="2">부스</th><th rowspan="2">플래그</th><th rowspan="2">흡음 방향</th><th rowspan="2">진동</th><th rowspan="2">비고</th></tr>
+<tr><th style="font-weight:400;opacity:.75">최저</th><th style="font-weight:500">연습 전용</th><th>녹음 겸용</th></tr>
+</thead>
+<tbody>
+<tr><td class="inst">일렉기타 앰프</td><td class="hz">82Hz</td><td><span class="ac">L2</span></td><td class="h-min">2.1m</td><td class="h">2.4m</td><td class="h">2.4m</td><td><span class="pill p-o">O</span></td><td><span class="fl loud">loud</span></td><td>중음</td><td class="vib">약간</td><td class="note">캐비닛이 바닥에 직접 닿으면 진동 전달 — 앰프 스탠드나 방진 패드. 드롭 튜닝·7현(≈62Hz)이면 L3. 밴드 음량이면 loud.</td></tr>
+<tr><td class="inst">베이스 앰프</td><td class="hz">41Hz (5현 31Hz)</td><td><span class="ac">L4</span> / 5현 <span class="ac b">AC-B</span></td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.2m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl low">low</span> <span class="fl loud">loud</span></td><td>저음 트랩</td><td class="vib">큼</td><td class="note"><strong>아파트에서 가장 해결이 안 되는 항목.</strong> 캐비닛 진동이 슬래브→기둥→대각선 세대까지. 완화 순서: 헤드폰/DI → 방진 스탠드 → 주간 한정 → 1층·최상층 이전.</td></tr>
+<tr><td class="inst">모니터 스피커</td><td class="hz">≈45~60Hz (5~8")</td><td><span class="ac">L3~L4</span></td><td class="h-min">2.2m</td><td class="h">2.4m</td><td class="h">2.7m</td><td><span class="pill p-w">△</span></td><td><span class="fl low">low</span> <span class="fl bi">양방향</span></td><td>1차 반사점 + 저음 트랩</td><td class="vib">약간</td><td class="note">믹싱은 유출보다 <strong>방 자체의 왜곡</strong>이 문제 — 실내 음향 설계(AC-AB)가 본체. 스탠드·방진 패드로 데스크 진동 차단. 청취 음량 85dB 기준.</td></tr>
+<tr><td class="inst">서브우퍼</td><td class="hz">20~30Hz</td><td><span class="ac b">AC-B</span></td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h tight">3.0m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl low">low</span></td><td>저음 트랩 (다량)</td><td class="vib">매우 큼</td><td class="note"><strong>표준 아파트 공사로 해결 불가 영역.</strong> 30Hz 이하는 벽이 아니라 구조체 전체가 울림. 방진 플랫폼 + 음량 제한이 현실적 답. 상담에서 한계를 먼저 고지.</td></tr>
+<tr><td class="inst">홈시어터</td><td class="hz">20~30Hz (LFE)</td><td><span class="ac b">AC-B</span> → 실무 L4 + 서브 제한</td><td class="h-min">2.4m</td><td class="h">2.7m</td><td class="h">—</td><td><span class="pill p-n">X</span></td><td><span class="fl low">low</span> <span class="fl quiet">quiet</span></td><td>RT 0.35s + 저음 트랩</td><td class="vib">큼 (서브)</td><td class="note">서브우퍼 행 + 유입 차단. 서브 음량을 제한하면 L4로 성립. 스크린·프로젝터 팬 소음, 환기 팬 소음이 목표 배경소음을 깨는 경우 많음.</td></tr>
+</tbody></table></div></div>
 
-</tbody>
-</table>
-</div>
+<!-- ───────── 9 그 밖 ───────── -->
+<div class="g">
+<h3>9 · 그 밖 <small>음향이 아니라 진동 공사 — 흡음재·차음벽으로는 못 잡음</small></h3>
+<div class="tblwrap">
+<table>
+<thead><tr><th>항목</th><th>성격</th><th>AC 하한</th><th>필요 천장고</th><th>부스</th><th>플래그</th><th>진동</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td class="inst">발구름 · 점프 (안무·댄스)</td><td>충격음 (기본음 없음)</td><td><span class="ac">F-L4+ (바닥)</span></td><td class="h">2.7m 이상</td><td><span class="pill p-n">X</span></td><td><span class="fl hit">hit</span></td><td class="vib">매우 큼</td><td class="note"><strong>플로팅 바닥이 핵심이며 공사비 대부분.</strong> 거울 반사 대책은 실내 음향. 견적서에 바닥을 별도 항목으로 분리. 음악 재생은 모니터 스피커 행 합산.</td></tr>
+<tr><td class="inst">러닝머신</td><td>반복 충격 + 모터 진동</td><td><span class="ac">F-L3+ (바닥)</span></td><td class="h">2.4m</td><td><span class="pill p-o">O</span> (방진 플랫폼)</td><td><span class="fl hit">hit</span></td><td class="vib">큼</td><td class="note">벽 공사 불필요. 기기 하부 방진 플랫폼(고무+MDF 2중)이 답. 모터 저역 진동은 아래층으로 — 야간 사용 제한 고지.</td></tr>
+<tr><td class="inst">웨이트 낙하</td><td>단발 고충격</td><td><span class="ac">F-L5 (바닥)</span></td><td class="h">2.4m</td><td><span class="pill p-n">X</span></td><td><span class="fl hit">hit</span></td><td class="vib">극대</td><td class="note"><strong>가장 큰 충격 하중.</strong> 드롭 존만 국부 플랫폼(고무 30T+ 다층)으로 처리. 아파트 중간층은 어떤 공사로도 완전 해결 안 됨 — 계약 전 문서 고지.</td></tr>
+<tr><td class="inst">그 밖의 악기</td><td>상담 결정</td><td><span class="ac">—</span></td><td class="h">—</td><td>—</td><td>—</td><td class="vib">—</td><td class="note">최저음(Hz)·음압·바닥 접촉 여부 세 가지를 확인해 위 군 중 가장 가까운 행으로 매핑. 아코디언→클라리넷, 밴조→만돌린, 콘가·봉고→젬베, 전자드럼→드럼(hit).</td></tr>
+</tbody></table></div></div>
 
 <div class="cols">
 
@@ -646,13 +706,13 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
   <h2>상담 순서 — 이 넷을 먼저 묻는다</h2>
   <ol>
     <li><strong>용도</strong> — 녹음 / 연습 / 믹스 / 라이브룸 / 안무</li>
-    <li><strong>악기</strong> — 위 표에서 조건 확인. 합주 여부도 함께 확인</li>
+    <li><strong>악기</strong> — 위 표에서 조건 확인. 합주면 <strong>가장 낮은 최저음 + 가장 큰 플래그</strong>로 합산</li>
     <li><strong>공간</strong> — 평수, <strong>건물 천장고</strong>, 자가·임차, 이사 계획, 아랫집 유무</li>
     <li><strong>운영주체</strong> — 취미 / 입시·전공 / 프로 / <strong>학원 등록 여부</strong> / 임대업</li>
   </ol>
   <div class="warnbox">
     <p><strong>부스인지 룸인지는 고객이 아니라 우리가 판단한다.</strong> "부스 놔주세요"라는 요청이 와도 1·2번을 먼저 확인할 것.</p>
-    <p>드럼·피아노·첼로를 부스로 요청하는 경우가 실제로 있음. 계약 전에 정리해야 클레임이 없음.</p>
+    <p><strong>AC 하한은 최저음 로직값.</strong> loud 플래그는 한 단계 올리고, 음압이 낮은 악기(하프·클래식 기타)는 '실무' 값을 쓴다. 로직값과 실무값이 다른 행은 표에 둘 다 적었다.</p>
   </div>
 </section>
 
@@ -665,7 +725,8 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
     <li><strong>관통부는 이중 슬리브·방진 처리.</strong> 배관 하나가 두 구조를 단단히 이으면 그리로 다 샘</li>
     <li><strong>부스는 넓힐 수는 있어도 높일 수 없음.</strong> 건물 천장이 위를 막음</li>
     <li><strong>학원 등록 예정이면 초기에 확인.</strong> 강의실 최소 10㎡(칸막이 기준), 복도·사무는 면적 산정 제외, 방마다 냉난방기 필수, 강의실 통과 동선 불가</li>
-    <li><strong>마감재 성적서와 시공 중 사진을 남길 것.</strong> 그라스울은 불연재라 문제없으나 증빙이 없으면 나중에 곤란</li>
+    <li><strong>마감재 성적서와 시공 중 사진을 남길 것.</strong> 미네랄울은 불연재라 문제없으나 증빙이 없으면 나중에 곤란</li>
+    <li><strong>≈ 표시 최저음(국악·일부 관악)</strong>은 조율·기종별 편차가 있음. 현장 계측값이 나오면 이 표를 갱신</li>
   </ul>
 </section>
 
@@ -673,7 +734,7 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 
 <footer>
   <span>그리드에이포유 · 당신을 위해 그리다</span>
-  <span>수치는 실무 기준이며 법정 요건은 관할 교육지원청·소방서 사전 확인 필요</span>
+  <span>v2 · 상담신청서 Q2 55항목 정합 · 수치는 실무 기준이며 법정 요건은 관할 교육지원청·소방서 사전 확인 필요</span>
 </footer>
 
 </div>
