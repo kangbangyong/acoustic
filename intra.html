@@ -144,6 +144,8 @@ body.admin .sheet{max-width:1080px}
 .brow .stt{font-size:11px;font-weight:700;padding:4px 10px;border-radius:3px;border:1px solid;
   white-space:nowrap}
 .brow .st-new{color:#6b6a63;border-color:var(--line);background:#f6f5f1}
+.brow .st-booth{color:#5b3a86;border-color:#d7c9ea;background:#f1ebf9}
+.brow .st-drop{color:#7a7770;border-color:#d5d3cb;background:#e9e8e2}
 .brow .st-call{color:#0b4f7a;border-color:#bcd6e8;background:#e9f2f9}
 .brow .st-go{color:#8a5a05;border-color:#ecd9ab;background:#faf0d8}
 .brow .st-done{color:#0c5a3c;border-color:#bfe0d0;background:#e8f5ee}
@@ -176,8 +178,14 @@ body.admin .sheet{max-width:1080px}
 .reqrow .mt{color:var(--sub);font-size:11.5px}
 .reqrow .stt{font-size:11px;font-weight:700;padding:4px 9px;border-radius:3px;border:1px solid;
   font-family:inherit;cursor:pointer;background:#fff;white-space:nowrap}
+.reqrow .st-booth{color:#5b3a86;border-color:#d7c9ea;background:#f1ebf9}
+.reqrow .st-drop{color:#7a7770;border-color:#d5d3cb;background:#e9e8e2}
 .reqrow .st-call{color:#0b4f7a;border-color:#bcd6e8;background:#e9f2f9}
-.reqrow .st-call{color:#0b4f7a;border-color:#bcd6e8;background:#e9f2f9}
+.reqrow .st-booth{color:#5b3a86;border-color:#d7c9ea;background:#f1ebf9}
+.reqrow .st-drop{color:#7a7770;border-color:#d5d3cb;background:#e9e8e2}
+.reqrow .st-booth{color:#5b3a86;border-color:#d7c9ea;background:#f1ebf9}
+.st-drop{color:#7a7770;border-color:#d5d3cb;background:#e9e8e2}
+.st-call{color:#0b4f7a;border-color:#bcd6e8;background:#e9f2f9}
 .st-new{color:#6b6a63;border-color:var(--line);background:#f6f5f1}
 .reqrow .st-go{color:#8a5a05;border-color:#ecd9ab;background:#faf0d8}
 .reqrow .st-done{color:#0c5a3c;border-color:#bfe0d0;background:#e8f5ee}
@@ -192,6 +200,10 @@ body.admin .sheet{max-width:1080px}
   background:#fff;border-radius:3px;cursor:pointer}
 .pager button:disabled{color:#c9c7be;cursor:not-allowed}
 .sub{font-size:10.5px;letter-spacing:.1em;color:var(--sub);margin:14px 0 8px}
+.logbox{margin-top:14px;border:1px solid var(--line);background:var(--fill);padding:11px 14px}
+.logh{font-size:10px;letter-spacing:.14em;color:var(--sub);font-weight:700;margin-bottom:6px}
+.logl{font-size:12px;line-height:1.6;color:#33475a;padding:3px 0;border-bottom:1px dashed var(--hair)}
+.logl:last-child{border-bottom:0}
 .peek{margin-top:14px;border:1px solid var(--line)}
 .peek-b{padding:14px 16px;font-size:13px;line-height:1.6}
 .bsec{border-top:1px solid var(--hair);padding:14px 0 4px}
@@ -1016,6 +1028,25 @@ async function finish(){
   const btn=document.getElementById("save");
   btn.disabled=true; btn.textContent="저장 중…";
 
+  /* ── 수정 저장 ── */
+  if(EDIT_ID){
+    const before = window.__editBefore || {};
+    const log = diffLog(before, D);
+    let ok=false;
+    try{ const res=await api({action:"update", id:EDIT_ID, data:D, log:log, pass:ADMIN_PASS});
+         ok = !!(res && res.ok); }catch(e){}
+    const rec=await STORE.get("req:"+EDIT_ID);
+    if(rec){ rec.data=JSON.parse(JSON.stringify(D));
+             rec.log=(rec.log?rec.log+"\n":"")+(log||"");
+             await STORE.set("req:"+EDIT_ID, rec); }
+    const id2=EDIT_ID; EDIT_ID=null;
+    document.getElementById("save").textContent="접수 저장";
+    if(!ok) alert("서버 저장에 실패했습니다. 화면에만 반영되었습니다.");
+    btn.textContent="접수 저장"; btn.disabled=false;
+    showBrief(id2);
+    return;
+  }
+
   let id=null, at=new Date().toISOString();
   try{
     const res = await api({ action:"save", data:D });
@@ -1050,6 +1081,40 @@ async function finish(){
     </div>
     <button class="restart" onclick="location.reload()">새 접수</button>
   </div>`;
+}
+
+/* ══════════════ 수정 (관리자 전용) ══════════════ */
+function startEdit(id){
+  EDIT_ID = id;
+  const sv=document.getElementById("save"); sv.disabled=false;
+  document.body.classList.remove("admin");
+  document.getElementById("hdTitle").textContent="내용 수정";
+  document.getElementById("intake").style.display="";
+  document.getElementById("foot").style.display="";
+  document.getElementById("save").textContent="수정 저장";
+  const el=document.querySelector(".body");
+  el.outerHTML='<div class="body" id="body"></div>';
+  render();
+  window.scrollTo(0,0);
+}
+
+/* 변경된 항목만 뽑아 한 줄로 */
+function diffLog(before, after){
+  const L = {space:"공간", spaceEtc:"공간 내용", sounds:"소리", soundEtc:"악기 직접입력",
+             w:"가로", d:"세로", noSize:"크기 모름", h:"천장높이", noH:"천장고 모름",
+             when:"사용시간", sido:"지역", gu:"시군구", bldg:"건물", floor:"층",
+             ct:"계약", pt:"희망시기", pd:"희망날짜", bud:"예산", bTBD:"예산 협의",
+             staff:"담당자", name:"고객성명", phone:"고객연락처"};
+  const out=[];
+  Object.keys(L).forEach(k=>{
+    const a=Array.isArray(before[k])?before[k].join(", "):String(before[k]??"");
+    const b=Array.isArray(after[k])?after[k].join(", "):String(after[k]??"");
+    if(a!==b) out.push(`${L[k]} ${a||"—"} → ${b||"—"}`);
+  });
+  if(!out.length) return "";
+  const d=new Date();
+  const t=`${String(d.getFullYear()).slice(2)}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+  return t + " · " + out.join(" / ");
 }
 
 /* ══════════════ 처리현황 (실무진 · 읽기 전용) ══════════════ */
@@ -1111,14 +1176,16 @@ function legendStyle(v){
            "계약진행":"color:#8a5a05;border-color:#ecd9ab;background:#faf0d8",
            "계약완료":"color:#0c5a3c;border-color:#bfe0d0;background:#e8f5ee",
            "시공완료":"color:#fff;border-color:#002945;background:#002945",
+           "방음부스추천":"color:#5b3a86;border-color:#d7c9ea;background:#f1ebf9",
+           "진행포기":"color:#7a7770;border-color:#d5d3cb;background:#e9e8e2",
            "보류":"color:#a8281b;border-color:#eecbc6;background:#fbeae8"};
   return m[v]||"";
 }
 
 /* ══════════════ 관리자 ══════════════ */
-const STATUS=["신규","전화연락완료","계약진행","계약완료","시공완료","보류"];
-const STCLS={"신규":"st-new","전화연락완료":"st-call","계약진행":"st-go","계약완료":"st-done","시공완료":"st-fin","보류":"st-hold"};
-const PER=10; let page=0, ADMIN_PASS=null;
+const STATUS = ["신규","전화연락완료","계약진행","계약완료","시공완료","방음부스추천","보류","진행포기"];
+const STCLS = {"신규":"st-new","전화연락완료":"st-call","계약진행":"st-go","계약완료":"st-done","시공완료":"st-fin","방음부스추천":"st-booth","보류":"st-hold","진행포기":"st-drop"};
+const PER=10; let page=0, ADMIN_PASS=null, EDIT_ID=null;
 
 document.getElementById("adminBtn").onclick=async ()=>{
   if(!ADMIN_PASS){
@@ -1230,10 +1297,17 @@ async function showBrief(id){
   if(!rec) rec=await STORE.get("req:"+id);
   if(!rec){ alert("해당 번호의 신청서를 찾을 수 없습니다."); return; }
   Object.keys(rec.data).forEach(k=>D[k]=rec.data[k]);
-  renderAdmin(`<div class="idbox" style="margin-top:0"><div class="l">신청번호</div>
+  window.__editBefore = JSON.parse(JSON.stringify(rec.data));
+  await renderAdmin(`<div class="idbox" style="margin-top:0"><div class="l">신청번호</div>
       <div class="no">${id}</div>
-      <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""}</div></div>
+      <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""}</div>
+      <button class="btn go" id="editBtn" style="margin-top:12px;padding:9px 22px;font-size:13px"
+        data-id="${id}">내용 수정</button></div>
+    ${rec.log?`<div class="logbox"><div class="logh">수정 이력</div>${
+      String(rec.log).split("\n").filter(Boolean).map(l=>`<div class="logl">${l}</div>`).join("")}</div>`:""}
     <div class="peek"><div class="peek-b">${briefHTML()}</div></div>`);
+  const eb=document.getElementById("editBtn");
+  if(eb) eb.onclick=()=>startEdit(id);
 }
 
 render();
