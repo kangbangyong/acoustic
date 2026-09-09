@@ -1295,7 +1295,8 @@ async function showBrief(id){
   try{ const res=await api({action:"find",q:id,pass:ADMIN_PASS});
        if(res&&res.ok&&res.hits.length){
          const h=res.hits[0];
-         if(h.data && Object.keys(h.data).length){ rec={at:h.at,data:h.data,log:h.log||""}; from="서버"; }
+         if(h.data && Object.keys(h.data).length){ rec={at:h.at,data:h.data,log:h.log||""};
+           from = h.data._rebuilt ? "복원" : "서버"; }
        } }catch(e){}
   if(!rec){
     const local=await STORE.get("req:"+id);
@@ -1324,7 +1325,7 @@ async function showBrief(id){
   await renderAdmin(`<div class="idbox" style="margin-top:0"><div class="l">신청번호</div>
       <div class="no">${id}</div>
       <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""}
-        ${from?`<span style="color:#b6b4ab"> · ${from}</span>`:""}</div>
+        ${from?`<span style="color:${from==="복원"?"#a8281b":"#b6b4ab"}"> · ${from}</span>`:""}</div>
       <button class="btn go" id="editBtn" style="margin-top:12px;padding:9px 22px;font-size:13px"
         data-id="${id}">내용 수정</button></div>
     ${rec.log?`<div class="logbox"><div class="logh">수정 이력</div>${
