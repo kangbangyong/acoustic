@@ -93,6 +93,20 @@ body{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,
 .alert{margin-top:9px;border-left:2px solid var(--stop);background:var(--stop-bg);
   padding:9px 12px;font-size:12px;line-height:1.55;color:#7a2016}
 .alert b{font-weight:700;color:var(--stop)}
+.drop{margin-top:6px;border:1px dashed var(--line);background:#fbfaf7;padding:14px;
+  text-align:center;cursor:pointer;transition:.12s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--fill)}
+.drop .t{font-size:13px;font-weight:700;color:var(--accent)}
+.drop .s{font-size:11.5px;color:var(--sub);margin-top:4px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.th{position:relative;width:96px}
+.th img{width:96px;height:72px;object-fit:cover;border:1px solid var(--line);display:block}
+.th .x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;
+  border:1px solid var(--line);background:#fff;color:var(--sub);font-size:12px;line-height:1;
+  cursor:pointer;padding:0}
+.th .x:hover{border-color:var(--stop);color:var(--stop)}
+.th .n{font-size:10px;color:var(--sub);margin-top:3px;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
 .notice{margin-top:12px;padding:10px 12px;background:#FBF6E8;border-left:2px solid var(--gold);
   font-size:12px;line-height:1.6;color:#6b5518;font-style:italic}
 .notice b{font-style:normal;font-weight:700;color:#8a6a12}
@@ -204,6 +218,8 @@ body.admin .sheet{max-width:1080px}
 .logh{font-size:10px;letter-spacing:.14em;color:var(--sub);font-weight:700;margin-bottom:6px}
 .logl{font-size:12px;line-height:1.6;color:#33475a;padding:3px 0;border-bottom:1px dashed var(--hair)}
 .logl:last-child{border-bottom:0}
+.flink{font-size:13px;font-weight:700;color:var(--accent);text-decoration:none}
+.flink:hover{text-decoration:underline}
 .peek{margin-top:14px;border:1px solid var(--line)}
 .peek-b{padding:14px 16px;font-size:13px;line-height:1.6}
 .bsec{border-top:1px solid var(--hair);padding:14px 0 4px}
@@ -387,6 +403,7 @@ const D = { space:null, spaceEtc:"", sounds:[], soundEtc:"",
             sido:null, gu:"", bldg:null, floor:null,
             ct:null, pt:null, pd:"", bud:"", bTBD:false,
             staff:"", name:"", phone:"" };
+let FILES = [];   // {name,type,data(base64),thumb}
 
 function newId(idx){
   const yy = String(new Date().getFullYear()).slice(2);
@@ -929,6 +946,16 @@ function render(){
       <span class="chk${D.bTBD?" on":""}" id="ckBud"><span class="bx"></span>상담 후 결정</span></div>`;
   h += `</div>`;
 
+  /* 06 첨부 */
+  h += `<div class="sec"><div class="sh"><span class="sn">6</span><span class="st">현장 사진</span>
+        <span class="ss">선택 · 있으면 판단이 정확해집니다</span></div>`;
+  h += `<div class="drop" id="drop">
+      <div class="t">사진 선택 또는 여기로 끌어놓기</div>
+      <div class="s">평면도 · 현장 전경 · 천장 · 문 주변 · 인접 세대 방향</div>
+      <input type="file" id="inFile" accept="image/*" multiple style="display:none"></div>`;
+  h += `<div class="thumbs" id="thumbs"></div>`;
+  h += `</div>`;
+
   document.getElementById("body").innerHTML = h;
   bind();
   check();
@@ -963,10 +990,73 @@ function bind(){
   if(g("ckH"))    g("ckH").onclick=()=>{D.noH=!D.noH; if(D.noH){D.h="";} render();};
   if(g("ckBud"))  g("ckBud").onclick=()=>{D.bTBD=!D.bTBD; if(D.bTBD) D.bud=""; render();};
 
+  const drop=g("drop"), inFile=g("inFile");
+  if(drop){
+    drop.onclick=()=>inFile.click();
+    inFile.onchange=e=>addFiles(e.target.files);
+    ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{
+      e.preventDefault(); drop.classList.add("over"); }));
+    ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{
+      e.preventDefault(); drop.classList.remove("over"); }));
+    drop.addEventListener("drop",e=>{ if(e.dataTransfer.files) addFiles(e.dataTransfer.files); });
+    paintThumbs();
+  }
+
   g("inStaff").value=D.staff; g("inN").value=D.name; g("inP").value=D.phone;
   g("inStaff").oninput=e=>{D.staff=e.target.value;check()};
   g("inN").oninput=e=>{D.name=e.target.value;check()};
   g("inP").oninput=e=>{D.phone=e.target.value;check()};
+}
+
+/* 사진을 긴 변 1600px 이하로 줄여 base64 로 만든다 */
+function shrink(file){
+  return new Promise((res,rej)=>{
+    const fr=new FileReader();
+    fr.onerror=()=>rej();
+    fr.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>rej();
+      img.onload=()=>{
+        const MAX=1600;
+        let w=img.width, hh=img.height;
+        if(Math.max(w,hh)>MAX){ const r=MAX/Math.max(w,hh); w=Math.round(w*r); hh=Math.round(hh*r); }
+        const cv=document.createElement("canvas"); cv.width=w; cv.height=hh;
+        cv.getContext("2d").drawImage(img,0,0,w,hh);
+        const url=cv.toDataURL("image/jpeg",0.72);
+        res({ name:file.name.replace(/\.[^.]+$/,"")+".jpg", type:"image/jpeg",
+              data:url.split(",")[1], thumb:url });
+      };
+      img.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+async function addFiles(list){
+  const arr=[...list].filter(f=>f.type.indexOf("image/")===0);
+  if(!arr.length) return;
+  if(FILES.length + arr.length > 12){ alert("사진은 한 번에 12장까지 보낼 수 있습니다."); return; }
+  const dp=document.getElementById("drop");
+  const keep=dp.innerHTML;
+  dp.innerHTML='<div class="t">사진 줄이는 중…</div>';
+  for(const f of arr){
+    try{ FILES.push(await shrink(f)); }catch(e){}
+  }
+  dp.innerHTML=keep;
+  const inF=document.getElementById("inFile");
+  if(inF){ inF.value=""; inF.onchange=e=>addFiles(e.target.files); }
+  dp.onclick=()=>document.getElementById("inFile").click();
+  paintThumbs(); check();
+}
+
+function paintThumbs(){
+  const t=document.getElementById("thumbs"); if(!t) return;
+  t.innerHTML = FILES.map((f,i)=>`<div class="th">
+      <img src="${f.thumb}" alt="">
+      <button class="x" data-i="${i}">×</button>
+      <div class="n">${f.name}</div></div>`).join("");
+  t.querySelectorAll(".x").forEach(b=>b.onclick=e=>{
+    e.stopPropagation(); FILES.splice(Number(b.dataset.i),1); paintThumbs(); });
 }
 
 function missing(){
@@ -1035,11 +1125,16 @@ async function finish(){
     let ok=false;
     try{ const res=await api({action:"update", id:EDIT_ID, data:D, log:log, pass:ADMIN_PASS});
          ok = !!(res && res.ok); }catch(e){}
+    if(FILES.length){
+      try{ await api({action:"addfiles", id:EDIT_ID,
+             files:FILES.map(f=>({name:f.name,type:f.type,data:f.data})), pass:ADMIN_PASS}); }catch(e){}
+      FILES=[];
+    }
     const rec=await STORE.get("req:"+EDIT_ID);
     if(rec){ rec.data=JSON.parse(JSON.stringify(D));
              rec.log=(rec.log?rec.log+"\n":"")+(log||"");
              await STORE.set("req:"+EDIT_ID, rec); }
-    const id2=EDIT_ID; EDIT_ID=null;
+    const id2=EDIT_ID; EDIT_ID=null; FILES=[];
     document.getElementById("save").textContent="접수 저장";
     if(!ok) alert("서버 저장에 실패했습니다. 화면에만 반영되었습니다.");
     btn.textContent="접수 저장"; btn.disabled=false;
@@ -1049,7 +1144,7 @@ async function finish(){
 
   let id=null, at=new Date().toISOString();
   try{
-    const res = await api({ action:"save", data:D });
+    const res = await api({ action:"save", data:D, files:FILES.map(f=>({name:f.name,type:f.type,data:f.data})) });
     if(res && res.ok){ id=res.id; at=res.at; }
   }catch(e){}
   if(!id){
@@ -1085,6 +1180,10 @@ async function finish(){
 
 /* ══════════════ 수정 (관리자 전용) ══════════════ */
 function startEdit(id){
+  if(!D.space && !D.sounds.length){
+    alert("수정할 내용이 없습니다. 목록에서 다시 열어 주세요.");
+    return;
+  }
   EDIT_ID = id;
   const sv=document.getElementById("save"); sv.disabled=false;
   document.body.classList.remove("admin");
@@ -1295,7 +1394,7 @@ async function showBrief(id){
   try{ const res=await api({action:"find",q:id,pass:ADMIN_PASS});
        if(res&&res.ok&&res.hits.length){
          const h=res.hits[0];
-         if(h.data && Object.keys(h.data).length){ rec={at:h.at,data:h.data,log:h.log||""};
+         if(h.data && Object.keys(h.data).length){ rec={at:h.at,data:h.data,log:h.log||"",files:h.files||0,filesUrl:h.filesUrl||""};
            from = h.data._rebuilt ? "복원" : "서버"; }
        } }catch(e){}
   if(!rec){
@@ -1317,10 +1416,19 @@ async function showBrief(id){
     sido:null, gu:"", bldg:null, floor:null,
     ct:null, pt:null, pd:"", bud:"", bTBD:false,
     staff:"", name:"", phone:"" };
+let FILES = [];   // {name,type,data(base64),thumb}
   Object.keys(BLANK).forEach(k=>D[k]=BLANK[k]);
   Object.keys(rec.data).forEach(k=>{ if(k in D) D[k]=rec.data[k]; });
   if(!Array.isArray(D.sounds)) D.sounds=[];
+  /* 숫자로 저장된 값이 섞여도 문자열로 통일 */
+  ["w","d","h","bud","gu","name","phone","staff","spaceEtc","soundEtc","pd"]
+    .forEach(k=>{ if(D[k]!=null) D[k]=String(D[k]); });
   window.__editBefore = JSON.parse(JSON.stringify(rec.data));
+  window.__lastRec = rec;
+  if(!D.space && !D.sounds.length){
+    alert("불러온 내용이 비어 있습니다.\n\n출처: "+from
+      +"\n받은 항목: "+Object.keys(rec.data).join(", ").slice(0,200));
+  }
 
   await renderAdmin(`<div class="idbox" style="margin-top:0"><div class="l">신청번호</div>
       <div class="no">${id}</div>
@@ -1328,6 +1436,8 @@ async function showBrief(id){
         ${from?`<span style="color:${from==="복원"?"#a8281b":"#b6b4ab"}"> · ${from}</span>`:""}</div>
       <button class="btn go" id="editBtn" style="margin-top:12px;padding:9px 22px;font-size:13px"
         data-id="${id}">내용 수정</button></div>
+    ${rec.files?`<div class="logbox"><div class="logh">현장 사진 ${rec.files}장</div>
+        <a href="${rec.filesUrl}" target="_blank" class="flink">드라이브 폴더 열기 →</a></div>`:""}
     ${rec.log?`<div class="logbox"><div class="logh">수정 이력</div>${
       String(rec.log).split("\n").filter(Boolean).map(l=>`<div class="logl">${l}</div>`).join("")}</div>`:""}
     <div class="peek"><div class="peek-b">${briefHTML()}</div></div>`);
