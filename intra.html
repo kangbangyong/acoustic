@@ -1291,16 +1291,40 @@ function bindList(){
 
 async function showBrief(id){
   if(!id) return;
-  let rec=null;
+  let rec=null, from="";
   try{ const res=await api({action:"find",q:id,pass:ADMIN_PASS});
-       if(res&&res.ok&&res.hits.length) rec={at:res.hits[0].at,data:res.hits[0].data}; }catch(e){}
-  if(!rec) rec=await STORE.get("req:"+id);
-  if(!rec){ alert("해당 번호의 신청서를 찾을 수 없습니다."); return; }
-  Object.keys(rec.data).forEach(k=>D[k]=rec.data[k]);
+       if(res&&res.ok&&res.hits.length){
+         const h=res.hits[0];
+         if(h.data && Object.keys(h.data).length){ rec={at:h.at,data:h.data,log:h.log||""}; from="서버"; }
+       } }catch(e){}
+  if(!rec){
+    const local=await STORE.get("req:"+id);
+    if(local && local.data && Object.keys(local.data).length){
+      rec={at:local.at,data:local.data,log:local.log||""}; from="로컬";
+    }
+  }
+  if(!rec){
+    alert(id+" 의 상세 내용을 불러오지 못했습니다.\n\n"
+      +"시트의 '원본' 열이 비어 있는 건일 수 있습니다.\n"
+      +"이 스크립트를 적용하기 전에 접수된 건은 상세 내용이 없습니다.");
+    return;
+  }
+
+  /* 기본값으로 초기화한 뒤 덮어써야 이전 화면 값이 남지 않는다 */
+  const BLANK = { space:null, spaceEtc:"", sounds:[], soundEtc:"",
+    w:"", d:"", noSize:false, h:"", noH:false, when:null,
+    sido:null, gu:"", bldg:null, floor:null,
+    ct:null, pt:null, pd:"", bud:"", bTBD:false,
+    staff:"", name:"", phone:"" };
+  Object.keys(BLANK).forEach(k=>D[k]=BLANK[k]);
+  Object.keys(rec.data).forEach(k=>{ if(k in D) D[k]=rec.data[k]; });
+  if(!Array.isArray(D.sounds)) D.sounds=[];
   window.__editBefore = JSON.parse(JSON.stringify(rec.data));
+
   await renderAdmin(`<div class="idbox" style="margin-top:0"><div class="l">신청번호</div>
       <div class="no">${id}</div>
-      <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""}</div>
+      <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""}
+        ${from?`<span style="color:#b6b4ab"> · ${from}</span>`:""}</div>
       <button class="btn go" id="editBtn" style="margin-top:12px;padding:9px 22px;font-size:13px"
         data-id="${id}">내용 수정</button></div>
     ${rec.log?`<div class="logbox"><div class="logh">수정 이력</div>${
