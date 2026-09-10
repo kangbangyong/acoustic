@@ -176,6 +176,70 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 .pg-inst .fl.bi{background:#F4ECD8;color:var(--warn)}
 .pg-inst .fl.low{background:#EDE7F6;color:#5B3E9B}
 .pg-inst .est{color:var(--warn);font-size:11px;font-weight:600}
+/* ===== 룸모드 계산기 ===== */
+.pg-modes{--navy:#0D2B4A;--gold:#E3B23C;--ink:#1B2430;--ink2:#4A5563;--ink3:#8A93A0;--rule:#D9DEE5;--wash:#F4F6F9;
+  --bad:#B3402F;--badbg:#F7E6E3;--warn:#C98A12;--warnbg:#FBF1DA;--ok:#2E7D5B;--okbg:#E3F1EA}
+.pg-modes *{box-sizing:border-box}
+.pg-modes{margin:0;background:#EEF0F3;font-family:"IBM Plex Sans KR","Pretendard","Apple SD Gothic Neo","Noto Sans CJK KR",sans-serif;color:var(--ink);font-size:14px;line-height:1.55}
+.pg-modes .wrap{max-width:1040px;margin:0 auto;padding:24px 20px 48px}
+.pg-modes .hd{background:var(--navy);color:#fff;padding:22px 28px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.pg-modes .hd h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.pg-modes .hd h1 span{color:var(--gold)}
+.pg-modes .hd p{margin:6px 0 0;font-size:13px;color:rgba(255,255,255,.75)}
+.pg-modes .hd .brand{font-size:12px;letter-spacing:.14em;color:rgba(255,255,255,.7);white-space:nowrap}
+.pg-modes .hd .brand b{color:#fff;font-weight:600}
+.pg-modes .card{background:#fff;padding:22px 28px;border:1px solid var(--rule);border-top:0}
+.pg-modes .card:last-child{border-radius:0 0 8px 8px}
+.pg-modes h2{font-size:15px;font-weight:600;margin:0 0 12px}
+.pg-modes h2 .n{color:var(--gold);font-weight:700;margin-right:4px}
+.pg-modes .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 18px}
+.pg-modes .f label{display:block;font-size:12px;color:var(--ink3);margin-bottom:4px}
+.pg-modes .f .in{display:flex;align-items:baseline;gap:6px}
+.pg-modes .f input{width:100%;font:600 20px "IBM Plex Mono",ui-monospace,monospace;color:var(--navy);border:0;border-bottom:2px solid var(--rule);padding:4px 2px;outline:0;background:transparent}
+.pg-modes .f input:focus{border-color:var(--gold)}
+.pg-modes .f .u{font-size:12px;color:var(--ink3)}
+.pg-modes .f.derived input{color:var(--ink3)}
+.pg-modes .hint{font-size:12px;color:var(--ink3);margin-top:10px}
+.pg-modes .hint b{color:var(--ink2);font-weight:500}
+.pg-modes .sum{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.pg-modes .k{padding:14px 16px;background:var(--wash);border-radius:6px}
+.pg-modes .k .l{font-size:12px;color:var(--ink3)}
+.pg-modes .k .v{font:600 24px "IBM Plex Mono",ui-monospace,monospace;color:var(--navy);margin-top:2px}
+.pg-modes .k .v small{font-size:12px;font-weight:500;color:var(--ink3);margin-left:3px}
+.pg-modes .k .s{font-size:12px;color:var(--ink2);margin-top:2px}
+.pg-modes .k.gold{background:var(--navy);color:#fff}
+.pg-modes .k.gold .l, .pg-modes .k.gold .s{color:rgba(255,255,255,.7)}
+.pg-modes .k.gold .v{color:var(--gold)}
+.pg-modes .verdict{margin-top:14px;padding:12px 16px;border-radius:6px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:flex-start}
+.pg-modes .verdict.bad{background:var(--badbg);color:var(--bad)}
+.pg-modes .verdict.warn{background:var(--warnbg);color:#7A5208}
+.pg-modes .verdict.ok{background:var(--okbg);color:var(--ok)}
+.pg-modes .verdict .ic{font:700 13px "IBM Plex Mono",ui-monospace,monospace;padding:1px 6px;border-radius:3px;background:rgba(0,0,0,.08);flex:none}
+.pg-modes .ruler{margin-top:6px}
+.pg-modes .ruler svg{width:100%;height:auto;display:block}
+.pg-modes .legend{display:flex;gap:18px;font-size:12px;color:var(--ink2);margin-top:6px;flex-wrap:wrap}
+.pg-modes .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.pg-modes table{width:100%;border-collapse:collapse;font-size:13px}
+.pg-modes th{font-weight:500;color:var(--ink3);text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule);font-size:12px}
+.pg-modes td{padding:7px 8px;border-bottom:1px solid #EEF0F3;font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:500}
+.pg-modes td.t{font-family:inherit;font-weight:500;color:var(--ink)}
+.pg-modes td .tag{display:inline-block;font:600 11px "IBM Plex Sans KR",sans-serif;padding:1px 7px;border-radius:3px;margin-left:6px;vertical-align:1px}
+.pg-modes .tag.bad{background:var(--badbg);color:var(--bad)}
+.pg-modes .tag.warn{background:var(--warnbg);color:#7A5208}
+.pg-modes tr.hit td{background:#FFF8F7}
+.pg-modes .ban{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.pg-modes .ban div{padding:10px 12px;border:1px solid var(--rule);border-radius:6px}
+.pg-modes .ban .b{font:600 14px "IBM Plex Mono",ui-monospace,monospace;color:var(--bad);white-space:nowrap}
+.pg-modes .ban .r{font-size:12px;color:var(--ink3)}
+.pg-modes .ban .r b{color:var(--ink2);font-weight:500}
+.pg-modes .two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.pg-modes .note{font-size:12.5px;color:var(--ink2);margin-top:12px;padding-left:12px;border-left:3px solid var(--gold);line-height:1.6}
+@media(max-width:760px){.pg-modes .grid, .pg-modes .sum, .pg-modes .ban{grid-template-columns:1fr 1fr}
+.pg-modes .two{grid-template-columns:1fr}
+.pg-modes .hd{flex-direction:column;align-items:flex-start}}
+@media print{.pg-modes{background:#fff}
+.pg-modes .wrap{padding:0;max-width:none}
+.pg-modes .hd{border-radius:0}}
 /* ===== 룸어쿠스틱 요소 ===== */
 .pg-room{--navy:#002643;--navy-2:#0B3B60;--paper:#F7F6F3;--ink:#1C1C1A;--mid:#5E5E58;--line:#D9D6CF;
   --gold:#C8A24A;--orange:#DB4A2B;--teal:#1D6B7A;--wood:#D9B27C;--wood2:#B98A52;--felt:#3A3F47}
@@ -187,18 +251,27 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 .pg-room .brand{font-size:12px;letter-spacing:.14em;color:var(--orange);font-weight:600}
 .pg-room h1{font-size:26px;margin:6px 0 4px;letter-spacing:-.02em}
 .pg-room .sub{font-size:13px;color:var(--mid);margin:0}
-.pg-room .intro{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 26px}
+.pg-room .intro{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:0 0 26px}
 .pg-room .box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .pg-room .box h4{margin:0 0 6px;font-size:13px;letter-spacing:.06em;color:var(--orange)}
 .pg-room .box p{margin:0;font-size:13.5px}
 .pg-room .box.navy{background:var(--navy);color:#E6EDF2;border-color:var(--navy)}
 .pg-room .box.navy h4{color:var(--gold)}
-.pg-room .zones{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:28px;background:#fff}
+.pg-room .zbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--navy);color:#E6EDF2;border-radius:10px 10px 0 0;padding:10px 14px;font-size:12.5px}
+.pg-room .zbar .zt{font-weight:700;color:var(--gold);letter-spacing:.04em;margin-right:6px}
+.pg-room .zbar label{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.pg-room .zbar input{width:58px;padding:3px 6px;border:1px solid rgba(255,255,255,.3);border-radius:5px;background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:13px;text-align:right}
+.pg-room .zbar input:focus{outline:none;border-color:var(--gold)}
+.pg-room .zbar .zref{margin-left:auto;color:#B8C6D1;font-size:12px}
+.pg-room .zbar .zlink{color:var(--gold);text-decoration:none;font-size:12px;white-space:nowrap}
+.pg-room .zbar .zlink:hover{text-decoration:underline}
+.pg-room .zones{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:0 0 10px 10px;border-top:0;margin-bottom:28px;overflow:hidden;margin-bottom:28px;background:#fff}
 .pg-room .zone{padding:12px 14px;border-left:1px solid var(--line)}
 .pg-room .zone:first-child{border-left:0}
 .pg-room .zone b{display:block;font-size:12px;color:var(--mid);letter-spacing:.04em}
 .pg-room .zone strong{display:block;font-size:14px;color:var(--navy);margin:2px 0 4px}
 .pg-room .zone span{font-size:12.5px;color:var(--mid)}
+.pg-room .zone .zf{display:block;font-style:normal;font-size:11px;color:var(--orange);font-variant-numeric:tabular-nums;margin:-2px 0 6px;line-height:1.4}
 .pg-room .zone.z1{border-top:4px solid var(--orange)}
 .pg-room .zone.z2{border-top:4px solid #5B3E9B}
 .pg-room .zone.z3{border-top:4px solid var(--teal)}
@@ -235,18 +308,32 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 @media (max-width:900px){.pg-room .cards{grid-template-columns:repeat(2,1fr)}
 .pg-room .zones{grid-template-columns:1fr 1fr}
 .pg-room .intro{grid-template-columns:1fr}}
-@media (max-width:560px){.pg-room .cards{grid-template-columns:1fr}
+@media (max-width:560px){.pg-room .zbar .zref{margin-left:0}
+.pg-room .cards{grid-template-columns:1fr}
 .pg-room .cols{grid-template-columns:1fr}
 .pg-room{padding:18px 12px 40px}}
 @media print{.pg-room{background:#fff;padding:0}
 .pg-room .card{break-inside:avoid}
 .pg-room .cards{grid-template-columns:repeat(3,1fr)}}
+.pg-room .rt{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:12.5px;margin-top:12px}
+.pg-room .rt th{background:var(--navy);color:#fff;font-weight:600;text-align:left;padding:8px 9px;font-size:12px;white-space:nowrap}
+.pg-room .rt td{padding:8px 9px;border-top:1px solid var(--line);vertical-align:top}
+.pg-room .rt tbody tr:nth-child(even){background:#FBFAF8}
+.pg-room .rt .rm{font-weight:700;color:var(--navy);white-space:nowrap}
+.pg-room .rt .rtv{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.pg-room .lv{display:inline-block;min-width:22px;text-align:center;padding:0 6px;border-radius:4px;font-size:11px;font-weight:700;white-space:nowrap}
+.pg-room .lv.a{background:#1D6B52;color:#fff}
+.pg-room .lv.b{background:#CFE5D9;color:#1D6B52}
+.pg-room .lv.c{background:#EEF0F2;color:#5E5E58}
+.pg-room .lv.d{background:#2F6FB3;color:#fff}
+.pg-room .lv.x{background:#FBE3DC;color:#B33A1E}
+.pg-room .rt .note{color:var(--mid);font-size:12px}
 </style>
 </head>
 <body>
 <div class="hub-bar">
   <span class="hub-brand">GRID-A 4U · AC 사전</span>
-  <div class="hub-tabs"><button class="hub-tab" data-page="dict">방음 용어사전</button><button class="hub-tab" data-page="inst">악기별 설계 비고판</button><button class="hub-tab" data-page="room">룸어쿠스틱 요소</button></div>
+  <div class="hub-tabs"><button class="hub-tab" data-page="dict">방음 용어사전</button><button class="hub-tab" data-page="inst">악기별 설계 비고판</button><button class="hub-tab" data-page="modes">룸모드 계산기</button><button class="hub-tab" data-page="room">룸어쿠스틱 요소</button></div>
   <button class="hub-print" type="button">인쇄</button>
 </div>
 <div class="hub-page pg-dict" id="pg-dict">
@@ -272,6 +359,7 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
   <a href="#s5">5 공법</a>
   <a href="#s6">6 자재</a>
   <a href="#s7">7 설비</a>
+  <a href="#s8">8 전기·전원</a>
 </div></nav>
 
 <div class="wrap">
@@ -300,6 +388,7 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
   <div class="term">
     <div class="t-head"><span class="t-ko">저역 · 중역 · 고역</span><span class="t-en">Low / Mid / High Frequency</span><span class="tag must">필수</span></div>
     <div class="t-def">대략 저역 250Hz 이하, 중역 250~2,000Hz, 고역 2,000Hz 이상. 저역이 가장 막기 어렵고, 등급 차이의 대부분은 저역 대응 여부에서 갈린다.</div>
+    <div class="t-def"><strong>파장 = 343 ÷ 주파수.</strong> 40Hz 8.6m · 80Hz 4.3m · 200Hz 1.7m · 1kHz 34cm · 4kHz 8.6cm. 파장이 방만 하면 공명(모드), 패널보다 길면 돌아서 지나감(회절), 손바닥만 하면 튕김(반사). 흡음재는 파장의 1/4 두께가 있어야 먹고, 벽은 파장이 길수록 통째로 밀린다 — 저역이 차음·흡음 모두 어려운 이유가 전부 이 한 줄.</div>
     <div class="say"><b>고객 설명</b>"낮은 소리일수록 막기 어렵습니다. 킥드럼이나 발소리가 그렇고, 등급이 올라가는 이유가 여기 있습니다."</div>
   </div>
 
@@ -572,6 +661,60 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
   </div>
 </section>
 
+
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">8</span><h2>전기 · 전원</h2></div>
+  <p class="sec-note">방음이 끝나도 스피커에서 "웅—" 소리가 나면 방음 클레임이 된다. 음향 장비 전원은 별도 항목으로 잡는다.</p>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">전용 회선</span><span class="t-en">Dedicated Circuit</span><span class="tag must">필수</span></div>
+    <div class="t-def">음향 장비만 쓰는 분전반 차단기 한 회로. 에어컨·냉장고·조명 디머와 같은 회로를 쓰면 기동 순간 노이즈가 스피커로 들어온다. 방음실 공사의 전기 항목 1번.</div>
+    <div class="say"><b>고객 설명</b>"에어컨 켤 때 스피커가 '틱' 하는 건 방음이 아니라 전기 문제입니다. 회선을 따로 빼면 없어집니다."</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">접지 · 그라운드 루프</span><span class="t-en">Grounding / Ground Loop</span><span class="tag must">필수</span></div>
+    <div class="t-def">장비들이 서로 다른 경로로 접지되면 그 사이에 미세 전류가 흘러 60Hz "웅—" 험 노이즈가 난다. 모든 음향 장비를 한 콘센트 계통(한 점 접지)에서 받게 한다.</div>
+    <div class="warn"><b>현장 주의</b>구축 건물은 접지가 없거나 부실한 경우가 많다. 분전반 접지 여부를 착공 전에 확인하고, 없으면 접지 공사를 견적에 넣는다.</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">AVR</span><span class="t-en">Automatic Voltage Regulator</span><span class="tag part">실무</span></div>
+    <div class="t-def">전압이 오르락내리락하는 것을 일정하게 잡아주는 장치. 노이즈 제거가 목적이 아니라 <strong>전압 안정</strong>이 목적. 구축 상가·전압 변동 큰 지역, 고출력 앰프에 필요.</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">차폐 트랜스</span><span class="t-en">Isolation Transformer</span><span class="tag part">실무</span></div>
+    <div class="t-def">1차·2차 코일 사이에 차폐판을 둔 변압기(도란스). 전원선을 타고 들어오는 전기 잡음을 <strong>물리적으로 격리</strong>해서 끊는다. 무겁고 크지만 노이즈 차단은 가장 확실. 녹음실 마이크 프리·컨버터 계통에.</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">파워 컨디셔너</span><span class="t-en">Power Conditioner</span><span class="tag part">실무</span></div>
+    <div class="t-def">19인치 랙에 꽂는 슬림한 음향 전용 전원 보정 장치. 필터·서지 보호·분배를 한 대에. 위 둘보다 가볍고 랙에 정리되지만 격리 성능은 차폐 트랜스보다 낮다. 합주실·유튜브 데스크 표준.</div>
+    <div class="say"><b>선택 기준</b>전압이 흔들림 → AVR / 잡음을 확실히 끊어야 함 → 차폐 트랜스 / 랙에 깔끔하게 정리 + 기본 보호 → 파워 컨디셔너. 셋 다 노이즈의 근본 원인(회선·접지)을 먼저 잡은 뒤의 이야기.</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">서지 보호기</span><span class="t-en">Surge Protector</span><span class="tag part">실무</span></div>
+    <div class="t-def">낙뢰·순간 과전압에서 장비를 보호. 노이즈나 전압 안정과는 무관. 파워 컨디셔너에 대개 포함되어 있다.</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">UPS</span><span class="t-en">Uninterruptible Power Supply</span><span class="tag part">실무</span></div>
+    <div class="t-def">정전 시 배터리로 잠시 버티는 장치. 녹음 중 정전으로 파일이 날아가는 걸 막는 용도. 컴퓨터·인터페이스에만, 앰프에는 용량상 불가.</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">디머 노이즈</span><span class="t-en">Dimmer Noise</span><span class="tag part">실무</span></div>
+    <div class="t-def">조명 디머(밝기 조절기)가 만드는 고조파 잡음. 음향실에서 가장 흔한 노이즈원. 방음실 조명은 디머 대신 <strong>온·오프 스위치 + 조명 회로 분리</strong>, 꼭 필요하면 0–10V 방식 LED 디머.</div>
+  </div>
+
+  <div class="term">
+    <div class="t-head"><span class="t-ko">배관 관통부 (전기)</span><span class="t-en">Electrical Penetration</span><span class="tag must">필수</span></div>
+    <div class="t-def">전선관이 방음벽을 통과하는 자리. AC-W 배선 규칙 그대로 — WP는 한쪽 열에만, 열간 분리 구간 횡단 금지, 관이 구조체와 각재를 동시에 닿지 않게. 콘센트 박스는 뒷면 퍼티로 밀폐하고 양면 벽에서 같은 위치 배치 금지.</div>
+  </div>
+</section>
+
 <div class="open">
   <h3>확정 필요 · 다음 개정 반영</h3>
   <ul>
@@ -804,6 +947,142 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 
 </div>
 </div>
+<div class="hub-page pg-modes" id="pg-modes">
+<div class="wrap">
+
+  <div class="hd">
+    <div>
+      <h1>룸 모드 계산기 <span>· 방의 공진음과 금지 치수</span></h1>
+      <p>실높이가 정해지면 방의 공진음이 정해지고, 그 위에 가로세로 공진이 겹치지 않도록 치수를 고릅니다.</p>
+    </div>
+    <div class="brand">조용한청년들 <b>AcousticLAB</b></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">1</span>방 치수</h2>
+    <div class="grid">
+      <div class="f"><label>원 층고 (바닥 → 노출천장)</label><div class="in"><input id="h0" type="number" step="0.01" value="2.60"><span class="u">m</span></div></div>
+      <div class="f"><label>바닥 구성 두께</label><div class="in"><input id="hf" type="number" step="1" value="130"><span class="u">mm</span></div></div>
+      <div class="f"><label>천장 구성 두께</label><div class="in"><input id="hc" type="number" step="1" value="170"><span class="u">mm</span></div></div>
+      <div class="f derived"><label>실높이 (자동)</label><div class="in"><input id="h" type="number" step="0.01" readonly><span class="u">m</span></div></div>
+      <div class="f"><label>방 길이</label><div class="in"><input id="L" type="number" step="0.1" value="8.4"><span class="u">m</span></div></div>
+      <div class="f"><label>방 폭</label><div class="in"><input id="W" type="number" step="0.1" value="6.0"><span class="u">m</span></div></div>
+      <div class="f"><label>목표 잔향</label><div class="in"><input id="rt" type="number" step="0.05" value="0.45"><span class="u">초</span></div></div>
+      <div class="f"><label>겹침 판정 폭</label><div class="in"><input id="tol" type="number" step="1" value="5"><span class="u">%</span></div></div>
+    </div>
+    <p class="hint"><b>공식</b> — 축방향 모드 f = 171.5 ÷ 길이 (n차 = n배) · 슈뢰더 f<sub>s</sub> = 2000 √(RT ÷ V) · 실높이 = 원 층고 − 바닥 − 천장</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">2</span>이 방의 공진음</h2>
+    <div class="sum">
+      <div class="k gold"><div class="l">높이 모드 (고정)</div><div class="v" id="fh">—<small>Hz</small></div><div class="s">실높이가 정하는 값 · 치수로 못 바꿈</div></div>
+      <div class="k"><div class="l">길이 모드</div><div class="v" id="fl">—<small>Hz</small></div><div class="s" id="fls"></div></div>
+      <div class="k"><div class="l">폭 모드</div><div class="v" id="fw">—<small>Hz</small></div><div class="s" id="fws"></div></div>
+      <div class="k"><div class="l">슈뢰더 주파수</div><div class="v" id="fs">—<small>Hz</small></div><div class="s" id="fss"></div></div>
+    </div>
+    <div id="verdict" class="verdict ok"><span class="ic">OK</span><span></span></div>
+    <div class="ruler"><svg id="svg" viewBox="0 0 900 162" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <div class="legend"><span><i style="background:#E3B23C"></i>높이 모드</span><span><i style="background:#0D2B4A"></i>길이 모드</span><span><i style="background:#6B7FA3"></i>폭 모드</span><span><i style="background:#F3E7E7;border:1px solid #D9B9B5"></i>겹침 판정 폭</span><span>세로 점선 = 슈뢰더 (이 위는 고르게 들림)</span></div>
+  </div>
+
+  <div class="card">
+    <div class="two">
+      <div>
+        <h2><span class="n">3</span>모드 표 (1 ~ 4차)</h2>
+        <table>
+          <thead><tr><th>축</th><th>길이</th><th>1차</th><th>2차</th><th>3차</th><th>4차</th></tr></thead>
+          <tbody id="tb"></tbody>
+        </table>
+        <p class="note">붉게 표시된 칸은 높이 모드와 겹치는 배음입니다. 겹친 모드는 서로 보강해서 그 음 하나가 유독 크게 울립니다.</p>
+      </div>
+      <div>
+        <h2><span class="n">4</span>금지 치수 — 이 높이에서 피할 가로 · 세로</h2>
+        <div class="ban" id="ban"></div>
+        <p class="note" id="bannote"></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const C=171.5;
+const F=v=>v.toFixed(1);
+const ids=['h0','hf','hc','L','W','rt','tol'];
+ids.forEach(i=>$(i).addEventListener('input',calc));
+
+function calc(){
+  const h0=+$('h0').value, hf=+$('hf').value/1000, hc=+$('hc').value/1000;
+  const h=Math.max(0.5,h0-hf-hc); $('h').value=h.toFixed(2);
+  const L=+$('L').value, W=+$('W').value, rt=+$('rt').value, tol=+$('tol').value/100;
+  const V=L*W*h, fh=C/h, fl=C/L, fw=C/W, fs=2000*Math.sqrt(rt/V);
+
+  $('fh').innerHTML=F(fh)+'<small>Hz</small>';
+  $('fl').innerHTML=F(fl)+'<small>Hz</small>'; $('fls').textContent=`배음 ${F(fl*2)} · ${F(fl*3)} · ${F(fl*4)}`;
+  $('fw').innerHTML=F(fw)+'<small>Hz</small>'; $('fws').textContent=`배음 ${F(fw*2)} · ${F(fw*3)} · ${F(fw*4)}`;
+  $('fs').innerHTML=F(fs)+'<small>Hz</small>'; $('fss').textContent=`체적 ${V.toFixed(0)} ㎥ · 이 아래가 모달 영역`;
+
+  const hits=[];
+  const axes=[['길이',L,fl,'#0D2B4A'],['폭',W,fw,'#6B7FA3']];
+  const hh=[fh,fh*2];
+  let rows='';
+  axes.forEach(([name,len,f1])=>{
+    rows+=`<tr><td class="t">${name}</td><td>${len.toFixed(2)} m</td>`;
+    for(let n=1;n<=4;n++){
+      const f=f1*n; let cls='',tag='';
+      hh.forEach((fx,k)=>{ const d=Math.abs(f-fx)/fx; if(d<=tol){cls='bad';tag=`<span class="tag bad">높이 ${k+1}차와 겹침</span>`;hits.push({name,n,f,fx,d});} else if(d<=tol*1.6&&!cls){cls='warn';tag=`<span class="tag warn">근접</span>`;} });
+      rows+=`<td style="${cls==='bad'?'color:var(--bad);font-weight:600':cls==='warn'?'color:var(--warn)':''}">${F(f)}${tag}</td>`;
+    }
+    rows+='</tr>';
+  });
+  const lw=[];
+  for(let a=1;a<=4;a++)for(let b=1;b<=4;b++){const d=Math.abs(fl*a-fw*b)/(fw*b); if(d<=tol&&fl*a<200) lw.push({a,b,f:fl*a});}
+  $('tb').innerHTML=rows;
+
+  const v=$('verdict'); v.className='verdict';
+  if(hits.length){ v.classList.add('bad'); v.children[0].textContent='겹침';
+    v.children[1].textContent=hits.map(x=>`${x.name} ${x.n}차 ${F(x.f)}Hz 가 높이 모드 ${F(x.fx)}Hz 위에 앉습니다`).join(' · ')+`. 이 치수는 피하세요.`; }
+  else if(lw.length){ v.classList.add('warn'); v.children[0].textContent='주의';
+    v.children[1].textContent=`높이 모드와는 안 겹치지만 길이 ${lw[0].a}차와 폭 ${lw[0].b}차가 ${F(lw[0].f)}Hz 에서 겹칩니다. 한쪽 치수를 10% 정도 바꿔 보세요.`; }
+  else { v.classList.add('ok'); v.children[0].textContent='OK';
+    v.children[1].textContent=`세 축의 공진음이 서로 떨어져 있습니다. 높이 모드 ${F(fh)}Hz 는 남지만 한 음에 몰리지 않고, ${F(fs)}Hz 위부터는 고르게 들립니다.`; }
+
+  drawRuler({fh,fl,fw,fs,tol});
+  drawBan(h,fh,tol,L,W);
+}
+
+function drawRuler({fh,fl,fw,fs,tol}){
+  const lo=20,hi=400; const X=f=>40+820*Math.log10(f/lo)/Math.log10(hi/lo);
+  let s='';
+  [fh,fh*2].forEach(f=>{ if(f*(1+tol)>lo&&f*(1-tol)<hi) s+=`<rect x="${X(f*(1-tol))}" y="22" width="${X(f*(1+tol))-X(f*(1-tol))}" height="86" fill="#F3E7E7" rx="2"/>`; });
+  s+=`<line x1="40" y1="108" x2="860" y2="108" stroke="#0D2B4A" stroke-width="1.4"/>`;
+  [20,30,40,50,60,80,100,150,200,300,400].forEach(f=>{ s+=`<line x1="${X(f)}" y1="104" x2="${X(f)}" y2="112" stroke="#0D2B4A"/><text x="${X(f)}" y="128" text-anchor="middle" font-size="11" fill="#8A93A0" font-family="IBM Plex Mono,monospace">${f}${f===400?' Hz':''}</text>`; });
+  if(fs>lo&&fs<hi) s+=`<line x1="${X(fs)}" y1="14" x2="${X(fs)}" y2="108" stroke="#0D2B4A" stroke-width="1.4" stroke-dasharray="5 4"/><text x="${X(fs)}" y="148" text-anchor="middle" font-size="11" fill="#0D2B4A" font-weight="600">슈뢰더 ${fs.toFixed(0)}Hz</text>`;
+  const rows=[[fh,'#E3B23C',40,'높이'],[fl,'#0D2B4A',62,'길이'],[fw,'#6B7FA3',84,'폭']];
+  rows.forEach(([f1,col,y,name])=>{
+    s+=`<text x="34" y="${y+4}" text-anchor="end" font-size="11" fill="#4A5563">${name}</text>`;
+    for(let n=1;n<=8;n++){ const f=f1*n; if(f<lo||f>hi) continue; const r=n===1?7:5-Math.min(n,4)*0.5;
+      s+=`<line x1="${X(f)}" y1="${y}" x2="${X(f)}" y2="108" stroke="${col}" stroke-width="1" opacity=".35"/><circle cx="${X(f)}" cy="${y}" r="${r}" fill="${col}"/>`;
+      if(n<=2) s+=`<text x="${X(f)}" y="${y-10}" text-anchor="middle" font-size="10.5" fill="${col}" font-weight="600" font-family="IBM Plex Mono,monospace">${f.toFixed(0)}</text>`; }
+  });
+  $('svg').innerHTML=s;
+}
+
+function drawBan(h,fh,tol,L,W){
+  let s='';
+  for(let n=1;n<=4;n++){ const len=h*n; const lo=len*(1-tol), hi=len*(1+tol);
+    const hitL=L>=lo&&L<=hi, hitW=W>=lo&&W<=hi;
+    s+=`<div style="${hitL||hitW?'border-color:var(--bad);background:var(--badbg)':''}"><div class="b">${lo.toFixed(2)} ~ ${hi.toFixed(2)} m</div><div class="r"><b>${n}차</b> = 높이 × ${n}${hitL?' · <b style="color:var(--bad)">길이 걸림</b>':''}${hitW?' · <b style="color:var(--bad)">폭 걸림</b>':''}</div></div>`; }
+  $('ban').innerHTML=s;
+  $('bannote').textContent=`실높이 ${h.toFixed(2)} m 의 정수배 ± ${(tol*100).toFixed(0)}% 안에 가로세로가 들어오면 ${F(fh)}Hz 가 두 번 쌓입니다. 방을 나눌 때 이 구간을 건너뛰어 치수를 정하세요.`;
+}
+calc();
+})();
+</script>
+</div>
 <div class="hub-page pg-room" id="pg-room">
 <div class="wrap">
 
@@ -815,15 +1094,53 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 
 <div class="intro">
   <div class="box navy"><h4>차음 ≠ 룸어쿠스틱</h4><p>차음은 소리가 밖으로 못 나가게 하는 것, 룸어쿠스틱은 방 안에서 소리가 어떻게 들리느냐다. 벽 두께와는 무관하고, 마감면에 무엇을 붙이느냐로 결정된다. 견적서에서도 항목이 다르다 — AC-W/C/F는 차음, AC-AB는 룸어쿠스틱.</p></div>
-  <div class="box"><h4>한 줄 원리</h4><p>낮은 소리는 <strong>코너</strong>에 모이고, 중간 소리는 <strong>벽면 반사</strong>로 흐려지고, 높은 소리는 <strong>플러터(펄럭임)</strong>로 거슬린다. 그래서 코너엔 트랩, 벽엔 패널, 뒷벽엔 디퓨저 — 위치가 정해져 있다.</p></div>
+  <div class="box"><h4>세 칸으로 나눈다</h4><p><strong>죽임</strong>(광대역 흡음 — 흡음판·클라우드·코너 트랩·패브릭·커튼) / <strong>조준</strong>(저·중역만 죽이고 고역은 살림 — 라인·유공흡음판·슬랫·멤브레인, 겉은 나무) / <strong>살림</strong>(반사 유지 — 석고·원목 마감 그대로, 디퓨저, 깊이 다른 책장·진열장). 방마다 이 셋의 비율이 다르다.</p></div>
+  <div class="box"><h4>한 줄 원리</h4><p>낮은 소리(ZONE 2 · <span id="pLo">40~200Hz</span>)는 <strong>코너</strong>에 모이고, 중간 소리(ZONE 3 · <span id="pMid">200~800Hz</span>)는 <strong>벽면 반사</strong>로 흐려지고, 높은 소리(ZONE 4 · <span id="pHi">800Hz~</span>)는 <strong>플러터(펄럭임)</strong>로 거슬린다. 그래서 코너엔 트랩, 벽엔 패널, 뒷벽엔 디퓨저 — 위치가 정해져 있다. 경계 수치는 아래 방 치수 입력을 따라간다.</p></div>
 </div>
 
-<div class="zones">
-  <div class="zone z1"><b>ZONE 1 · 최저 모드 아래</b><strong>~ 40Hz</strong><span>방이 반응하지 못함. 룸어쿠스틱으로 못 잡고 차음(구조)만 관여</span></div>
-  <div class="zone z2"><b>ZONE 2 · 모달 영역</b><strong>40 ~ 200Hz</strong><span>특정 음이 부풀고 꺼짐. 코너 베이스트랩, 멤브레인·슬랫 레조네이터</span></div>
-  <div class="zone z3"><b>ZONE 3 · 반사·회절</b><strong>200 ~ 1kHz</strong><span>1차 반사점 패널, 천장 클라우드</span></div>
-  <div class="zone z4"><b>ZONE 4 · 기하 영역</b><strong>1kHz ~</strong><span>디퓨저. 여기서 흡음을 과하게 하면 방이 죽음</span></div>
+<div class="zbar">
+  <span class="zt">4영역 경계 — 방 치수 입력</span>
+  <label>길이 L <input id="zL" type="number" step="0.1" min="1" value="4.3"> m</label>
+  <label>폭 W <input id="zW" type="number" step="0.1" min="1" value="3.4"> m</label>
+  <label>높이 H <input id="zH" type="number" step="0.1" min="1" value="2.7"> m</label>
+  <label>목표 잔향 RT <input id="zRT" type="number" step="0.05" min="0.1" value="0.4"> s</label>
+  <span class="zref" id="zRef"></span>
+  <a class="zlink" href="#modes">룸모드 계산기 →</a>
 </div>
+<div class="zones">
+  <div class="zone z1"><b>ZONE 1 · 최저 모드 아래</b><strong id="zB1">~ 40Hz</strong><em class="zf" id="zF1"></em><span>파장이 방보다 길어 정재파가 서지 않음. 방 전체가 압력으로 고르게 움직여 룸어쿠스틱 처리가 필요 없음. 벽을 밀고 새는 것만 남으므로 차음(구조)만 관여</span></div>
+  <div class="zone z2"><b>ZONE 2 · 모달(고유진동) 영역 / 낮은 소리</b><strong id="zB2">40 ~ 200Hz</strong><em class="zf" id="zF2"></em><span>특정 음이 부풀고 꺼짐. 코너 베이스트랩 · 멤브레인 · 슬랫 레조네이터. 높이 모드는 치수로 못 바꾸므로 가로·세로가 높이의 정수배에 걸리지 않게 방을 나눔</span></div>
+  <div class="zone z3"><b>ZONE 3 · 반사 · 회절 / 중간 소리</b><strong id="zB3">200 ~ 800Hz</strong><em class="zf" id="zF3"></em><span>1차 반사점 패널 · 천장 클라우드. 파장(0.3~1.7m)이 패널보다 길면 돌아서 지나가므로(회절) 패널은 100mm급 두께 · 넓은 면적</span></div>
+  <div class="zone z4"><b>ZONE 4 · 기하 영역 / 높은 소리</b><strong id="zB4">약 800Hz ~</strong><em class="zf" id="zF4"></em><span>디퓨저. 여기서 흡음을 과하게 하면 방이 죽음. 귀가 가장 예민한 대역 — 차음도 흡음도 쉬워 과흡음이 유일한 위험</span></div>
+</div>
+
+<script>
+(function(){
+  var ids=['zL','zW','zH','zRT'];
+  function f(n){return n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':Math.round(n)+'';}
+  function calc(){
+    var L=+document.getElementById('zL').value,W=+document.getElementById('zW').value,
+        H=+document.getElementById('zH').value,RT=+document.getElementById('zRT').value;
+    if(!(L>0&&W>0&&H>0&&RT>0))return;
+    var b1=171.5/Math.max(L,W,H), V=L*W*H, b2=2000*Math.sqrt(RT/V), b3=b2*4;
+    document.getElementById('zB1').textContent='~ '+f(b1)+'Hz';
+    document.getElementById('zB2').textContent=f(b1)+' ~ '+f(b2)+'Hz';
+    document.getElementById('zB3').textContent=f(b2)+' ~ '+f(b3)+'Hz';
+    document.getElementById('zB4').textContent='약 '+f(b3)+'Hz ~';
+    var mx=Math.max(L,W,H), side=(mx===L?'L':mx===W?'W':'H');
+    document.getElementById('zF1').textContent='171.5 ÷ '+mx+'('+side+') = '+b1.toFixed(1)+'Hz — 가장 긴 변의 반파장';
+    document.getElementById('zF2').textContent='최저 모드 '+b1.toFixed(1)+' → 슈뢰더 2000×√(RT '+RT+' ÷ 부피 '+V.toFixed(1)+'㎥) = '+b2.toFixed(0)+'Hz';
+    document.getElementById('zF3').textContent='슈뢰더 '+b2.toFixed(0)+' → ×4 = 약 '+b3.toFixed(0)+'Hz (파장 '+(343/b3).toFixed(2)+'~'+(343/b2).toFixed(2)+'m)';
+    document.getElementById('zF4').textContent='슈뢰더 ×4 = 약 '+b3.toFixed(0)+'Hz 이상 (파장 '+(343/b3*100).toFixed(0)+'cm 이하 — 광선처럼 움직임)';
+    document.getElementById('pLo').textContent=f(b1)+'~'+f(b2)+'Hz';
+    document.getElementById('pMid').textContent=f(b2)+'~'+f(b3)+'Hz';
+    document.getElementById('pHi').textContent=f(b3)+'Hz~';
+    document.getElementById('zRef').textContent='기준 방 '+L+' × '+W+' × '+H+'m · '+V.toFixed(1)+'㎥ · RT '+RT+'s';
+  }
+  ids.forEach(function(i){document.getElementById(i).addEventListener('input',calc)});
+  calc();
+})();
+</script>
 
 <!-- ───────── A 흡음 ───────── -->
 <div class="g">
@@ -834,18 +1151,27 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 <div class="card">
 <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
   <rect width="320" height="180" fill="#EEEAE2"/>
-  <rect x="0" y="0" width="320" height="130" fill="#F4EFE6"/>
-  <rect x="0" y="130" width="320" height="50" fill="#D9B27C"/>
-  <rect x="60" y="30" width="60" height="80" rx="3" fill="#3A3F47"/><rect x="66" y="36" width="48" height="68" fill="#4A5059"/>
-  <rect x="200" y="30" width="60" height="80" rx="3" fill="#3A3F47"/><rect x="206" y="36" width="48" height="68" fill="#4A5059"/>
-  <circle cx="160" cy="150" r="9" fill="#002643"/><rect x="152" y="120" width="16" height="22" rx="4" fill="#002643"/>
-  <path d="M160 125 L90 70" stroke="#DB4A2B" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
-  <path d="M160 125 L230 70" stroke="#DB4A2B" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
-  <text x="14" y="20" font-size="11" fill="#5E5E58">벽면 · 1차 반사점</text>
+  <!-- 방 평면 -->
+  <rect x="70" y="12" width="180" height="144" fill="#F8F5EE" stroke="#3A3F47" stroke-width="4"/>
+  <!-- 스피커 -->
+  <rect x="104" y="34" width="22" height="16" fill="#3A3F47"/><rect x="194" y="34" width="22" height="16" fill="#3A3F47"/>
+  <!-- 청취자 (머리) -->
+  <circle cx="160" cy="118" r="9" fill="#002643"/><circle cx="150" cy="116" r="3" fill="#DB4A2B"/><circle cx="170" cy="116" r="3" fill="#DB4A2B"/>
+  <!-- 직접음 -->
+  <path d="M115 50 L160 112 M205 50 L160 112" stroke="#002643" stroke-width="1.5" opacity=".5"/>
+  <!-- 1차 반사: 벽 → 귀 -->
+  <path d="M115 50 L72 82 L152 116" stroke="#DB4A2B" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+  <path d="M205 50 L248 82 L168 116" stroke="#DB4A2B" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+  <!-- 패널 (벽에서 띄움) -->
+  <rect x="76" y="64" width="6" height="36" fill="#1D6B52"/><rect x="238" y="64" width="6" height="36" fill="#1D6B52"/>
+  <!-- 거울 표시 -->
+  <text x="14" y="84" font-size="10" fill="#5E5E58">거울</text><text x="14" y="96" font-size="10" fill="#5E5E58">위치</text>
+  <text x="256" y="84" font-size="10" fill="#1D6B52" font-weight="700">패널</text>
+  <text x="76" y="176" font-size="11" fill="#5E5E58">위에서 본 방 · 벽 반사가 귀에 닿는 자리</text>
 </svg>
 <div class="cb"><div class="nm"><b>어쿠스틱 패널</b><i>Acoustic Panel</i></div><span class="nick">흡음판</span>
 <p class="def">천 마감 안에 미네랄울 50K가 들어간 사각 판. 룸어쿠스틱의 기본 단위.</p>
-<dl class="kv"><dt>어디</dt><dd>스피커와 귀를 잇는 벽면의 1차 반사점, 마주 보는 두 벽 중 한쪽</dd><dt>뭘 잡나</dt><dd><span class="tag t-hi">중고역</span> 반사·플러터 에코</dd><dt>규격</dt><dd>600×1200×50T 표준 · 벽에서 20~50mm 이격 설치</dd></dl></div>
+<dl class="kv"><dt>어디</dt><dd>스피커와 귀를 잇는 벽면의 1차 반사점, 마주 보는 두 벽 중 한쪽</dd><dt>뭘 잡나</dt><dd><span class="tag t-hi">중고역</span> 반사·플러터 에코</dd><dt>규격</dt><dd>600×1200×50T 표준 · 벽에서 20~50mm 이격 설치 · 1차 반사점은 100T</dd><dt>변형</dt><dd><strong>쐐기형</strong> — 상부 150~200T → 하부 50T, 앞면 10~15° 경사. 깊이가 연속으로 변해 광대역, 기운 면이 남은 반사를 위로 빗겨 보내고(스플레이 효과), 두꺼운 상부가 벽·천장 모서리 트랩을 겸함. 좋은 스튜디오의 "역삼각형 패널"이 이것</dd></dl></div>
 </div>
 
 <div class="card">
@@ -867,18 +1193,53 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 <div class="card">
 <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
   <rect width="320" height="180" fill="#EEEAE2"/>
-  <path d="M0 0 L160 0 L160 180 L0 180Z" fill="#F4EFE6"/><path d="M160 0 L320 0 L320 180 L160 180Z" fill="#EAE4DA"/>
-  <line x1="160" y1="0" x2="160" y2="180" stroke="#D9D6CF"/>
-  <path d="M100 20 L220 20 L160 140 Z" fill="#3A3F47" opacity=".92"/>
-  <path d="M100 20 L160 140 L160 20Z" fill="#4A5059"/>
-  <circle cx="160" cy="95" r="26" fill="none" stroke="#5B3E9B" stroke-width="2" stroke-dasharray="3 3"/>
-  <circle cx="160" cy="95" r="40" fill="none" stroke="#5B3E9B" stroke-width="2" stroke-dasharray="3 3" opacity=".5"/>
-  <text x="14" y="168" font-size="11" fill="#5E5E58">코너 = 저음이 쌓이는 자리</text>
+  <rect x="70" y="12" width="180" height="144" fill="#F8F5EE" stroke="#3A3F47" stroke-width="4"/>
+  <!-- 저음 압력 분포: 코너로 갈수록 진함 -->
+  <defs>
+    <radialGradient id="bt1" cx="0" cy="0" r="1"><stop offset="0" stop-color="#5B3E9B" stop-opacity=".55"/><stop offset="1" stop-color="#5B3E9B" stop-opacity="0"/></radialGradient>
+    <radialGradient id="bt2" cx="1" cy="0" r="1"><stop offset="0" stop-color="#5B3E9B" stop-opacity=".55"/><stop offset="1" stop-color="#5B3E9B" stop-opacity="0"/></radialGradient>
+    <radialGradient id="bt3" cx="0" cy="1" r="1"><stop offset="0" stop-color="#5B3E9B" stop-opacity=".55"/><stop offset="1" stop-color="#5B3E9B" stop-opacity="0"/></radialGradient>
+    <radialGradient id="bt4" cx="1" cy="1" r="1"><stop offset="0" stop-color="#5B3E9B" stop-opacity=".55"/><stop offset="1" stop-color="#5B3E9B" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect x="72" y="14" width="70" height="58" fill="url(#bt1)"/><rect x="178" y="14" width="70" height="58" fill="url(#bt2)"/>
+  <rect x="72" y="96" width="70" height="58" fill="url(#bt3)"/><rect x="178" y="96" width="70" height="58" fill="url(#bt4)"/>
+  <!-- 코너 트랩 (삼각 단면) -->
+  <path d="M72 14 L112 14 L72 54 Z" fill="#3A3F47"/><path d="M248 14 L208 14 L248 54 Z" fill="#3A3F47"/>
+  <path d="M72 154 L112 154 L72 114 Z" fill="#3A3F47"/><path d="M248 154 L208 154 L248 114 Z" fill="#3A3F47"/>
+  <!-- 스피커·청취자 -->
+  <rect x="118" y="40" width="18" height="12" fill="#5E5E58"/><rect x="184" y="40" width="18" height="12" fill="#5E5E58"/>
+  <circle cx="160" cy="118" r="8" fill="#002643"/>
+  <text x="14" y="30" font-size="10" fill="#5B3E9B" font-weight="700">저음</text><text x="14" y="42" font-size="10" fill="#5B3E9B" font-weight="700">쌓임</text>
+  <text x="256" y="140" font-size="10" fill="#3A3F47" font-weight="700">트랩</text>
+  <text x="76" y="176" font-size="11" fill="#5E5E58">위에서 본 방 · 저음은 네 코너에 몰린다</text>
 </svg>
 <div class="cb"><div class="nm"><b>베이스트랩</b><i>Bass Trap</i></div><span class="nick">코너 저음잡이</span>
 <p class="def">두꺼운 흡음체를 코너에 세워 저음이 쌓이는 곳에서 직접 빨아들인다. 룸어쿠스틱에서 가장 먼저 놓는 것.</p>
 <dl class="kv"><dt>어디</dt><dd>네 수직 코너 전부 → 부족하면 벽·천장 코너</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">저역</span> 80~250Hz 부풂(모드)</dd><dt>규격</dt><dd>삼각 단면 300~450mm · 미네랄울 50K · 코너를 비운 채 앞판만</dd></dl></div>
 </div>
+<div class="card">
+<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="180" fill="#EEEAE2"/>
+  <rect x="0" y="0" width="320" height="130" fill="#F4EFE6"/><rect x="0" y="130" width="320" height="50" fill="#D9B27C"/>
+  <!-- 벽 기준선 -->
+  <rect x="150" y="20" width="6" height="110" fill="#3A3F47"/>
+  <!-- 왼쪽: 나무 면 (연습) -->
+  <rect x="40" y="30" width="100" height="90" rx="3" fill="#D9B27C" stroke="#B98A52" stroke-width="2"/>
+  <g stroke="#B98A52" stroke-width="1"><line x1="50" y1="40" x2="130" y2="40"/><line x1="50" y1="60" x2="130" y2="60"/><line x1="50" y1="80" x2="130" y2="80"/><line x1="50" y1="100" x2="130" y2="100"/></g>
+  <circle cx="150" cy="45" r="5" fill="#5E5E58"/><circle cx="150" cy="105" r="5" fill="#5E5E58"/>
+  <!-- 오른쪽: 패브릭 면 (녹음) -->
+  <rect x="166" y="30" width="100" height="90" rx="3" fill="#3A3F47"/><rect x="172" y="36" width="88" height="78" fill="#4A5059"/>
+  <!-- 회전 화살표 -->
+  <path d="M120 140 A45 20 0 0 1 190 140" stroke="#DB4A2B" stroke-width="2" fill="none"/><path d="M186 133 L192 141 L182 143 Z" fill="#DB4A2B"/>
+  <text x="46" y="24" font-size="10" fill="#B98A52" font-weight="700">연습 — 원목 면</text>
+  <text x="172" y="24" font-size="10" fill="#3A3F47" font-weight="700">녹음 — 흡음 면</text>
+  <text x="14" y="170" font-size="11" fill="#5E5E58">닫으면 나무 벽, 열면 흡음 벽 · 문 여는 동작 하나로 방이 바뀜</text>
+</svg>
+<div class="cb"><div class="nm"><b>가변형 패널</b><i>Reversible / Hinged Panel</i></div><span class="nick">여닫는 벽</span>
+<p class="def">한쪽 면은 패브릭 흡음(미네랄울 50K), 반대 면은 원목·라인판. 벽에 경첩이나 회전축으로 달아 연습 땐 나무 면, 녹음 땐 흡음 면. 연습·녹음을 한 방에서 하는 보컬·기타 연습실의 답.</p>
+<dl class="kv"><dt>어디</dt><dd>가수·연주자가 마주 보는 벽, 마이크 뒤 벽, 측벽 1차 반사점</dd><dt>뭘 잡나</dt><dd>흡음 면적을 <strong>30% ↔ 60%</strong>로 전환 — 잔향 0.45s(연습) ↔ 0.3s(녹음)</dd><dt>규격</dt><dd>600×1800 ×100T · 2~3장 · 흡음 면은 벽에서 50mm 이격되게 경첩 위치 설계 · 무게 15~20kg이라 하지 보강</dd><dt>대안</dt><dd>이동식 패널·고보 3장(마이크 뒤·양옆) / 벨벳 커튼 레일 한 면 / 마이크는 흡음벽을 등지고, 가수가 흡음벽을 마주 보게</dd></dl></div>
+</div>
+
 
 </div></div>
 
@@ -901,7 +1262,7 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 </svg>
 <div class="cb"><div class="nm"><b>슬랫 레조네이터</b><i>Slat Resonator</i></div><span class="nick">나무살 저음벽</span>
 <p class="def">나무 살(슬랫)을 간격을 두고 붙이고 뒤에 공기층 + 미네랄울을 둔 벽. 틈이 헬름홀츠 공명기가 되어 저음을 먹는다. 겉보기엔 그냥 원목 벽.</p>
-<dl class="kv"><dt>어디</dt><dd>앞벽·옆벽 전면, 코너 인접 벽</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">저역·중저역</span> 60~300Hz — 살 폭·틈·깊이로 튜닝</dd><dt>규격</dt><dd>슬랫 불규칙 폭 · 틈 8~15mm · 공기층 50~100mm · 50K 배면</dd></dl></div>
+<dl class="kv"><dt>어디</dt><dd>앞벽·옆벽 전면, 코너 인접 벽</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">저역·중저역</span> 60~300Hz — 살 폭·틈·깊이로 튜닝</dd><dt>규격</dt><dd>슬랫 불규칙 폭 · 틈 8~15mm · 공기층 50~100mm · 50K 배면</dd><dt>시중</dt><dd>라인흡음판 · 홈보드 · 슬롯보드 (판만 판매 — 공기층·배면은 시공 항목). <strong>석고에 밀착하면 무늬 있는 나무 벽</strong> — 공기층이 공명기의 몸통이라 없으면 성적서 흡음률의 절반 이하</dd></dl></div>
 </div>
 
 <div class="card">
@@ -916,7 +1277,7 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 </svg>
 <div class="cb"><div class="nm"><b>멤브레인 레조네이터</b><i>Membrane / Panel Absorber</i></div><span class="nick">떨림판 트랩</span>
 <p class="def">밀폐된 상자 앞에 얇은 합판·고무판을 씌운 것. 판이 특정 저음에 떨리며 에너지를 소모한다. 두껍지 않아도 40~100Hz를 잡는 유일한 방법.</p>
-<dl class="kv"><dt>어디</dt><dd>뒷벽, 코너 옆 벽면 (베이스트랩 보조)</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">극저역</span> 40~120Hz 좁은 대역 — f₀ = 60/√(면밀도×공기층)</dd><dt>규격</dt><dd>깊이 100~200mm · 앞판 3~6T 합판 · 배면 50K 부분 충진</dd></dl></div>
+<dl class="kv"><dt>어디</dt><dd>뒷벽, 코너 옆 벽면 (베이스트랩 보조)</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">극저역</span> 40~120Hz 좁은 대역 — f₀ = 60/√(면밀도×공기층)</dd><dt>규격</dt><dd>깊이 100~200mm · 앞판 3~6T 합판 · 배면 50K 부분 충진 (판과 흡음재 사이 틈)</dd><dt>시중</dt><dd>국내 기성품 없음 — 현장 제작 또는 수입(GIK Scopus 40/70/100Hz). 측정 후 남는 한 주파수 조준용</dd></dl></div>
 </div>
 
 <div class="card">
@@ -933,8 +1294,26 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 </svg>
 <div class="cb"><div class="nm"><b>타공 레조네이터</b><i>Perforated Panel Absorber</i></div><span class="nick">구멍판 흡음벽</span>
 <p class="def">구멍 뚫린 판 뒤에 공기층을 둔 것. 구멍 하나하나가 병처럼 공명한다. 슬랫과 원리가 같고, 다중이용시설에서 불연 요구 시 금속·석고 타공판으로 대체.</p>
-<dl class="kv"><dt>어디</dt><dd>벽면 전면, 천장 (강당·학원)</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">중저역</span> 100~500Hz — 개공률·판두께·공기층으로 튜닝</dd><dt>규격</dt><dd>개공률 5~15% · 공기층 50~100mm · 50K 배면 (AC-AB 불연 규정 적용)</dd></dl></div>
+<dl class="kv"><dt>어디</dt><dd>벽면 전면, 천장 (강당·학원)</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">중저역</span> 100~500Hz — 개공률·판두께·공기층으로 튜닝</dd><dt>규격</dt><dd>개공률 5~15% · 공기층 50~100mm · 50K 배면 (AC-AB 불연 규정 적용)</dd><dt>시중</dt><dd>유공흡음판 · 타공보드 · 펀칭보드 (판만 판매). 성적서 값은 공기층 50~100mm 조건 — 밀착 시공은 조건 위반</dd></dl></div>
 </div>
+<div class="card">
+<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="180" fill="#EEEAE2"/>
+  <defs><pattern id="ln" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-40)"><rect width="8" height="8" fill="#D9B27C"/><rect x="0" y="0" width="8" height="1.6" fill="#3A3F47"/></pattern></defs>
+  <rect x="40" y="16" width="240" height="140" fill="url(#ln)"/>
+  <!-- 민판(살림) 나뭇가지 -->
+  <path d="M150 156 L158 120 L142 84 L150 50 L146 16 L170 16 L166 50 L176 84 L164 120 L176 156 Z" fill="#EBC896"/>
+  <path d="M158 120 L196 100 L206 70 M142 84 L108 66 L100 40" stroke="#EBC896" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <!-- 면적 표시 -->
+  <rect x="44" y="20" width="60" height="18" rx="3" fill="#fff" opacity=".85"/><text x="48" y="33" font-size="10" fill="#1D6B52" font-weight="700">라인 70~80%</text>
+  <rect x="216" y="134" width="60" height="18" rx="3" fill="#fff" opacity=".85"/><text x="220" y="147" font-size="10" fill="#B98A52" font-weight="700">민판 20~30%</text>
+  <text x="40" y="172" font-size="11" fill="#5E5E58">홈 방향은 무관 · 민판은 살림 면적으로 계산</text>
+</svg>
+<div class="cb"><div class="nm"><b>패턴형 라인흡음벽</b><i>Patterned Slot Absorber Wall</i></div><span class="nick">무늬 나무살 벽</span>
+<p class="def">라인흡음판을 사선·세로로 돌리고, 사이에 민무늬 원목판으로 나뭇가지·기하 무늬를 넣은 벽. 한 벽 안에서 조준(라인판)과 살림(민판)의 비율을 디자인으로 조절한다.</p>
+<dl class="kv"><dt>어디</dt><dd>성악·현악 연습실, 상담실, 학원 앞벽 — 살려야 하는 방의 벽</dd><dt>뭘 잡나</dt><dd><span class="tag t-low">중저역</span> 라인판 면적만큼 — 홈 방향은 성능에 무관</dd><dt>비율</dt><dd><strong>민판 20~30% 이내</strong>면 조준 흡음벽으로 계산 · <strong>50% 넘으면</strong> 그냥 나무 벽(살림)으로 본다</dd><dt>규격</dt><dd>공기층 50~100mm + 50K 배면이 벽 전체에 연속 · 재단된 판 끝의 홈이 막히지 않게 · 사선 재단 로스 15~20% 견적 반영</dd><dt>변형</dt><dd><strong>덮개형 공명기</strong> — 원판·사각판·육각판을 홈보다 작게 붙여 <strong>테두리 틈 10~15mm</strong>를 남기고 뒤 홈(50~100mm)에 50K, 홈끼리는 칸막이. 덮개가 단단하면 살림, 틈을 주면 조준으로 바뀜. <strong>불연 버전</strong>: 송이석·현무암 돌판이나 금속판을 철 격자에 띄워 걸고 뒤에 50K — 다중이용시설용. 돌판은 ㎡당 40~80kg이라 구조벽 앵커 별도 격자, AC-W 하지에 직접 금지</dd></dl></div>
+</div>
+
 
 </div></div>
 
@@ -990,6 +1369,35 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 <p class="def">바퀴 달린 두꺼운 이동식 벽. 한쪽은 흡음, 한쪽은 반사(또는 확산)로 만들어 필요에 따라 돌려 쓴다. 라이브룸에서 드럼과 앰프 사이를 가르는 용도.</p>
 <dl class="kv"><dt>어디</dt><dd>라이브룸 악기 사이, 보컬 뒤, 임시 부스</dd><dt>뭘 잡나</dt><dd><span class="tag t-iso">근거리 차음</span> 10~15dB + <span class="tag t-hi">중고역</span> 흡음 — 저역은 못 막음</dd><dt>규격</dt><dd>1200×1800×100T 전후 · 50K 코어 · 하부 창은 시선 확보용</dd></dl></div>
 </div>
+<div class="card">
+<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="180" fill="#EEEAE2"/>
+  <rect x="0" y="0" width="320" height="130" fill="#F4EFE6"/><rect x="0" y="130" width="320" height="50" fill="#D9B27C"/>
+  <!-- 책장 프레임 -->
+  <rect x="60" y="20" width="200" height="118" fill="#B98A52"/>
+  <g fill="#F4EFE6">
+    <rect x="66" y="26" width="56" height="30"/><rect x="128" y="26" width="40" height="30"/><rect x="174" y="26" width="80" height="30"/>
+    <rect x="66" y="62" width="90" height="34"/><rect x="162" y="62" width="92" height="34"/>
+    <rect x="66" y="102" width="40" height="30"/><rect x="112" y="102" width="70" height="30"/><rect x="188" y="102" width="66" height="30"/>
+  </g>
+  <!-- 깊이 다른 내용물 -->
+  <g fill="#3A3F47"><rect x="70" y="34" width="8" height="22"/><rect x="80" y="30" width="6" height="26"/><rect x="88" y="38" width="10" height="18"/><rect x="100" y="28" width="7" height="28"/></g>
+  <g fill="#1D6B7A"><rect x="134" y="40" width="28" height="16"/></g>
+  <g fill="#3A3F47"><rect x="180" y="32" width="6" height="24"/><rect x="188" y="36" width="9" height="20"/><rect x="200" y="30" width="5" height="26"/><rect x="208" y="40" width="12" height="16"/><rect x="224" y="34" width="8" height="22"/></g>
+  <circle cx="90" cy="80" r="10" fill="#5B3E9B" opacity=".8"/><rect x="110" y="70" width="40" height="26" fill="#DB4A2B" opacity=".7"/>
+  <g fill="#3A3F47"><rect x="168" y="74" width="7" height="22"/><rect x="177" y="68" width="7" height="28"/><rect x="186" y="78" width="7" height="18"/><rect x="195" y="70" width="7" height="26"/><rect x="204" y="80" width="7" height="16"/></g>
+  <rect x="70" y="110" width="30" height="22" fill="#1D6B7A" opacity=".7"/>
+  <g fill="#3A3F47"><rect x="118" y="112" width="8" height="20"/><rect x="128" y="106" width="8" height="26"/><rect x="138" y="116" width="8" height="16"/><rect x="148" y="108" width="8" height="24"/><rect x="158" y="114" width="8" height="18"/></g>
+  <circle cx="220" cy="118" r="11" fill="#5B3E9B" opacity=".8"/>
+  <!-- 확산 화살표 -->
+  <path d="M30 80 L56 80" stroke="#2F6FB3" stroke-width="2"/><path d="M52 80 L36 62 M52 80 L36 98 M52 80 L32 72 M52 80 L32 88" stroke="#2F6FB3" stroke-width="1.5" opacity=".6"/>
+  <text x="14" y="172" font-size="11" fill="#5E5E58">칸 깊이·내용물이 들쭉날쭉한 책장 = 확산판</text>
+</svg>
+<div class="cb"><div class="nm"><b>가구형 확산</b><i>Bookshelf / Display Diffuser</i></div><span class="nick">책장 디퓨저</span>
+<p class="def">칸 깊이가 다르고 책·소품이 들쭉날쭉 채워진 책장·진열장은 스카이라인 디퓨저와 같은 원리로 일한다. 흡음판을 붙이지 않고 방을 살리는, 인테리어 회사가 가장 잘할 수 있는 요소.</p>
+<dl class="kv"><dt>어디</dt><dd>뒷벽, 측벽 (1차 반사점·코너는 대체 불가)</dd><dt>뭘 잡나</dt><dd><span class="tag t-hi">중고역</span> 반사 분산 — 저역은 못 잡음</dd><dt>규격</dt><dd>깊이 차이 100~200mm 이상 · 칸 깊이 3단 이상 변화 · 문 닫힌 수납·유리문은 평면 반사(확산 아님) · 원목·도장 무관 · <strong>우물천장도 칸 깊이가 제각각이어야 확산</strong> — 깊이가 같으면 그냥 디자인 천장</dd><dt>디자인</dt><dd>패브릭 소파·커튼·러그는 '죽임'으로, 플루티드 패널(틈 없음)은 '살림'으로 계산에 넣는다</dd></dl></div>
+</div>
+
 
 </div></div>
 
@@ -1002,13 +1410,21 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 <div class="card">
 <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
   <rect width="320" height="180" fill="#EEEAE2"/>
-  <rect x="40" y="20" width="240" height="140" fill="#3A3F47"/>
-  <rect x="60" y="40" width="200" height="100" fill="#CFE3EA"/>
-  <line x1="120" y1="40" x2="120" y2="140" stroke="#002643" stroke-width="3"/>
-  <line x1="130" y1="40" x2="130" y2="140" stroke="#002643" stroke-width="5" opacity=".7"/>
-  <text x="74" y="94" font-size="10" fill="#002643">8~10T</text><text x="150" y="94" font-size="10" fill="#002643">12T 접합</text>
-  <path d="M120 60 L130 60" stroke="#DB4A2B" stroke-width="2"/>
-  <text x="14" y="174" font-size="11" fill="#5E5E58">두께 다른 유리 두 장 + 공기층 (평행 금지)</text>
+  <!-- 벽체 (위: 컨트롤룸 / 아래: 라이브룸) 평면 -->
+  <rect x="0" y="70" width="70" height="40" fill="#3A3F47"/><rect x="250" y="70" width="70" height="40" fill="#3A3F47"/>
+  <!-- 개구부 내부 흡음 마감 -->
+  <rect x="70" y="70" width="180" height="6" fill="#1D6B52"/><rect x="70" y="104" width="180" height="6" fill="#1D6B52"/>
+  <!-- 유리 1 (얇음, 살짝 기울임) -->
+  <path d="M72 80 L248 84" stroke="#2F6FB3" stroke-width="3"/>
+  <!-- 유리 2 (두꺼운 접합, 반대 기울임) -->
+  <path d="M72 100 L248 96" stroke="#002643" stroke-width="6"/>
+  <!-- 공기층 표시 -->
+  <path d="M160 84 L160 96" stroke="#DB4A2B" stroke-width="1.5"/><text x="166" y="94" font-size="9" fill="#DB4A2B">공기층 100+</text>
+  <text x="76" y="66" font-size="10" fill="#5E5E58">컨트롤룸</text><text x="76" y="126" font-size="10" fill="#5E5E58">라이브룸</text>
+  <text x="14" y="30" font-size="10" fill="#2F6FB3" font-weight="700">▬ 8~10T 단판</text>
+  <text x="14" y="44" font-size="10" fill="#002643" font-weight="700">▬ 12T 접합유리</text>
+  <text x="180" y="30" font-size="10" fill="#1D6B52" font-weight="700">▬ 개구부 흡음 마감</text>
+  <text x="14" y="168" font-size="11" fill="#5E5E58">위에서 본 창 · 두께 다르게, 평행하지 않게</text>
 </svg>
 <div class="cb"><div class="nm"><b>방음시창</b><i>Acoustic Window</i></div><span class="nick">이중 유리창</span>
 <p class="def">컨트롤룸과 라이브룸 사이 창. 두께가 다른 유리 두 장(접합유리 권장)을 공기층을 두고 각도를 살짝 틀어 설치. 두께가 같으면 같은 주파수에서 함께 꺼진다.</p>
@@ -1018,13 +1434,23 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 <div class="card">
 <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
   <rect width="320" height="180" fill="#EEEAE2"/>
-  <rect x="0" y="0" width="320" height="180" fill="#F4EFE6"/>
-  <rect x="40" y="30" width="30" height="120" fill="#3A3F47"/><rect x="250" y="30" width="30" height="120" fill="#3A3F47"/>
-  <rect x="70" y="30" width="180" height="120" fill="#E6E0D4"/>
-  <rect x="70" y="60" width="8" height="60" fill="#B98A52"/><rect x="242" y="60" width="8" height="60" fill="#B98A52"/>
-  <path d="M78 60 L110 40 L110 120 Z" fill="#D9B27C" opacity=".8"/><path d="M242 60 L210 140 L210 60 Z" fill="#D9B27C" opacity=".8"/>
-  <path d="M120 90 L200 90" stroke="#002643" stroke-width="1.5" stroke-dasharray="3 3"/><text x="140" y="84" font-size="10" fill="#002643">≥ 900mm</text>
-  <text x="14" y="172" font-size="11" fill="#5E5E58">문 두 짝 사이 완충실 · 엇갈림 배치</text>
+  <!-- 복도(왼) / 완충실(중) / 방음실(오른) -->
+  <rect x="0" y="0" width="320" height="180" fill="#F8F5EE"/>
+  <rect x="96" y="10" width="10" height="150" fill="#3A3F47"/><rect x="214" y="10" width="10" height="150" fill="#3A3F47"/>
+  <rect x="96" y="10" width="128" height="10" fill="#3A3F47"/><rect x="96" y="150" width="128" height="10" fill="#3A3F47"/>
+  <!-- 완충실 내부 흡음 -->
+  <rect x="106" y="20" width="108" height="5" fill="#1D6B52"/><rect x="106" y="145" width="108" height="5" fill="#1D6B52"/>
+  <!-- 문 1: 복도쪽, 위쪽 -->
+  <rect x="96" y="30" width="10" height="44" fill="#F8F5EE"/><path d="M106 30 L146 52" stroke="#B98A52" stroke-width="5"/><path d="M106 30 A44 44 0 0 1 146 52" stroke="#B98A52" stroke-width="1" fill="none" stroke-dasharray="2 2"/>
+  <!-- 문 2: 방음실쪽, 아래쪽 (엇갈림) -->
+  <rect x="214" y="106" width="10" height="44" fill="#F8F5EE"/><path d="M214 150 L174 128" stroke="#B98A52" stroke-width="5"/><path d="M214 150 A44 44 0 0 1 174 128" stroke="#B98A52" stroke-width="1" fill="none" stroke-dasharray="2 2"/>
+  <!-- 동선 -->
+  <path d="M60 52 L130 52 L190 128 L260 128" stroke="#DB4A2B" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+  <!-- 치수 -->
+  <path d="M106 92 L214 92" stroke="#002643" stroke-width="1"/><path d="M106 88 L106 96 M214 88 L214 96" stroke="#002643" stroke-width="1"/>
+  <text x="140" y="86" font-size="10" fill="#002643" font-weight="700">≥ 900mm</text>
+  <text x="14" y="30" font-size="10" fill="#5E5E58">복도</text><text x="128" y="112" font-size="10" fill="#5E5E58">완충실</text><text x="236" y="30" font-size="10" fill="#5E5E58">방음실</text>
+  <text x="14" y="174" font-size="11" fill="#5E5E58">위에서 본 출입구 · 문 둘을 엇갈려 배치</text>
 </svg>
 <div class="cb"><div class="nm"><b>사운드락</b><i>Sound Lock</i></div><span class="nick">방음 현관</span>
 <p class="def">방음문 두 짝 사이에 작은 완충실을 둔 출입 구조. 문 하나가 열려도 다른 하나가 닫혀 있어 소리가 새지 않는다. 벽에 문 두 개를 겹쳐 단 '이중문'과는 다르다.</p>
@@ -1034,34 +1460,87 @@ body{background:#F7F6F3;font-family:'Pretendard','Apple SD Gothic Neo','Noto San
 <div class="card">
 <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
   <rect width="320" height="180" fill="#EEEAE2"/>
-  <rect x="0" y="0" width="320" height="120" fill="#F4EFE6"/><rect x="0" y="120" width="320" height="60" fill="#D9B27C"/>
-  <ellipse cx="160" cy="145" rx="110" ry="22" fill="#3A3F47" opacity=".85"/>
-  <rect x="120" y="40" width="80" height="12" rx="2" fill="#3A3F47"/>
-  <path d="M160 52 L160 124" stroke="#DB4A2B" stroke-width="2" stroke-dasharray="4 3"/>
-  <text x="14" y="28" font-size="11" fill="#5E5E58">바닥 반사만 잡는 러그 · 벽은 나무 그대로</text>
+  <rect x="70" y="12" width="180" height="144" fill="#F8F5EE" stroke="#3A3F47" stroke-width="4"/>
+  <!-- 앞 1/3 데드 (흡음) 배경 -->
+  <rect x="72" y="14" width="176" height="52" fill="#1D6B52" opacity=".10"/>
+  <!-- 뒤 1/3 라이브 (확산) 배경 -->
+  <rect x="72" y="104" width="176" height="50" fill="#2F6FB3" opacity=".10"/>
+  <!-- 코너 트랩 4 -->
+  <path d="M72 14 L100 14 L72 42 Z" fill="#3A3F47"/><path d="M248 14 L220 14 L248 42 Z" fill="#3A3F47"/>
+  <path d="M72 154 L100 154 L72 126 Z" fill="#3A3F47"/><path d="M248 154 L220 154 L248 126 Z" fill="#3A3F47"/>
+  <!-- 앞벽·측벽 흡음 패널 -->
+  <rect x="104" y="15" width="112" height="6" fill="#1D6B52"/>
+  <rect x="73" y="48" width="6" height="34" fill="#1D6B52"/><rect x="241" y="48" width="6" height="34" fill="#1D6B52"/>
+  <!-- 스피커 · 청취자 -->
+  <rect x="112" y="30" width="18" height="12" fill="#3A3F47"/><rect x="190" y="30" width="18" height="12" fill="#3A3F47"/>
+  <circle cx="160" cy="80" r="8" fill="#002643"/>
+  <!-- 뒷벽 디퓨저 (블록) -->
+  <g fill="#2F6FB3"><rect x="106" y="140" width="10" height="12"/><rect x="118" y="136" width="10" height="16"/><rect x="130" y="144" width="10" height="8"/><rect x="142" y="134" width="10" height="18"/><rect x="154" y="142" width="10" height="10"/><rect x="166" y="136" width="10" height="16"/><rect x="178" y="146" width="10" height="6"/><rect x="190" y="138" width="10" height="14"/><rect x="202" y="143" width="10" height="9"/></g>
+  <!-- 라벨 -->
+  <text x="14" y="34" font-size="10" fill="#1D6B52" font-weight="700">DEAD</text><text x="14" y="46" font-size="9" fill="#5E5E58">앞 · 흡음</text>
+  <text x="14" y="134" font-size="10" fill="#2F6FB3" font-weight="700">LIVE</text><text x="14" y="146" font-size="9" fill="#5E5E58">뒤 · 확산</text>
+  <text x="256" y="34" font-size="9" fill="#3A3F47">코너</text><text x="256" y="44" font-size="9" fill="#3A3F47">트랩</text>
+  <text x="76" y="172" font-size="11" fill="#5E5E58">위에서 본 컨트롤룸 · 앞은 죽이고 뒤는 살림</text>
 </svg>
-<div class="cb"><div class="nm"><b>라이브 엔드 / 데드 엔드</b><i>LEDE</i></div><span class="nick">앞은 죽이고 뒤는 살리기</span>
+<div class="cb"><div class="nm"><b>라이브 엔드 / 데드 엔드</b><i>LEDE · Dead = 앞(스피커 쪽), Live = 뒤(청취자 뒤) — end는 "뒤"가 아니라 "쪽"</i></div><span class="nick">앞은 죽이고 뒤는 살리기</span>
 <p class="def">방 앞쪽(스피커·연주자 쪽)은 흡음으로 반사를 죽이고, 뒤쪽은 확산으로 살리는 배치 원칙. 위의 요소들을 어디에 놓을지 정하는 지도.</p>
-<dl class="kv"><dt>어디</dt><dd>컨트롤룸 표준 · 연습실은 반대로 (앞 반사 살려 소리 확인)</dd><dt>뭘 잡나</dt><dd>배치 원칙 — 요소가 아님</dd><dt>규격</dt><dd>앞 1/3 흡음 · 뒤 1/3 확산 · 코너 트랩 · 바닥은 러그만, 천장은 클라우드</dd></dl></div>
+<dl class="kv"><dt>어디</dt><dd>컨트롤룸 표준 · 연습실은 앞(마주 보는 벽)을 살리고 마주 보는 한 면만 죽임 — 연주자가 자기 소리를 확인해야 하므로</dd><dt>뭘 잡나</dt><dd>배치 원칙 — 요소가 아님</dd><dt>규격</dt><dd>앞 1/3 흡음 · 뒤 1/3 확산 · 코너 트랩 · 바닥은 러그만, 천장은 클라우드</dd></dl></div>
 </div>
 
 </div></div>
 
+<div class="g">
+<h3>실 유형별 적용 <small>같은 요소라도 방에 따라 쓰는 양과 순서가 다르다 — 목표 RT60이 정한다</small></h3>
+<p class="lead">공통은 하나뿐: <strong>코너 트랩은 어디든 먼저.</strong> 그 다음은 방의 목적에 따라 갈린다. 아래 표의 순서(①②③)가 그 방에서 손대는 우선순위.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--mid);margin-bottom:4px">
+  <span><span class="lv a">필수</span> 반드시</span><span><span class="lv b">권장</span> 예산 되면</span><span><span class="lv c">선택</span> 문제 있을 때만</span><span><span class="lv d">확산</span> 흡음 대신 확산</span><span><span class="lv x">금지</span> 하면 안 됨</span>
+</div>
+<div class="tblwrap" style="overflow-x:auto">
+<table class="rt">
+<thead><tr><th>실 유형</th><th>목표 RT60</th><th>코너 트랩</th><th>1차 반사점</th><th>천장</th><th>뒷벽</th><th>바닥</th><th>순서 · 요령</th></tr></thead>
+<tbody>
+<tr><td class="rm">컨트롤룸 · 믹싱</td><td class="rtv">0.25~0.30s</td><td><span class="lv a">필수</span></td><td><span class="lv a">필수</span></td><td><span class="lv a">클라우드</span></td><td><span class="lv d">확산</span></td><td>러그만</td><td class="note">① 코너 ② 측벽 1차 반사점 ③ 천장 클라우드 ④ 뒷벽 디퓨저(1m 이상 떨어질 때) ⑤ 측정 후 멤브레인. LEDE 원칙 그대로.</td></tr>
+<tr><td class="rm">홈시어터</td><td class="rtv">0.35s</td><td><span class="lv a">필수</span></td><td><span class="lv a">필수</span></td><td><span class="lv a">클라우드</span></td><td><span class="lv b">흡음+확산</span></td><td>카펫</td><td class="note">컨트롤룸과 같되 좌석이 여럿이라 측벽 흡음 범위를 넓힘. 서브우퍼 있으면 코너 트랩을 두껍게. 화면 뒤 앞벽 흡음.</td></tr>
+<tr><td class="rm">유튜브 · 방송 데스크</td><td class="rtv">0.30s</td><td><span class="lv b">권장</span></td><td><span class="lv a">필수</span></td><td><span class="lv a">클라우드</span></td><td><span class="lv a">흡음</span></td><td>러그</td><td class="note">마이크 뒤(화자 뒤) 벽과 천장이 핵심. 카메라에 잡히는 벽은 흡음판을 디자인 요소로. 확산은 거의 안 씀.</td></tr>
+<tr><td class="rm">보컬 부스 · 녹음실</td><td class="rtv">0.25s</td><td><span class="lv a">필수</span></td><td>—</td><td><span class="lv a">전면 흡음</span></td><td><span class="lv a">전면 흡음</span></td><td>러그</td><td class="note">순서 없음 — <strong>거의 전면 흡음.</strong> 확산 안 씀. 단 얇은 흡음재로만 덮으면 저역만 남아 '먹먹한데 부풀음' → 코너 트랩과 두꺼운 패널(100T)로.</td></tr>
+<tr><td class="rm">보컬 연습실 (연습+녹음 겸용)</td><td class="rtv">0.45s ↔ 0.30s</td><td><span class="lv a">필수</span></td><td><span class="lv b">가변</span></td><td><span class="lv b">부분</span></td><td><span class="lv b">가변</span></td><td>러그</td><td class="note"><strong>연습 기준(20~30%)으로 짓고 가변형 패널로 녹음 모드 전환.</strong> 작은 방이라 ZONE 2가 300Hz대까지 — 코너 트랩 비중 크게. 마이크는 흡음벽을 등지고 가수가 흡음벽을 마주 보게.</td></tr>
+<tr><td class="rm">개인 연습실 (건반·관악·기타)</td><td class="rtv">0.40s</td><td><span class="lv a">필수</span></td><td><span class="lv b">한쪽 벽만</span></td><td><span class="lv b">부분</span></td><td><span class="lv c">선택</span></td><td>나무 그대로</td><td class="note">① 코너 ② 마주 보는 두 벽 중 <strong>한쪽만</strong> 흡음 ③ 천장 30%. 나머지는 나무. 너무 죽이면 자기 소리가 안 들려 더 세게 연주함.</td></tr>
+<tr><td class="rm">성악 · 현악 연습실</td><td class="rtv">0.50~0.60s</td><td><span class="lv b">권장</span></td><td><span class="lv x">금지</span></td><td><span class="lv c">선택</span></td><td><span class="lv d">확산</span></td><td>나무 그대로</td><td class="note"><strong>살리는 방.</strong> 흡음은 코너와 플러터 나는 한 면만. 벽은 확산·나무. 흡음 과다가 이 방의 1위 클레임 — "소리가 안 나온다".</td></tr>
+<tr><td class="rm">합주실 · 드럼실</td><td class="rtv">0.45s</td><td><span class="lv a">두껍게</span></td><td>—</td><td><span class="lv a">전면 흡음</span></td><td><span class="lv a">흡음</span></td><td>러그(드럼 하부)</td><td class="note">음원이 여럿이라 1차 반사점 개념 없음. <strong>청력 보호용 흡음량</strong>이 먼저 — 천장 전면 + 벽 50%. 나머지 벽은 슬랫으로 저역까지.</td></tr>
+<tr><td class="rm">라이브룸 (녹음용 연주실)</td><td class="rtv">0.40~0.60s 가변</td><td><span class="lv a">필수</span></td><td>—</td><td><span class="lv b">클라우드</span></td><td><span class="lv d">확산</span></td><td>나무 그대로</td><td class="note">벽은 반사·확산으로 두고 <strong>고보로 그때그때 조절.</strong> 드럼 코너만 흡음 강화. 바닥 반사는 자산 — 러그를 옮겨가며 씀.</td></tr>
+<tr><td class="rm">살롱 · 소형 리사이틀 (50~100석)</td><td class="rtv">1.0s 만석 / 1.2~1.3s 공실</td><td><span class="lv b">권장</span></td><td>—</td><td><span class="lv d">확산</span></td><td><span class="lv d">확산+조준</span></td><td>원목</td><td class="note">방이 커서 잔향을 길게 둔다. 천장은 <strong>칸 깊이가 다른</strong> 확산(같으면 우물천장), 벽은 조준+살림, 흡음은 객석 의자·사람으로. 사람 1명 ≈ 흡음 0.4~0.5㎡라 만석 시 0.2~0.3s 줄어듦 — 빈 방에서 1초 맞추면 연주회 날 마름.</td></tr>
+<tr><td class="rm">음악학원 강의실</td><td class="rtv">0.50s</td><td><span class="lv c">선택</span></td><td>—</td><td><span class="lv a">흡음 (1순위)</span></td><td><span class="lv a">흡음</span></td><td>—</td><td class="note">말소리 명료도. ① 천장 흡음 ② 뒷벽 흡음(플러터 방지) ③ 코너. 불연 규정(AC-AB) 적용 — 타공 석고·금속.</td></tr>
+<tr><td class="rm">상담실 · 회의실</td><td class="rtv">0.60s</td><td>—</td><td>—</td><td><span class="lv a">흡음</span></td><td><span class="lv b">흡음</span></td><td>카펫</td><td class="note">천장 흡음 + 마주 보는 벽 한쪽. 트랩·확산 불필요. 화상회의면 마이크 뒤 벽 추가.</td></tr>
+<tr><td class="rm">댄스 · 안무</td><td class="rtv">0.70s</td><td><span class="lv c">선택</span></td><td>—</td><td><span class="lv a">흡음</span></td><td><span class="lv a">거울 맞은편 흡음</span></td><td>—</td><td class="note">거울 벽이 전면 반사라 <strong>천장 + 거울 맞은편</strong>만 잡으면 됨. 나머지는 살림 — 음악이 죽으면 안 됨. 스피커 뒤 벽 흡음.</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:26px">실 유형별 죽임 · 조준 · 살림 <small>같은 표를 디자인 언어로 — 딱딱한 방음실이 아니라 들어가고 싶은 방으로</small></h3>
+<p class="lead">흡음판을 벽에 붙이는 대신, <strong>어느 면을 어떤 재질·가구로 만들 것인가</strong>로 바꿔 읽으면 된다. 죽임은 부드러운 것, 살림은 단단한 것, 조준은 나무처럼 보이는 것.</p>
+<div class="tblwrap" style="overflow-x:auto">
+<table class="rt">
+<thead><tr><th>실 유형</th><th>죽임 (광대역 흡음)</th><th>조준 (저·중역만)</th><th>살림 (반사·확산)</th><th>디자인 제안</th></tr></thead>
+<tbody>
+<tr><td class="rm">컨트롤룸 · 믹싱</td><td>측벽 1차 반사점 패널, 천장 클라우드, 앞벽 상부</td><td>코너 트랩 두껍게, 측정 후 멤브레인</td><td>뒷벽 확산, 바닥 원목</td><td class="note">뒷벽 전체를 <strong>깊이 다른 제작 책장</strong>으로 — 디퓨저 자재비 대신 가구. 측벽 패널은 패브릭 색으로 포인트, 천장 클라우드에 조명 매립.</td></tr>
+<tr><td class="rm">홈시어터</td><td>측벽 넓게, 천장, 화면 뒤 앞벽, 카펫</td><td>코너 트랩(서브우퍼 대응)</td><td>뒷벽 일부 확산</td><td class="note">측벽을 <strong>패브릭 월 커버링</strong>(안에 50K)으로 통째로 — 극장 느낌 그대로 흡음. 뒷벽은 수납 겸 진열장.</td></tr>
+<tr><td class="rm">유튜브 · 방송 데스크</td><td>화자 뒤 벽, 천장, 러그</td><td>코너(선택)</td><td>카메라 화면에 잡히는 벽</td><td class="note"><strong>카메라 뒤(화자 앞)는 살리고, 화자 뒤는 죽인다.</strong> 화면에 잡히는 벽이 살림 면이라 책장·소품·플루티드 패널로 꾸미고, 화자 뒤 흡음은 패브릭 아트월로.</td></tr>
+<tr><td class="rm">보컬 부스 · 녹음실</td><td>전면 — 벽·천장·코너 전부</td><td>—</td><td>바닥만 (러그 덮음)</td><td class="note">디자인 여지가 가장 적은 방. 대신 흡음 패널 배열·색·조명으로 — 폭이 좁은 세로 패널을 리듬감 있게. 유리창으로 답답함 해소.</td></tr>
+<tr><td class="rm">보컬 연습실 (겸용)</td><td>코너 트랩, 마주 보는 벽 한 면(가변)</td><td>코너 트랩</td><td>나머지 벽, 바닥</td><td class="note"><strong>뒤집는 패널 2~3장</strong>이 이 방의 핵심 가구 — 원목 면/패브릭 면. 안 쓰는 이동식 패널은 벽에 세워 흡음판 겸용. 벨벳 커튼 레일이 가장 싼 가변 장치.</td></tr>
+<tr><td class="rm">개인 연습실</td><td>마주 보는 한 면(뒤 또는 옆), 천장 30%</td><td>코너 트랩, 라인흡음판 한 면</td><td>연주자가 보는 앞벽, 나머지 벽, 바닥</td><td class="note">앞벽은 <strong>원목·석고 그대로 + 거울 없이</strong>. 뒤 한 면만 패브릭 벤치+쿠션이 있는 <strong>휴식 좌석</strong>으로 만들면 흡음이 가구가 된다. 옆벽은 라인흡음판(나무처럼 보임).</td></tr>
+<tr><td class="rm">성악 · 현악 연습실</td><td>플러터 나는 한 면만 (부분)</td><td>코너 트랩, 라인흡음판</td><td>거의 전부 — 벽·천장·바닥</td><td class="note"><strong>가장 살려야 하는 방.</strong> 벽은 원목·라인흡음판·책장, 천장은 목재 루버(틈 없이)로 확산. 흡음은 코너와 커튼 한 면. 반주 피아노 자리는 벽에서 띄움.</td></tr>
+<tr><td class="rm">합주실 · 드럼실</td><td>천장 전면, 벽 50%, 드럼 하부 러그</td><td>코너 트랩 두껍게, 나머지 벽 슬랫</td><td>바닥, 벽 일부</td><td class="note">천장을 <strong>격자 박스 흡음 천장</strong>으로 — 박스(200~300mm 깊이) 안에 50K 100~150T + 목모보드 마감(불연), 박스 사이는 타공 석고, 절반은 조명 칸으로 비워 체커보드. 드럼 위는 흡음 칸을 몰고 보컬 위는 살림 칸. 천장이 저역까지 받으니 벽은 30%만 — 절반 패브릭·절반 라인판. '검은 스펀지 벽'을 피하는 방법.</td></tr>
+<tr><td class="rm">라이브룸</td><td>드럼 코너, 이동식 고보</td><td>코너 트랩</td><td>벽·바닥 — 반사·확산</td><td class="note">벽은 원목·확산 마감, 흡음은 전부 <strong>고보로 이동식</strong>. 고보 자체를 디자인 오브제로(양면 다른 마감). 바닥 원목은 자산.</td></tr>
+<tr><td class="rm">살롱 · 소형 리사이틀</td><td>거의 없음 — 객석 의자(패브릭)가 흡음</td><td>코너·벽 하부 슬랫, 유공판</td><td>천장 확산, 벽 원목, 바닥</td><td class="note"><strong>우물천장을 QRD 수열 깊이로</strong> 파면 디자인 천장이 곧 확산 천장. 벽은 유공·라인판과 원목 민판 교차. 저역(125Hz) 잔향이 중역의 1.2~1.3배면 정상(따뜻함), 그 이상이면 코너 조준 추가.</td></tr>
+<tr><td class="rm">음악학원 강의실</td><td>천장, 뒷벽</td><td>코너(선택), 불연 타공 석고·금속</td><td>앞벽(선생님 뒤), 측벽</td><td class="note">불연 규정이라 자재가 제한 — <strong>타공 석고보드 천장</strong>(도장 가능)과 금속 타공판이 답. 뒷벽 흡음은 게시판·수납장 겸용.</td></tr>
+<tr><td class="rm">상담실 · 회의실</td><td>천장, 마주 보는 벽 한쪽, 카펫</td><td>—</td><td>나머지 벽</td><td class="note"><strong>패브릭 소파·커튼·러그가 흡음재.</strong> 별도 흡음판 없이 가구만으로 RT 0.6 나오는 경우 많음. 화상회의면 화자 뒤 벽 패브릭 아트월.</td></tr>
+<tr><td class="rm">댄스 · 안무</td><td>천장, 거울 맞은편 벽, 스피커 뒤</td><td>코너(선택)</td><td>거울 벽, 바닥</td><td class="note">거울 맞은편을 <strong>패브릭 벤치 + 짐 수납장</strong>으로 — 흡음이 곧 대기석. 천장은 클라우드로 조명과 통합.</td></tr>
+</tbody></table></div>
+<div class="warnbox" style="margin-top:14px">
+  <p><strong>흡음 과다가 가장 흔한 실패.</strong> 벽 전면을 흡음판으로 덮으면 고역만 죽고 저역은 그대로 남아 '먹먹한데 부풀어 있는' 방이 된다. 코너와 표에 적힌 면만 잡고 나머지는 나무 마감 그대로 두는 게 원칙.</p>
+  <p><strong>거울 테스트</strong> — 1차 반사점 찾는 법: 청취 위치에 앉고, 다른 사람이 벽에 거울을 대고 움직여 스피커가 비치는 자리가 패널 자리. 측벽 둘, 천장 하나.</p>
+</div>
+</div>
+
 <div class="cols">
-<section>
-  <h2>상담에서 쓰는 순서</h2>
-  <ol>
-    <li><strong>코너 베이스트랩</strong> 네 곳 — 무조건 먼저. 이게 없으면 나머지가 다 헛수고</li>
-    <li><strong>1차 반사점 패널</strong> — 거울 테스트: 청취 위치에 앉아 벽에 거울을 대고 스피커가 보이는 자리</li>
-    <li><strong>천장 클라우드</strong> — 청취 위치 바로 위</li>
-    <li><strong>뒷벽 디퓨저</strong> — 청취 위치에서 1m 이상 떨어질 때만. 가까우면 흡음판</li>
-    <li>남는 부풂이 있으면 <strong>슬랫·멤브레인</strong>으로 그 주파수만 조준</li>
-  </ol>
-  <div class="warnbox">
-    <p><strong>흡음 과다가 가장 흔한 실패.</strong> 벽 전면을 흡음판으로 덮으면 고역만 죽고 저역은 그대로 남아 '먹먹한데 부풀어 있는' 방이 된다. 코너와 1차 반사점만 잡고 나머지는 나무 마감 그대로 두는 게 원칙.</p>
-    <p><strong>목표 RT60</strong> — 녹음실 0.25 · 합주실 0.45 · 개인연습실 0.40 · 음악학원 0.50 · 홈시어터 0.35 · 유튜브 0.30 · 댄스 0.70 · 상담실 0.60s</p>
-  </div>
-</section>
 <section>
   <h2>이름 붙이기 — 입에 붙는 우리말</h2>
   <ul>
