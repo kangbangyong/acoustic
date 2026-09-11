@@ -821,8 +821,9 @@ function briefHTML(){
     h+=`</div>`;
   }
 
-  /* 2 실 조건 */
-  if(B.modes){
+  /* 2 실 조건 — 실을 나누면 07에서 실별로 다룬다 */
+  const hasRooms=(D.rooms||[]).length>0;
+  if(B.modes && !hasRooms){
     h+=`<div class="bsec"><div class="bh">04 &nbsp;실 조건 · 룸 모드</div>`;
     h+=`<table class="bt"><tr><th>축</th><th>1차 공진</th></tr>`;
     B.modes.forEach(m=>h+=`<tr><td>${m[0]}</td><td class="m">${m[1].toFixed(1)} Hz</td></tr>`);
@@ -878,8 +879,8 @@ function briefHTML(){
   h+=`</div>`;
 
 
-  /* 4 실내 음향 */
-  if(B.ac){
+  /* 4 실내 음향 — 실을 나누면 07에서 실별로 다룬다 */
+  if(B.ac && !hasRooms){
     const a=B.ac;
     h+=`<div class="bsec"><div class="bh">06 &nbsp;실내 음향 설계</div>`;
     h+=`<div class="bp">차음이 끝나면 <b>안에서 쓸 수 있는 방인지</b>가 남는다.
@@ -1158,6 +1159,7 @@ function roomsHTML(B){
   const HD = (B.H && B.rest) ? B.rest/1000 : (parseFloat(D.h)||2.4);
   const prop = proposeDims(HD);
   let h=`<div class="bsec" id="roomsec"><div class="bh">07 &nbsp;실별 설계</div>`;
+  if((D.rooms||[]).length) h+=`<div class="bp" style="color:var(--sub)">실이 등록되어 공간 전체 룸 모드·실내 음향(04·06)은 생략하고 실별로 계산한다.</div>`;
   h+=`<div class="bp">실을 나누고 접수된 소리를 실마다 배치한다. 높이는 <b>방음실높이 ${HD.toFixed(2)}m</b>
       (천장 AC-C-${lvName(B.cL)} + 바닥 AC-F-${lvName(B.fL)} 적용 후)를 기본으로 쓴다.</div>`;
 
@@ -1222,6 +1224,24 @@ function roomsHTML(B){
         </table>`;
       if(!R.out.length)
         h+=`<div class="bp"><b>치수 문제 없음.</b> 정방형·정수비·모드 겹침·악기 충돌 모두 해당 없음.</div>`;
+      /* 잔향 · 흡음 면적 (Sabine) */
+      {
+        const S=2*(dims.L*dims.W + dims.L*dims.H + dims.W*dims.H);
+        const tgt=RT[rtKey][0], why=RT[rtKey][1];
+        const a0=0.06, A0=a0*S, rtNow=0.161*V/A0, dA=0.161*V/tgt-A0, needA=dA>0?dA/(0.85-a0):0;
+        const q=343/R.a.f1/4;
+        h+=`<div class="bg">잔향 · 흡음 (${r.use||"용도 미정"})</div>`;
+        h+=`<table class="bt"><tr><th>부피</th><th>표면적</th><th>목표 RT</th><th>흡음 없을 때</th><th>필요 흡음 면적</th></tr>
+          <tr><td class="m">${V.toFixed(1)} m³</td><td class="m">${S.toFixed(1)} m²</td><td class="m b">${tgt.toFixed(2)} 초</td>
+          <td class="m">약 ${rtNow.toFixed(2)} 초</td><td class="m b">약 ${needA.toFixed(1)} m² (${(needA/S*100).toFixed(0)}%)</td></tr></table>`;
+        h+=`<div class="bp">목표 ${tgt.toFixed(2)}초 — ${why}. 석고 마감만 하면 ${rtNow.toFixed(2)}초.
+            가장 낮은 모드 ${R.a.f1.toFixed(0)}Hz는 다공질로 잡으려면 ${q.toFixed(1)}m 두께가 필요하므로 저역은 코너 멤브레인·레조네이터로.</div>`;
+        if(rtNow>1.2) h+=`<div class="bw"><b>차음만 하면 못 쓰는 방.</b> 흡음 계획을 견적에 처음부터 포함할 것.</div>`;
+        if(r.use==="합주실"||r.use==="개인 연습실"||r.use==="음악학원 강의실")
+          h+=`<div class="bl">과도한 흡음 금물 — 자기 소리를 못 들으면 더 세게 치고, 차음 부담이 다시 커진다.</div>`;
+        if(r.use==="녹음실 · 스튜디오"||r.use==="보컬 부스"||r.use==="컨트롤룸"||r.use==="유튜브 · 스트리밍")
+          h+=`<div class="bl">마이크·청취 위치 기준 1차 반사점(측벽·천장·후벽) 우선 처리.</div>`;
+      }
       R.out.forEach(([t,why,fix])=>{
         h+=`<div class="bw"><b>${t}</b> — ${why}</div>`;
         fix.forEach(f=>h+=`<div class="bl">${f}</div>`);
