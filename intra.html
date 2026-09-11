@@ -198,6 +198,8 @@ body.admin .sheet{max-width:1080px}
   border-radius:3px;border:1px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer}
 .abar button:hover{background:var(--accent);color:#fff}
 .abar button.solid{background:var(--accent);color:#fff}
+.abar button.ghost{border-color:var(--line);color:var(--sub)}
+.abar button.ghost:hover{border-color:var(--accent);color:var(--accent);background:#fff}
 .abar .sep{width:1px;height:19px;background:var(--line);margin:0 3px}
 .reqrow{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:10px;
   background:#fff;border:1px solid var(--line);padding:10px 12px;margin-bottom:6px;
@@ -301,7 +303,8 @@ body.admin .sheet{max-width:1080px}
 
   <div class="foot" id="foot">
     <span class="msg" id="msg"></span>
-    <button class="btn gh" onclick="location.reload()">초기화</button>
+    <button class="btn gh" id="cancel" style="display:none">수정 취소</button>
+    <button class="btn gh" id="reset" onclick="location.reload()">초기화</button>
     <button class="btn go" id="save">접수 저장</button>
   </div>
 
@@ -362,7 +365,7 @@ const INST = [
                 ["트럼펫",165,"loud"],["트롬본",82],["호른",62],["튜바",37]]},
  {g:"건반", it:[["피아노 (그랜드)",60],["피아노 (업라이트)",60],
                 ["전자피아노",60],["신디사이저",31]]},
- {g:"타악", it:[["드럼",50,"hit"],["카혼",60,"hit"],["젬베",60,"hit"],
+ {g:"타악", it:[["드럼 (어쿠스틱)",50,"hit"],["드럼 (전자)",80,"hitq"],["카혼",60,"hit"],["젬베",60,"hit"],
                 ["팀파니",40,"hit"],["마림바",87]]},
  {g:"앰프 · 스피커", it:[["일렉기타 앰프",82],["베이스 앰프",41],
                 ["모니터 스피커",40],["서브우퍼",20],["홈시어터",25]]},
@@ -377,7 +380,7 @@ const F0 = {1:150, 2:95, 3:70, 4:52, 5:44};
 const START = {1:212, 2:134, 3:99, 4:74, 5:62};
 const STC = {1:"45~47", 2:"48~50", 3:"64~67", 4:"66~68", 5:"68~70"};
 /* 소리원천별 음압 4단계 (1m 기준) */
-const SPLTAB = {quiet:70, normal:90, loud:110, hit:115};
+const SPLTAB = {quiet:70, normal:90, loud:110, hit:115, hitq:85};
 
 const SPEC = {
   F:{ // 바닥
@@ -456,14 +459,32 @@ function buildBrief(){
   const picked=[];
   D.sounds.forEach(n=>{
     const i=FIND(n); if(!i) return;
-    if(i[2]==="hit") hit=true;
+    if(i[2]==="hit"||i[2]==="hitq") hit=true;
     if(i[2]==="loud") loud.push(n);
     if(i[2]==="quiet") quiet.push(n);
     if(i[2]==="both"){ quiet.push(n); both=true; }
     if(i[2]==="in") inbound=true;
     if(i[1]>0){ picked.push([n,i[1]]); if(i[1]<lo){ lo=i[1]; loName=n; } }
   });
+  /* 전자 드럼 — 합주·학원은 스피커 모니터가 전제이므로 어쿠스틱에 준해 잡는다 */
+  const SPK_SPACE = ["합주실","음악학원","홈시어터","댄스 · 짐"];
+  let eDrumSpk = false;
+  if(D.sounds.includes("드럼 (전자)")){
+    const withSpk = D.sounds.some(n=>["모니터 스피커","서브우퍼","홈시어터"].includes(n));
+    if(SPK_SPACE.includes(D.space) || withSpk){
+      eDrumSpk = true;
+      for(const it of picked) if(it[0]==="드럼 (전자)") it[1] = 50;
+    }
+  }
+  /* 전자 드럼 + 서브우퍼 조합이면 전자 드럼을 40Hz로 본다 */
+  let subLow = false;
+  if(D.sounds.includes("드럼 (전자)") && D.sounds.includes("서브우퍼")){
+    subLow = true;
+    for(const it of picked) if(it[0]==="드럼 (전자)") it[1] = 40;
+  }
+
   picked.sort((a,b)=>a[1]-b[1]);
+  if(picked.length){ lo = picked[0][1]; loName = picked[0][0]; }
   const quietOnly = quiet.length && lo===9999;
 
   /* 음원 음압 추정 */
@@ -474,6 +495,11 @@ function buildBrief(){
     if(QUIETSET.includes(n)||TALKSET.includes(n)) return SPLTAB.quiet;
     const i=FIND(n); if(!i) return SPLTAB.normal;
     if(i[2]==="hit") return SPLTAB.hit;
+    if(i[2]==="hitq"){
+      const spk = ["합주실","음악학원","홈시어터","댄스 · 짐"].includes(D.space)
+        || D.sounds.some(x=>["모니터 스피커","서브우퍼","홈시어터"].includes(x));
+      return spk ? 110 : SPLTAB.hitq;
+    }
     if(i[2]==="loud"||AMPSET.includes(n)) return SPLTAB.loud;
     return SPLTAB.normal;
   }
@@ -485,7 +511,7 @@ function buildBrief(){
 
   /* ── 3. 등급 산정 ── */
   /* 최저 기음이 각 등급의 "막히기 시작" 주파수 이상인지로 판정 */
-  let base, overLimit=false, target=lo, targetName=loName, skipped=[];
+  let base, overLimit=false, noneOK=false, target=lo, targetName=loName, skipped=[];
   if(quietOnly){ base = 2; }
   else {
     const pick = f => { for(let L=1;L<=5;L++) if(f >= START[L]) return L; return null; };
@@ -498,7 +524,7 @@ function buildBrief(){
         if(L===null){ skipped.push([n,f]); continue; }
         base = L; target = f; targetName = n; break;
       }
-      if(base===null) base = 5;
+      if(base===null){ base = 5; noneOK = true; }
     }
   }
 
@@ -554,7 +580,7 @@ function buildBrief(){
   care.push(["공통","삼중 구성 금지. 판을 한 겹 더 띄우면 저역에서 오히려 나빠진다."]);
   if(wL>=3) care.push(["벽","그린글루 제진층 적용(L3부터). 도포 후 15분 내 압착."]);
   if(wL>=1) care.push(["벽","돌차음판 4T는 구조체 면에 전 등급 적용. L5는 마감판 사이에 한 겹 더."]);
-  care.push(["벽","이격·열간분리 최대 50mm, 미네랄울 충진 최대 100T(48K). 미네랄울은 구조체 쪽에 밀착하고 마감판 뒷면과 닿지 않게 한다."]);
+  care.push(["벽","이격·열간분리 최대 50mm, 미네랄울 충진 최대 100T(50K). 미네랄울은 구조체 쪽에 밀착하고 마감판 뒷면과 닿지 않게 한다."]);
   care.push(["벽","하지는 바닥에서 눕혀 짜고 세워 고정. 스태거드 스터드는 눕혀 짜기가 불가해 표준에서 제외."]);
   care.push(["벽","WS 배선은 관이 구조체와 각재를 동시에 접촉하지 않게 한다. WP 배선은 반드시 한쪽 열에만 — 열간 분리 구간 횡단은 이중벽을 무효로 만든다."]);
   if(cL>=2) care.push(["천장","천장 장선은 개별 설치. 2×4 표준이며 2×6은 하중 때문에 제외. 장스팬은 제작 박스빔."]);
@@ -569,6 +595,7 @@ function buildBrief(){
   ask.push("철거 가능 여부 — 임차면 원상복구 범위");
   ask.push("개구부 — 문·창·에어컨·환기·덕트 (실제 성능 상한을 결정)");
   ask.push("사용 시간대 — 심야 포함 여부");
+  if(D.sounds.includes("드럼 (전자)")) ask.push("전자 드럼 모니터 방식 — 헤드폰인지 스피커인지");
   if(capped) ask.push("천장고 조정 의사 — 잔여 "+(rest/1000).toFixed(2)+"m 수용 가능한지");
   if(overLimit) ask.push("저역 목표 합의 — AC-B(박스인박스) 전환 여부와 예산");
   if(D.bldg==="아파트") ask.push("관리규약상 바닥 구조 변경 허용 여부");
@@ -597,7 +624,7 @@ function buildBrief(){
 
   return {lo,loName,f0,picked,hit,loud,quiet,both,inbound,quietOnly,overLimit,
           fL,wL,cL,capped,rest,H,modes,clash,cube,care,ask,ac,bg,need,B_SPL,
-          target,targetName,skipped,splOf};
+          target,targetName,skipped,noneOK,eDrumSpk,subLow,splOf};
 }
 
 function grade(){
@@ -605,7 +632,7 @@ function grade(){
   let lo=9999, loName="", hit=false, loud=[], inbound=false, quiet=[], both=false;
   D.sounds.forEach(n=>{
     const i=FIND(n); if(!i) return;
-    if(i[2]==="hit") hit=true;
+    if(i[2]==="hit"||i[2]==="hitq") hit=true;
     if(i[2]==="loud") loud.push(n);
     if(i[2]==="in") inbound=true;
     if(i[2]==="quiet") quiet.push(n);
@@ -670,7 +697,7 @@ function briefHTML(){
       const i=FIND(n);
       h+=`<tr${f===B.lo?' class="hi"':''}><td>${n}</td><td class="m">${f} Hz</td>
           <td class="m">${B.splOf(n)} dB</td>
-          <td class="m">${i&&i[2]==="hit"?"바닥 진동":"—"}</td></tr>`;
+          <td class="m">${i&&(i[2]==="hit"||i[2]==="hitq")?"바닥 진동":"—"}</td></tr>`;
     });
     h+=`</table>`;
     h+=`<div class="bp">가장 낮은 소리 <b>${B.lo}Hz</b> (${B.loName}) ·
@@ -726,14 +753,37 @@ function briefHTML(){
       B.skipped.forEach(([n,f])=>{
         h+=`<tr><td class="m">${rank++}</td><td>${n} ${f}Hz</td><td>AC-A 범위 밖</td></tr>`;
       });
-      h+=`<tr class="hi"><td class="m">${rank}</td><td>${B.targetName} ${B.target}Hz</td>
-          <td><b>L${B.wL}로 달성 — 설계 기준</b></td></tr></table>`;
-      h+=`<div class="bp"><b>설계 기준 ${B.target}Hz · 벽 L${B.wL}.</b>
-          그 아래 대역은 박스인박스(AC-B) 전환, 또는 음원 방진·실내 저역 저감으로 대응한다.</div>`;
+      if(B.noneOK){
+        h+=`</table>`;
+        h+=`<div class="bw"><b>체크하신 소리가 전부 AC-A 범위 밖이다.</b>
+            L5는 우리가 세울 수 있는 최고 등급일 뿐 이 대역을 막는다는 뜻이 아니다.
+            <b>박스인박스(AC-B) 전환</b>을 먼저 꺼내고, 그것이 어려우면
+            음원 방진 · 실내 저역 저감 · 사용 시간 제한으로 어디까지 줄일 수 있는지를 말할 것.
+            "막아드립니다"라고 하면 안 되는 현장이다.</div>`;
+      } else {
+        h+=`<tr class="hi"><td class="m">${rank}</td><td>${B.targetName} ${B.target}Hz</td>
+            <td><b>L${B.wL}로 달성 — 설계 기준</b></td></tr></table>`;
+        h+=`<div class="bp"><b>설계 기준 ${B.target}Hz · 벽 L${B.wL}.</b>
+            그 아래 대역은 박스인박스(AC-B) 전환, 또는 음원 방진·실내 저역 저감으로 대응한다.</div>`;
+      }
     } else {
       h+=`<div class="bp"><b>설계 기준 ${B.lo}Hz · 벽 L${Math.max(1,B.wL)}.</b>
           체크하신 소리는 모두 이 등급으로 대응된다.</div>`;
     }
+    if(D.sounds.includes("드럼 (전자)")){
+      if(B.eDrumSpk)
+        h+=`<div class="bp"><b>전자 드럼 — 스피커 모니터 전제로 잡았다.</b>
+            합주·학원에서는 다른 연주자가 드럼을 들어야 하므로 헤드폰만으로는 진행되지 않는다.
+            저역이 스피커로 나오므로 <b>어쿠스틱에 준해</b> 산정했다.</div>`;
+      else
+        h+=`<div class="bw"><b>전자 드럼 — 모니터 방식을 확인할 것.</b>
+            헤드폰만 쓰면 공기전달음은 패드 타격음(80dB 안팎)뿐이고 <b>바닥 진동만</b> 남는다.
+            스피커를 쓰면 킥 샘플이 어쿠스틱과 같은 저역을 낸다. 등급이 크게 달라진다.</div>`;
+    }
+    if(B.subLow)
+      h+=`<div class="bw"><b>전자 드럼 + 서브우퍼 — 킥 저역을 40Hz로 잡았다.</b>
+          서브우퍼를 통해 킥이 재생되면 어쿠스틱보다 더 낮은 대역까지 내려간다.
+          실제 기기와 사용 음량을 확인할 것.</div>`;
     if(B.hit) h+=`<div class="bp"><b>충격음 동반.</b> 공기전달음과 별개 경로다.
         슬래브에 들어간 진동은 아래뿐 아니라 기둥·내력벽을 타고 위·옆으로도 돈다.
         <b>바닥 등급은 층 위치와 무관하게 유지</b>하며 한 단계 올려 잡는다.</div>`;
@@ -1197,6 +1247,14 @@ function summaryRows(){
 }
 
 document.getElementById("save").onclick = finish;
+document.getElementById("cancel").onclick = ()=>{
+  if(!confirm("수정을 취소하고 검토서로 돌아갑니다.\n입력한 변경 내용은 저장되지 않습니다.")) return;
+  const id=EDIT_ID; EDIT_ID=null; FILES=[];
+  const sv=document.getElementById("save"); sv.textContent="접수 저장"; sv.disabled=false;
+  document.getElementById("cancel").style.display="none";
+  document.getElementById("reset").style.display="";
+  showBrief(id);
+};
 
 async function finish(){
   const btn=document.getElementById("save");
@@ -1222,6 +1280,8 @@ async function finish(){
     document.getElementById("save").textContent="접수 저장";
     if(!ok) alert("서버 저장에 실패했습니다. 화면에만 반영되었습니다.");
     btn.textContent="접수 저장"; btn.disabled=false;
+    document.getElementById("cancel").style.display="none";
+    document.getElementById("reset").style.display="";
     showBrief(id2);
     return;
   }
@@ -1270,6 +1330,8 @@ function startEdit(id){
   }
   EDIT_ID = id;
   const sv=document.getElementById("save"); sv.disabled=false;
+  document.getElementById("cancel").style.display="";
+  document.getElementById("reset").style.display="none";
   document.body.classList.remove("admin");
   document.getElementById("hdTitle").textContent="내용 수정";
   document.getElementById("intake").style.display="";
@@ -1396,6 +1458,7 @@ async function renderAdmin(inner){
   const el=document.querySelector(".body")||document.querySelector(".done");
   el.outerHTML=`<div class="body" id="body" style="padding:0">
     <div class="abar">
+      <button id="bHome" class="ghost">◀ 목록</button><span class="sep"></span>
       <span class="l">신청번호</span><input class="w1" id="fId" placeholder="…AC26-0001">
       <button id="bLoad">불러오기</button><span class="sep"></span>
       <input class="w2" id="fName" placeholder="성명"><input class="w3" id="fPhone" placeholder="연락처">
@@ -1428,8 +1491,17 @@ function listPane(hits,pg){
 
 function repaint(hits,pg){ document.getElementById("apane").innerHTML=listPane(hits,pg); bindList(); }
 
+async function adminHome(){
+  EDIT_ID=null; FILES=[];
+  const sv=document.getElementById("save");
+  if(sv){ sv.textContent="접수 저장"; sv.disabled=false; }
+  page=0;
+  await renderAdmin();
+}
+
 function bindAdmin(){
   const g=id=>document.getElementById(id);
+  if(g("bHome")) g("bHome").onclick=adminHome;
   g("bLoad").onclick=()=>showBrief(g("fId").value.trim());
   g("bPrint").onclick=()=>window.print();
   g("bFind").onclick=async ()=>{
@@ -1518,8 +1590,10 @@ let FILES = [];   // {name,type,data(base64),thumb}
       <div class="no">${id}</div>
       <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""}
         ${from?`<span style="color:${from==="복원"?"#a8281b":"#b6b4ab"}"> · ${from}</span>`:""}</div>
-      <button class="btn go" id="editBtn" style="margin-top:12px;padding:9px 22px;font-size:13px"
-        data-id="${id}">내용 수정</button></div>
+      <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
+        <button class="btn gh" id="backBtn" style="padding:9px 20px;font-size:13px">◀ 목록</button>
+        <button class="btn go" id="editBtn" style="padding:9px 22px;font-size:13px"
+          data-id="${id}">내용 수정</button></div></div>
     ${rec.files?`<div class="logbox"><div class="logh">현장 사진 ${rec.files}장</div>
         <a href="${rec.filesUrl}" target="_blank" class="flink">드라이브 폴더 열기 →</a></div>`:""}
     ${rec.log?`<div class="logbox"><div class="logh">수정 이력</div>${
@@ -1527,6 +1601,8 @@ let FILES = [];   // {name,type,data(base64),thumb}
     <div class="peek"><div class="peek-b">${briefHTML()}</div></div>`);
   const eb=document.getElementById("editBtn");
   if(eb) eb.onclick=()=>startEdit(id);
+  const bb=document.getElementById("backBtn");
+  if(bb) bb.onclick=adminHome;
 }
 
 render();
