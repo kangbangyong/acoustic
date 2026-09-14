@@ -288,6 +288,35 @@ body.admin .sheet{max-width:1080px}
   .rm{page-break-inside:avoid}
 }
 
+/* ── 보류 · 진행포기 기록 ── */
+.notes{margin-top:14px;border:1px solid var(--line);background:#fff}
+.notes summary{cursor:pointer;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:12.5px;background:var(--fill)}
+.notes summary b{letter-spacing:.06em}
+.nt-sub{color:var(--sub);font-size:11.5px;flex:1}
+.nt-sub em{font-style:normal;font-weight:700;color:var(--stop)}
+.nt-b{padding:12px 14px}
+.nt-tabs{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.nt-tab{font-family:inherit;font-size:12px;font-weight:700;padding:6px 14px;border-radius:3px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
+.nt-tab.on{background:var(--stop);border-color:var(--stop);color:#fff}
+.nt-path{margin-left:auto;font-size:11px;color:var(--sub);font-family:ui-monospace,Menlo,Consolas,monospace}
+#ntText{display:block;width:100%;min-height:96px;border:1px solid var(--line);border-radius:3px;padding:9px 11px;font:13px/1.55 inherit;font-family:inherit;color:var(--ink);resize:vertical}
+#ntText:focus{outline:none;border-color:var(--accent)}
+.nt-files{margin-top:8px}
+.nt-drop{margin-top:0}
+.nt-pick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.nt-p{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:3px;background:#fbfaf7}
+.nt-p img{width:28px;height:22px;object-fit:cover;border:1px solid var(--line)}
+.nt-p button{border:0;background:transparent;color:#b6b4ab;cursor:pointer;font-size:14px;padding:0}
+.nt-p button:hover{color:var(--stop)}
+.nt-list{margin-top:8px;display:flex;flex-direction:column;gap:3px}
+.nt-f{font-size:12.5px;color:var(--accent);text-decoration:none;padding:5px 8px;border-bottom:1px dashed var(--hair);display:flex;justify-content:space-between;gap:10px}
+.nt-f:hover{background:var(--fill)}
+.nt-f small{color:var(--sub);font-size:11px}
+.nt-dim{font-size:12px;color:var(--sub)}
+.nt-foot{display:flex;align-items:center;gap:10px;margin-top:10px}
+.nt-st{flex:1;font-size:12px;color:var(--sub)}
+@media print{.notes{display:none !important}}
+
 /* ── 고객전송용 사전검토서 — 화면 ── */
 .q03bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--fill);border-bottom:1px solid var(--line);font-size:12px;color:var(--sub)}
 .q03bar span{flex:1;font-weight:700;letter-spacing:.06em}
@@ -1688,6 +1717,111 @@ function toggleQ03(id){
   window.scrollTo(0,0);
 }
 
+/* ══════════════ 보류 · 진행포기 기록 — 사유 + 자료를 드라이브 하위 폴더에 ══════════════ */
+const NOTE_TABS = ["보류","진행포기"];
+const NOTE_FILE = "사유.md";
+let NOTE_TAB = "보류", NOTE_PICK = [];
+
+function notesHTML(status){
+  const cur = NOTE_TABS.includes(status) ? status : null;
+  return `<details class="notes" id="notes"${cur?" open":""}>
+    <summary><b>보류 · 진행포기 기록</b><span class="nt-sub">${cur?`현재 상태 <em>${cur}</em> — 사유와 자료를 남겨 두면 같은 사유가 또 왔을 때 바로 꺼낼 수 있다.`:"지금은 진행 중. 미리 적어 둘 수도 있다."}</span></summary>
+    <div class="nt-b">
+      <div class="nt-tabs">${NOTE_TABS.map(t=>`<button class="nt-tab${t===NOTE_TAB?" on":""}" data-t="${t}">${t}</button>`).join("")}
+        <span class="nt-path" id="ntPath"></span></div>
+      <textarea id="ntText" placeholder="왜 ${NOTE_TAB}인지 — 예) 건축물 용도변경(창고→2종 근생) 허가가 먼저. 지하층 직통계단 1개라 탈출구 성립 여부에 따라 전체/축소 갈림"></textarea>
+      <div class="nt-files">
+        <div class="drop nt-drop" id="ntDrop"><div class="t">자료 선택 또는 여기로 끌어놓기</div><div class="s">정리 이미지 · 도면 · PDF · 캡처 — 여러 개 가능</div>
+          <input type="file" id="ntFile" multiple style="display:none"></div>
+        <div class="nt-pick" id="ntPick"></div>
+        <div class="nt-list" id="ntList"><span class="nt-dim">드라이브 확인 중…</span></div>
+      </div>
+      <div class="nt-foot"><span class="nt-st" id="ntSt"></span>
+        <button class="rmb solid" id="ntSave">사유 · 자료 저장</button></div>
+    </div></details>`;
+}
+
+async function notesLoad(id){
+  const g=x=>document.getElementById(x);
+  g("ntPath").textContent=`${id} / ${NOTE_TAB} /`;
+  g("ntText").value=""; g("ntList").innerHTML=`<span class="nt-dim">드라이브 확인 중…</span>`;
+  try{
+    const [txt, lst] = await Promise.all([
+      api({action:"getfile", id, name:NOTE_FILE, sub:NOTE_TAB, pass:ADMIN_PASS}),
+      api({action:"files", id, sub:NOTE_TAB, pass:ADMIN_PASS})
+    ]);
+    if(txt&&txt.ok&&txt.data){ const bin=atob(txt.data); const bytes=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      g("ntText").value=new TextDecoder().decode(bytes).replace(/^# .*\n+/,""); }
+    const items=(lst&&lst.items||[]).filter(f=>f.name!==NOTE_FILE);
+    g("ntList").innerHTML = items.length
+      ? items.map(f=>`<a class="nt-f" href="${f.url}" target="_blank">${f.name}<small>${fmt(f.at)}</small></a>`).join("")
+      : `<span class="nt-dim">올린 자료 없음</span>`;
+  }catch(e){ g("ntList").innerHTML=`<span class="nt-dim">드라이브 조회 실패</span>`; }
+}
+
+function fileToB64(file){
+  return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onerror=rej;
+    fr.onload=()=>res({name:file.name, type:file.type||"application/octet-stream", data:String(fr.result).split(",")[1]}); fr.readAsDataURL(file); });
+}
+async function notesPick(list){
+  for(const f of [...list]){
+    if(f.size>15*1024*1024){ alert(f.name+" — 15MB를 넘습니다."); continue; }
+    try{ NOTE_PICK.push(f.type.indexOf("image/")===0 ? await shrink(f) : await fileToB64(f)); }catch(e){}
+  }
+  paintPick();
+}
+function paintPick(){
+  const p=document.getElementById("ntPick"); if(!p) return;
+  p.innerHTML = NOTE_PICK.map((f,i)=>`<span class="nt-p">${f.thumb?`<img src="${f.thumb}">`:"📄"} ${f.name}<button data-i="${i}">×</button></span>`).join("");
+  p.querySelectorAll("button").forEach(b=>b.onclick=()=>{ NOTE_PICK.splice(+b.dataset.i,1); paintPick(); });
+}
+
+async function notesSave(id){
+  const g=x=>document.getElementById(x), btn=g("ntSave"), st=m=>g("ntSt").textContent=m;
+  const text=g("ntText").value.trim();
+  if(!text && !NOTE_PICK.length){ st("적은 내용이나 파일이 없습니다."); return; }
+  btn.disabled=true; st("저장 중…");
+  const out=[];
+  try{
+    if(text){
+      const md=`# ${NOTE_TAB} 사유 — ${id} · ${(D.name||"").trim()}\n\n`+text+"\n";
+      const bytes=new TextEncoder().encode(md); let bin=""; for(let i=0;i<bytes.length;i+=8192) bin+=String.fromCharCode.apply(null, bytes.subarray(i,i+8192));
+      const r=await api({action:"putfile", id, name:NOTE_FILE, type:"text/markdown", data:btoa(bin), sub:NOTE_TAB, pass:ADMIN_PASS});
+      out.push(r&&r.ok ? "사유 저장" : "사유 저장 실패: "+(r&&r.error||""));
+    }
+    if(NOTE_PICK.length){
+      const r=await api({action:"addfiles", id, sub:NOTE_TAB, files:NOTE_PICK.map(f=>({name:f.name,type:f.type,data:f.data})), pass:ADMIN_PASS});
+      out.push(r&&r.ok&&r.count ? `자료 ${r.count}건 업로드` : "자료 업로드 실패"+(r&&String(r.url||"").indexOf("ERR")===0?": "+r.url:""));
+      if(r&&r.ok&&r.count) NOTE_PICK=[];
+    }
+    /* 수정 이력에 한 줄 */
+    try{ const d=new Date(), t=`${String(d.getFullYear()).slice(2)}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+         const Dout=JSON.parse(JSON.stringify(D)); delete Dout.q03;
+         await api({action:"update", id, data:Dout, log:`${t} · ${NOTE_TAB} 기록 — ${out.join(", ")}${text?" / "+text.slice(0,60).replace(/\n/g," ")+(text.length>60?"…":""):""}`, pass:ADMIN_PASS}); }catch(e){}
+  }catch(e){ out.push("오류: "+e); }
+  paintPick(); st(out.join(" · ")+" "+new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"}));
+  btn.disabled=false; notesLoad(id);
+}
+
+function bindNotes(id, status){
+  const g=x=>document.getElementById(x); if(!g("notes")) return;
+  NOTE_TAB = NOTE_TABS.includes(status) ? status : "보류"; NOTE_PICK=[];
+  const sel=()=>{ document.querySelectorAll(".nt-tab").forEach(b=>b.classList.toggle("on", b.dataset.t===NOTE_TAB));
+    g("ntText").placeholder=`왜 ${NOTE_TAB}인지 — 예) 건축물 용도변경(창고→2종 근생) 허가가 먼저. 지하층 직통계단 1개라 탈출구 성립 여부에 따라 전체/축소 갈림`; };
+  document.querySelectorAll(".nt-tab").forEach(b=>b.onclick=()=>{ if(b.dataset.t===NOTE_TAB) return; NOTE_TAB=b.dataset.t; NOTE_PICK=[]; paintPick(); sel(); notesLoad(id); });
+  const drop=g("ntDrop"), inp=g("ntFile");
+  drop.onclick=()=>inp.click(); inp.onchange=e=>{ notesPick(e.target.files); inp.value=""; };
+  ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over");}));
+  ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over");}));
+  drop.addEventListener("drop",e=>{ if(e.dataTransfer.files) notesPick(e.dataTransfer.files); });
+  g("ntSave").onclick=()=>notesSave(id);
+  sel();
+  /* 펼쳐질 때 한 번만 드라이브 조회 */
+  const det=g("notes"); let loaded=false;
+  const load=()=>{ if(!loaded){ loaded=true; notesLoad(id); } };
+  if(det.open) load(); det.addEventListener("toggle",()=>{ if(det.open) load(); });
+}
+
 /* ══════════════ 한 페이지 폼 ══════════════ */
 const SPACES = [
   ["소리를 내는 공간", ["개인 연습실","합주실","녹음실 · 스튜디오","음악학원","홈시어터","댄스 · 짐"]],
@@ -2258,13 +2392,13 @@ async function showBrief(id){
   try{ const res=await api({action:"find",q:id,pass:ADMIN_PASS});
        if(res&&res.ok&&res.hits.length){
          const h=res.hits[0];
-         if(h.data && Object.keys(h.data).length){ rec={at:h.at,data:h.data,log:h.log||"",files:h.files||0,filesUrl:h.filesUrl||""};
+         if(h.data && Object.keys(h.data).length){ rec={at:h.at,data:h.data,log:h.log||"",files:h.files||0,filesUrl:h.filesUrl||"",status:h.status||"신규"};
            from = h.data._rebuilt ? "복원" : "서버"; }
        } }catch(e){}
   if(!rec){
     const local=await STORE.get("req:"+id);
     if(local && local.data && Object.keys(local.data).length){
-      rec={at:local.at,data:local.data,log:local.log||""}; from="로컬";
+      rec={at:local.at,data:local.data,log:local.log||"",status:local.status||"신규"}; from="로컬";
     }
   }
   if(!rec){
@@ -2300,7 +2434,7 @@ let FILES = [];   // {name,type,data(base64),thumb}
 
   await renderAdmin(`<div class="idbox" style="margin-top:0"><div class="l">신청번호</div>
       <div class="no">${id}</div>
-      <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""}
+      <div class="sm">${fmt(rec.at)} 접수 · 고객 ${D.name||""} ${D.phone||""}${D.staff?" · 담당 "+D.staff:""} · <b class="stt ${STCLS[rec.status]||"st-new"}" style="padding:2px 8px;border-radius:3px;border:1px solid;font-size:11px">${rec.status||"신규"}</b>
         ${from?`<span style="color:${from==="복원"?"#a8281b":"#b6b4ab"}"> · ${from}</span>`:""}</div>
       <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
         <button class="btn gh" id="backBtn" style="padding:9px 20px;font-size:13px">◀ 목록</button>
@@ -2309,6 +2443,7 @@ let FILES = [];   // {name,type,data(base64),thumb}
         <button class="btn gh" id="q03Btn" style="padding:9px 20px;font-size:13px;color:var(--accent);border-color:var(--accent)">고객전송용 사전검토서</button></div></div>
     ${rec.files?`<div class="logbox"><div class="logh">현장 사진 ${rec.files}장</div>
         <a href="${rec.filesUrl}" target="_blank" class="flink">드라이브 폴더 열기 →</a></div>`:""}
+    ${notesHTML(rec.status)}
     ${rec.log?`<div class="logbox"><div class="logh">수정 이력</div>${
       String(rec.log).split("\n").filter(Boolean).map(l=>`<div class="logl">${l}</div>`).join("")}</div>`:""}
     <div class="peek"><div class="peek-b">${briefHTML()}</div></div>`);
@@ -2316,6 +2451,7 @@ let FILES = [];   // {name,type,data(base64),thumb}
   if(eb) eb.onclick=()=>startEdit(id);
   Q03_ON=false; document.body.classList.remove("q03mode");
   const qb=document.getElementById("q03Btn"); if(qb) qb.onclick=()=>toggleQ03(id);
+  bindNotes(id, rec.status);
   bindReview(id);
   const bb=document.getElementById("backBtn");
   if(bb) bb.onclick=adminHome;
