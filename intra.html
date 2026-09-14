@@ -292,6 +292,8 @@ body.admin .sheet{max-width:1080px}
 .q03bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--fill);border-bottom:1px solid var(--line);font-size:12px;color:var(--sub)}
 .q03bar span{flex:1;font-weight:700;letter-spacing:.06em}
 .q03bar em{font-style:normal;font-weight:400;letter-spacing:0;color:var(--accent);margin-left:10px}
+.q03bar em a{color:var(--accent);font-weight:700}
+.q03bar em small{color:var(--stop);font-size:11px}
 .q03steps{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--hair)}
 .q03step{border:1px solid var(--line);background:#fbfaf7}
 .q03sh{display:flex;align-items:center;gap:8px;padding:7px 10px;font-size:12px;font-weight:700;border-bottom:1px solid var(--hair)}
@@ -1538,11 +1540,22 @@ function q03LoadHTML(id){ try{ return localStorage.getItem("q03html:"+id)||""; }
 function q03DriveName(id){ return `사전검토서_${q03FileName(id)}.html`; }
 /* 드라이브 저장 — 접수 건 폴더에 HTML 파일로 (기존 addfiles 통로) */
 async function q03Upload(id, html){
-  const b64=btoa(String.fromCharCode(...new TextEncoder().encode(html)));
+  const bytes=new TextEncoder().encode(html); let bin=""; for(let i=0;i<bytes.length;i+=8192) bin+=String.fromCharCode.apply(null, bytes.subarray(i,i+8192));
+  const b64=btoa(bin), name=q03DriveName(id);
+  let err="";
   /* putfile(같은 이름 덮어쓰기)이 있으면 그것을, 없으면 addfiles(새 파일 추가)로 */
-  try{ const r1=await api({action:"putfile", id, name:q03DriveName(id), type:"text/html", data:b64, pass:ADMIN_PASS}); if(r1&&r1.ok) return true; }catch(e){}
-  const res=await api({action:"addfiles", id, files:[{name:q03DriveName(id), type:"text/html", data:b64}], pass:ADMIN_PASS});
-  return !!(res&&res.ok);
+  try{ const r1=await api({action:"putfile", id, name, type:"text/html", data:b64, pass:ADMIN_PASS});
+       if(r1&&r1.ok) return {ok:true,url:r1.url||"",how:"putfile"}; err=(r1&&r1.error)||""; }catch(e){ err=String(e); }
+  if(err!=="unknown action"){ /* putfile 이 있는데 실패 → 그대로 보고 */ if(err) return {ok:false,err}; }
+  try{ const r2=await api({action:"addfiles", id, files:[{name, type:"text/html", data:b64}], pass:ADMIN_PASS});
+       if(!(r2&&r2.ok)) return {ok:false,err:(r2&&r2.error)||"addfiles 실패"};
+       if(!r2.count) return {ok:false,err:"드라이브 쓰기 실패 — "+(String(r2.url||"").indexOf("ERR")===0?r2.url:"스크립트 권한 확인")};
+  }catch(e){ return {ok:false,err:String(e)}; }
+  /* 실제로 폴더에 있는지 확인하고 링크를 받는다 */
+  try{ const r3=await api({action:"files", id, pass:ADMIN_PASS});
+       const f=(r3&&r3.items||[]).find(x=>x.name===name);
+       return f ? {ok:true,url:f.url,how:"addfiles"} : {ok:false,err:"올렸는데 폴더에서 안 보임 — 배포 계정의 드라이브를 확인"}; }catch(e){}
+  return {ok:true,url:"",how:"addfiles"};
 }
 /* 드라이브에서 가져오기 — AppsScript 에 getfile 액션이 있어야 한다 (없으면 조용히 실패) */
 async function q03Fetch(id){
@@ -1661,7 +1674,8 @@ function toggleQ03(id){
     if(!v){ alert("붙여넣을 HTML이 비어 있습니다."); return; }
     if(!/<html[\s>]/i.test(v)){ alert("HTML 전체(<html> … </html>)를 붙여넣어 주세요."); return; }
     D.q03.html=v; q03StoreHTML(id,v); paint(); st("드라이브에 올리는 중…");
-    q03Upload(id,v).then(ok=>st(ok?"드라이브 저장됨 · "+q03DriveName(id):"드라이브 저장 실패 — 브라우저에만 저장됨")).catch(()=>st("드라이브 저장 실패 — 브라우저에만 저장됨")); };
+    q03Upload(id,v).then(r=>{ if(r.ok){ g("q03St").innerHTML=`드라이브 저장됨 · ${r.url?`<a href="${r.url}" target="_blank">${q03DriveName(id)} ↗</a>`:q03DriveName(id)}${r.how==="addfiles"?" <small>(putfile 미배포 — 적용마다 파일이 추가됨)</small>":""}`; }
+      else st("드라이브 저장 실패: "+r.err+" — 브라우저에만 저장됨"); }).catch(e=>st("드라이브 저장 실패 — 브라우저에만 저장됨")); };
   g("q03Clear").onclick=()=>{ if(D.q03.html && !confirm("붙여넣은 문서를 지웁니다.")) return; D.q03.html=""; q03StoreHTML(id,""); paint(); };
   g("q03Back").onclick=()=>toggleQ03(id);
   g("q03Html").onclick=()=>{ if(!D.q03.html){ alert("먼저 HTML을 붙여넣고 적용하세요."); return; }
