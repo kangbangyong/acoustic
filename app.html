@@ -43,6 +43,7 @@
   .tile span{display:block;font-size:12.5px;color:var(--mute);margin-top:3px}
   .tile svg{width:18px;height:18px;flex:none;stroke:var(--mute);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .tile.lock svg{stroke:var(--gold)}
+  a.tile.soon{opacity:.45;pointer-events:none;border-style:dashed}
 
   .links{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .links a{display:flex;flex-direction:column;align-items:center;gap:6px;
@@ -88,6 +89,14 @@
       <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
     <a class="tile" href="/acoustic/ac_dictionary.html"><div><b>방음이론</b><span>용어사전 · 룸모드 · 잔향 계산기</span></div>
       <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+  </section>
+
+  <section class="group">
+    <h2>견적</h2>
+    <a class="tile" href="/acoustic/ac-estimate.html"><div><b>개략견적</b><span>등급 · 면적으로 빠른 견적</span></div>
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+    <a class="tile soon" aria-disabled="true"><div><b>세부견적</b><span>개발 중</span></div>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></a>
   </section>
 
   <section class="group">
