@@ -1,0 +1,17 @@
+{
+  "name": "Grid-A 4U 방음",
+  "short_name": "Grid-A 방음",
+  "id": "/acoustic/app.html",
+  "start_url": "/acoustic/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f283c",
+  "theme_color": "#0f283c",
+  "lang": "ko",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

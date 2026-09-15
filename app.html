@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Grid-A 4U 방음</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f283c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Grid-A 방음">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f283c; --navy-2:#173a55; --line:#2b4c68;
+    --gold:#f2c14e; --ivory:#f3efe6; --mute:#9db2c4;
+    --sat:env(safe-area-inset-top); --sab:env(safe-area-inset-bottom);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--navy);color:var(--ivory);
+    font-family:"IBM Plex Sans KR",system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  body{display:flex;justify-content:center}
+  .wrap{width:100%;max-width:440px;min-height:100%;padding:calc(28px + var(--sat)) 22px calc(28px + var(--sab));
+    display:flex;flex-direction:column;gap:22px}
+
+  header{display:flex;align-items:center;gap:14px}
+  header img{width:52px;height:52px;border-radius:12px}
+  header .name{font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+  header .name small{display:block;font-size:12px;font-weight:400;color:var(--mute);margin-top:4px}
+
+  .group{display:flex;flex-direction:column;gap:10px}
+  .group h2{font-size:13px;font-weight:500;color:var(--gold);padding-left:2px}
+  a.tile{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--navy-2);border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px;color:inherit;text-decoration:none;
+    transition:transform .08s,background .12s}
+  a.tile:active{transform:scale(.985);background:#1d4664}
+  a.tile:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .tile b{display:block;font-size:17px;font-weight:600}
+  .tile span{display:block;font-size:12.5px;color:var(--mute);margin-top:3px}
+  .tile svg{width:18px;height:18px;flex:none;stroke:var(--mute);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .tile.lock svg{stroke:var(--gold)}
+
+  .links{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .links a{display:flex;flex-direction:column;align-items:center;gap:6px;
+    padding:12px 6px;border:1px dashed var(--line);border-radius:12px;
+    color:var(--mute);font-size:12.5px;text-decoration:none}
+  .links a:active{background:var(--navy-2)}
+  .links svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  footer{margin-top:auto;font-size:11.5px;color:var(--mute);line-height:1.6}
+  footer b{color:var(--ivory);font-weight:500}
+
+  #install{display:none;margin-top:2px;background:var(--gold);color:var(--navy);border:0;border-radius:12px;
+    padding:14px;font:inherit;font-size:15px;font-weight:600;width:100%}
+  #install.show{display:block}
+  #howto{display:none;background:#1a3348;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.65;color:var(--ivory)}
+  #howto.show{display:block}
+  @media (display-mode:standalone){ #install,#howto,#tip{display:none!important} }
+  @media (prefers-reduced-motion:reduce){ a.tile{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img src="icons/icon-192.png" alt="">
+    <div class="name">Grid-A 4U 방음<small>당신을 위해 그리다 | 그리드에이포유</small></div>
+  </header>
+
+  <button id="install">홈 화면에 앱으로 설치</button>
+  <div id="howto">아이폰은 사파리에서 <b>공유</b> 버튼 → <b>홈 화면에 추가</b>를 누르면 주소창 없이 앱처럼 열립니다.</div>
+
+  <section class="group">
+    <h2>고객</h2>
+    <a class="tile" href="/grida/"><div><b>작품의뢰서</b><span>인테리어 · 리모델링 의뢰</span></div>
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+    <a class="tile" href="/acoustic/ac-q-01.html"><div><b>방음상담신청서</b><span>어떤 공간, 어떤 소리인지 6문항</span></div>
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+  </section>
+
+  <section class="group">
+    <h2>자료</h2>
+    <a class="tile" href="/acoustic/"><div><b>방음시공기준</b><span>AC 시리즈 시방서 · 등급표</span></div>
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+    <a class="tile" href="/acoustic/ac_dictionary.html"><div><b>방음이론</b><span>용어사전 · 룸모드 · 잔향 계산기</span></div>
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+  </section>
+
+  <section class="group">
+    <h2>내부</h2>
+    <a class="tile lock" href="/acoustic/intra.html"><div><b>intra_net</b><span>조용한청년들 접수 · 검토</span></div>
+      <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a>
+    <a class="tile lock" href="/acoustic/intra_review.html"><div><b>intra_review</b><span>대표 전용 시공 검토</span></div>
+      <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a>
+  </section>
+
+  <section class="group">
+    <h2>관련 사이트 <span style="color:var(--mute);font-weight:400">— 새 창으로 열림</span></h2>
+    <div class="links">
+      <a href="https://github.com/kangbangyong" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>GitHub</a>
+      <a href="https://app.netlify.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Netlify</a>
+      <a href="https://claude.ai" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Claude</a>
+    </div>
+  </section>
+
+  <footer id="tip">한 번 설치하면 이 화면이 앱의 첫 화면이 됩니다. 각 페이지 오른쪽 아래 <b>홈</b> 버튼으로 돌아옵니다.</footer>
+</div>
+
+<script>
+  // 설치 버튼 (안드로이드 크롬)
+  let deferred=null;
+  const btn=document.getElementById('install'), howto=document.getElementById('howto');
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;btn.classList.add('show');});
+  btn.addEventListener('click',async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;btn.classList.remove('show');});
+  // 아이폰 안내
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+  const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  if(isIOS&&!standalone) howto.classList.add('show');
+  // 서비스워커 (오프라인 캐시, /acoustic/ 범위)
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>

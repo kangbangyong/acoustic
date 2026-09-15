@@ -1,26 +1,16 @@
-# AC 시리즈 — 그리드에이포유 방음 시공 기준
+# Grid-A 4U 방음 앱 (PWA) 설치
 
-내부 자료. 대외 배포 금지.
+1. 이 폴더 안의 파일을 전부 `acoustic` 저장소 루트에 넣기
+   app.html / manifest.webmanifest / sw.js / home.js / icons/
+   (ZIP은 압축 해제 후 폴더째 드래그)
+2. 홈 버튼: 각 페이지 `</body>` 바로 앞에 한 줄
+   `<script src="/acoustic/home.js"></script>`
+   - acoustic: index.html, ac-q-01.html, intra.html, intra_review.html, ac_dictionary.html (build.py에 nav처럼 주입해도 됨)
+   - grida 저장소 index.html에도 같은 한 줄 (도메인이 같아서 그대로 동작)
+3. 앱 주소: https://kangbangyong.github.io/acoustic/app.html
+   - 안드로이드 크롬: 화면 위 "홈 화면에 앱으로 설치" 버튼
+   - 아이폰 사파리: 공유 → 홈 화면에 추가
+4. 관련 사이트 3개 링크는 app.html 안 주소를 실제 주소로 바꿔 쓰기 (github.com/kangbangyong, app.netlify.com, claude.ai 로 넣어둠)
 
-## 구조
-```
-index.html            목록 (검색 · 썸네일)
-assets/ac-nav.css/js  시트 상단 이동바
-common/  AC-00 표기규칙 · AC-00-R 법규 근거
-f/       AC-F  L0~L5 · M1~M2
-w/       AC-W-00 개요 · AC-WS L1~L5 · AC-WP L1~L5 · AC-W-M1~M3
-c/       AC-C  L0~L5 · M1~M2
-xlsx/    시방시트 (F · W · C)
-```
-
-## 조작
-| 키 | 동작 |
-|---|---|
-| ← → | 시트에서 이전 / 다음 등급 |
-| Esc | 목록으로 |
-| / | 목록에서 검색창 포커스 |
-
-## 주의
-- 모든 페이지 noindex. 검색에는 안 잡히지만 주소를 아는 사람은 볼 수 있다
-- 저장소를 Private 으로 바꾸면 Free 플랜에서는 Pages 가 내려간다
-- 오프라인: 저장소 ZIP 을 받아 폴더째 열면 그대로 작동 (상대경로)
+sw.js는 /acoustic/ 안 GET 요청만 캐시. AppsScript 저장·불러오기, 폰트, 외부 사이트는 건드리지 않음.
+페이지를 고친 뒤 캐시가 남으면 sw.js의 CACHE 이름(v1→v2)만 올리면 됨.
