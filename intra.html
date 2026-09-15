@@ -776,6 +776,8 @@ function buildBrief(){
                     "위층 뛰는 소리 · 인접 세대 충격음은 비대응 — 기존 천장 존치 조건에서 구조적으로 불가, 서면 고지" ].filter(Boolean) };
   }
 
+  if(apt && apt.rest!==null){ rest=apt.rest; restLow=rest<2100; }
+
   /* ── 4. 룸 모드 ── */
   let modes=null, clash=[], cube=false;
   if(!D.noSize && parseFloat(D.w) && parseFloat(D.d)){
@@ -805,6 +807,21 @@ function buildBrief(){
 
   /* ── 5. 시공 주의 ── */
   const care=[];
+  if(apt){
+    care.push(["전제","기존 천장 철거 금지 — 원상복구 조건 · M 시리즈 전제. 슬래브 타공 0, 방진행거 병용 금지(접촉점 0 원칙)."]);
+    care.push(["전제","벽면 · 경계벽에 피스 고정 금지 — 진동 직결 · 원상복구 불가. 유닛은 피스 체결만, 접착제 사용 금지(재사용 불가)."]);
+    care.push(["천장","방 폭 실측 → 스팬 판정: ≤ 2.7m @600 / ≤ 2.9m @450 / 초과 시 짧은 변 방향. 3.0m @600 강행 금지(처짐 15mm)."]);
+    care.push(["천장","박스빔은 벽 유닛 상단 턱에 양단 지지 — 턱이 PB면 각재로 보강(천장 하중 약 145kg 집중). 유닛 상면 마블 50 사전 접착은 표준, 슬래브 비접촉 최종 확인(배관 · 배선 · 유닛 상면)."]);
+    care.push(["천장","흡음텍스는 구조 아님 — 벽 안쪽 면까지만, 벽 마감과 만나는 곳은 그림자 홈 5~10mm(장기 처짐). 벽-천장 접합은 강결(턱 위 방진 패드 금지)."]);
+    if(apt.C==="M2") care.push(["천장","M2 — 기존 천장 하면에 돌차음판 4T 자체 점착(1000×1000 · 6.5kg). 노후 세대는 기존 달대 이완 · 부식 먼저 확인(7.2 → 13.7kg/㎡). 유닛 거치 전에 부착."]);
+    care.push(["벽","유닛 프레임은 반 칸 어긋내기(정렬 배치 시 관통 경로). 유닛 관통 피스 금지(두 판 직결 → 중공층 무효). 마블은 압착하지 않는다(흐름저항 저하 · 브릿지). 상하부 고무패드 생략 금지."]);
+    care.push(["벽",apt.party==="건식"
+      ?"M3 건식 경계벽 — 벽면 차음석고 12.5T 보강이 먼저(19 → 32kg/㎡). 콘센트 마주보기 지점 점검 후 착공(개구부로 남음). 경계벽 철거 · 개조 금지(내화 · 법정 차음 구조). 스터드 관통 시 옆 세대 직결."
+      :"M2 콘크리트 경계벽 — 유닛 2겹 같은 방향(마블면이 벽) + 차음석고 12.5T. 마감판을 유닛에 선부착하지 않는다(600마다 관통 이음선)."]);
+    care.push(["벽","M1 내부벽 — 유닛 A 마블면이 벽, 유닛 B 뒤집어 PB끼리 맞댐. 기존 내부벽에 PB 15T 보강. 실내측 마블 50이 타공판 배후 흡음층."]);
+    care.push(["바닥","벽 하단 하중 분산판(합판 18T · 접지 폭 300) 생략 금지 — 천장 145 + 벽 920 ≈ 1,065kg, 5.8kPa는 AC-F-M2 방진층 설계 하중 초과. 분산판 적용 시 약 3.5kPa."]);
+    care.push(["고지","위층 뛰는 소리 · 대출력 저역 비대응을 계약 전 서면 고지. 추정 성능 대외 기재 금지(마블 흡음 데이터 미확보). 인허가 시설은 마블 대신 미네랄울 50K."]);
+  } else {
   care.push(["공통","외벽(구조벽에 접한 벽)은 원 슬래브에 직접 세운다. 부유바닥 위에 올리거나 하부에 방진패드를 넣지 않는다."]);
   care.push(["공통","내벽은 부유바닥 위에 세우고, 부유 슬래브 단부는 공기층 안에서 끝낸다. 슬래브 단부를 복도로 노출하지 않는다."]);
   care.push(["공통","모든 러너는 실런트 베드(Ecoseal 805) 위에 고정한다. 방진패드나 경질재로 대체하지 않는다 — 질량 결합이 끊겨 중역 공진이 증폭된다."]);
@@ -819,6 +836,7 @@ function buildBrief(){
   care.push(["천장","드레인은 응축수 펌프 방식으로 한다."]);
   if(hit) care.push(["바닥","충격음 대응이 우선. 방진고무는 점 지지(십자형)로 면압을 확보한다 — 판재를 전면에 깔면 눌리지 않아 f₀가 올라간다."]);
   care.push(["바닥","이중벽 공기층은 최소 100mm. 내부는 비워두고 단열은 각 벽 스터드 안에만 넣는다."]);
+  }
 
   /* ── 6. 확인 필요 ── */
   const ask=[];
@@ -829,7 +847,13 @@ function buildBrief(){
   if(D.sounds.includes("드럼 (전자)")) ask.push("전자 드럼 모니터 방식 — 헤드폰인지 스피커인지");
   if(capped) ask.push("천장고 조정 의사 — 잔여 "+(rest/1000).toFixed(2)+"m 수용 가능한지");
   if(overLimit) ask.push("저역 목표 합의 — AC-B(박스인박스) 전환 여부와 예산");
-  if(D.bldg==="아파트") ask.push("관리규약상 바닥 구조 변경 허용 여부");
+  if(apt){
+    ask.push("기존 천장 상태 — 달대 이완 · 부식, 기존 천장고 실측(유닛 128 + 공동 200 확보 가능한지)");
+    ask.push("세대 경계벽 종류 — 콘크리트(두드려 판정)인지 건식인지 · 콘센트 마주보기 위치");
+    ask.push("관리규약 · 인테리어 신고 — 바닥 · 천장 변경 허용 범위, 원상복구 조건");
+    ask.push("비대응 고지 동의 — 위층 뛰는 소리 · 대출력 저역은 못 막는다는 서면 확인");
+    if(apt.drum) ask.push("어쿠스틱 드럼 — 전자드럼 헤드폰 전환 의사 (아파트에서는 불가)");
+  } else if(D.bldg==="아파트") ask.push("관리규약상 바닥 구조 변경 허용 여부");
   if(D.ct!=="계약 완료") ask.push("계약 조건 — 원상복구 범위·구조 변경 허용 조항");
   if(D.noSize) ask.push("실측 — 치수 미기재");
   if(D.soundEtc) ask.push("직접 입력 악기 대역 확인: "+D.soundEtc);
@@ -982,8 +1006,11 @@ function briefHTML(){
     h+=`</div>`;
   }
 
-  /* 벽 사다리 · 목표 주파수 */
-  if(!B.quietOnly){
+  /* 벽 사다리 · 목표 주파수 — 아파트형은 M 시리즈 대응 범위로 */
+  if(!B.quietOnly && B.apt){
+    h+=`<div class="bsec"><div class="bh">03 &nbsp;어디까지 잡히는가</div>`+aptReachHTML(B)+`</div>`;
+  }
+  if(!B.quietOnly && !B.apt){
     h+=`<div class="bsec"><div class="bh">03 &nbsp;어디까지 잡히는가</div>`;
     h+=`<table class="bt"><tr><th>등급</th><th>공진점 f₀</th><th>막히기 시작</th><th>STC 추정</th></tr>`;
     for(let L=1;L<=5;L++){
@@ -1052,7 +1079,7 @@ function briefHTML(){
     B.modes.forEach(m=>h+=`<tr><td>${m[0]}</td><td class="m">${m[1].toFixed(1)} Hz</td></tr>`);
     h+=`</table>`;
     if(B.H) h+=`<div class="bp">높이는 <b>방음실높이</b>(공사 후 실치수) 기준이다.
-        천장높이 ${D.h}m에서 천장 ${SPEC.C[B.cL].h}mm + 바닥 ${FH[B.fL]}mm를 뺀 값.</div>`;
+        천장높이 ${D.h}m에서 ${B.apt?`천장 유닛 ${SPECM.C[B.apt.C].h}mm(128 + 공동 200) + 바닥 M층 ${SPECM.F[B.apt.F].h}mm(가정)`:`천장 ${SPEC.C[B.cL].h}mm + 바닥 ${FH[B.fL]}mm`}를 뺀 값.</div>`;
     h+=`<div class="bp">축방향 1차 모드(c/2L)다. 이 주파수에서 실 안이 뭉친다.
         <b>차음 성능과 무관한 실 형상의 문제</b>이므로 등급을 올려도 사라지지 않는다.</div>`;
     if(B.cube) h+=`<div class="bw"><b>정방형에 가깝다.</b> 두 축의 모드가 겹쳐 특정 대역이 크게 부풀 수 있다. 흡음 배치나 비대칭 마감으로 완화한다.</div>`;
@@ -1120,6 +1147,10 @@ function briefHTML(){
                 4:["사운드락 권장","자리가 없으면 이중 방음문 + 성능 한계 고지"],
                 5:["사운드락 필수","단일문으로는 벽 등급이 성립하지 않는다"]};
   h+=`<div class="bg">출입문</div>`;
+  if(B.apt){
+    h+=`<div class="bl">유닛 벽 출입문 사양은 AC-W-M 시트에 없다 — 기존 방문 위치에 <b>방음문 교체 + 문틀 기밀</b>로 대응하고, 문이 세대 경계벽 쪽이면 유닛과 문틀 접합을 별도 검토.</div>`;
+    h+=`<div class="bl">벽만 올리고 문을 방치하면 벽에 쓴 돈이 문으로 빠져나간다. 아파트는 발코니 창호가 문보다 먼저 성능 상한이 되는 경우가 많다.</div>`;
+  } else {
   h+=`<div class="bl"><b>${DOOR[wlv][0]}</b> — ${DOOR[wlv][1]}</div>`;
   if(wlv>=3)
     h+=`<div class="bl">벽만 올리고 문을 방치하면 <b>벽에 쓴 돈이 문으로 빠져나간다.</b>
@@ -1128,18 +1159,19 @@ function briefHTML(){
     h+=`<div class="bl">사운드락 — 문 간격 <b>900mm 이상</b>, 중간 공간 흡음 처리, 두 문 엇갈림 배치.
         이중 방음문(간격 200~300mm)과는 다른 물건이며 성능 차이가 크다.
         피난 동선이 되므로 문 열림 방향·유효 폭·피난 표시를 함께 확인한다.</div>`;
+  }
   if(B.H){
-    h+=`<div class="bp">천장 ${D.h}m에서 천장 ${SPEC.C[B.cL].h}mm + 바닥 ${FH[B.fL]}mm를 빼면
+    h+=`<div class="bp">천장 ${D.h}m에서 ${B.apt?`천장 유닛 ${SPECM.C[B.apt.C].h}mm + 바닥 M층 ${SPECM.F[B.apt.F].h}mm(가정)`:`천장 ${SPEC.C[B.cL].h}mm + 바닥 ${FH[B.fL]}mm`}를 빼면
         <b>실내 잔여 ${(B.rest/1000).toFixed(2)}m</b>.</div>`;
     if(B.capped)
       h+=`<div class="bw"><b>천장고 제약으로 등급을 낮췄다.</b> 층고가 부족해 목표 등급을
           그대로 쓰면 거실 반자 최소 높이(2.1m)를 못 지킨다. 고객에게 <b>등급을 내릴지,
           높이를 감수할지</b> 선택하게 할 것. 시공 후에 말하면 늦다.</div>`;
-    if(VIEW!=="partner") h += altHTML(B);
+    if(VIEW!=="partner" && !B.apt) h += altHTML(B);
   }
   if(B.floorNote) h+=`<div class="bp">${B.floorNote}</div>`;
   if(D.floor==="1층 · 필로티 위") h+=`<div class="bp">아래에 사용 공간이 없어 바닥 등급을 낮춰 잡았다. 다만 충격음이 있으면 구조체 전달은 남는다.</div>`;
-  if(D.floor==="최상층") h+=`<div class="bp">위에 사용 공간이 없어 천장 등급을 낮춰 잡았다. 옥상 설비 소음·우수 소음은 별도 확인.</div>`;
+  if(D.floor==="최상층") h+=`<div class="bp">${B.apt?"최상층 — 위 세대 없음. 천장 유닛은 실내 발생음 상부 전달과 실내 음향 목적이며, 옥상 설비 소음·우수 소음은 별도 확인.":"위에 사용 공간이 없어 천장 등급을 낮춰 잡았다. 옥상 설비 소음·우수 소음은 별도 확인."}</div>`;
   if(D.floor==="지하") h+=`<div class="bp">지하 — 소리가 나갈 곳은 적으나 구조체 전달과 결로·환기가 별도 과제다.</div>`;
   h+=`</div>`;
 
@@ -1608,13 +1640,13 @@ function roomInsulHTML(r,B,g,ra){
 }
 function roomsHTML(B){
   if(!B) return "";
-  const HD = (B.H && B.rest) ? B.rest/1000 : (parseFloat(D.h)||2.4);
+  const HD = (B.H && B.rest) ? B.rest/1000 : (parseFloat(D.h)||2.4);   // B.rest 는 아파트형이면 M 두께로 계산돼 있다
   const bands=banBands(HD);
   let h=`<div class="bsec" id="roomsec"><div class="bh">07 &nbsp;실별 설계</div>`;
   if(!isSplit()){
     /* 한 방 — 공간 전체 높이의 금지 치수만 참고로 남긴다 (실별 계산기와 중복 안 되게) */
     h+=`<div class="bp">한 방으로 쓴다. 방음실높이 <b>${HD.toFixed(2)}m</b>
-      (천장 AC-C-${lvName(B.cL)} + 바닥 AC-F-${lvName(B.fL)} 적용 후) — 높이 모드 <b>${(171.5/HD).toFixed(1)}Hz</b>는 치수로 못 바꾼다. 룸 모드·실내 음향은 04·06 참조.</div>`;
+      (${B.apt?`천장 유닛 AC-C-${B.apt.C} 328 + 바닥 AC-F-${B.apt.F} 가정`:`천장 AC-C-${lvName(B.cL)} + 바닥 AC-F-${lvName(B.fL)}`} 적용 후) — 높이 모드 <b>${(171.5/HD).toFixed(1)}Hz</b>는 치수로 못 바꾼다. 룸 모드·실내 음향은 04·06 참조.</div>`;
     h+=`<div class="bg">금지 치수 — 높이 ${HD.toFixed(2)}m 에서 피할 가로 · 세로 (±${RM_TOL*100}%)</div>`;
     h+=`<table class="bt"><tr><th>구간</th><th>피할 범위</th><th>이유</th></tr>`;
     bands.forEach(b=>h+=`<tr class="${(!D.noSize&&[parseFloat(D.w),parseFloat(D.d)].some(v=>v>=b.lo&&v<=b.hi))?"hi":""}"><td class="m">높이 × ${b.n}</td><td class="m b">${b.lo.toFixed(2)} ~ ${b.hi.toFixed(2)} m</td>
@@ -2051,6 +2083,28 @@ function aptNoteHTML(B){
   return `<div class="bg">아파트형 단면 규칙 — AC-C-M1·M2 · AC-W-M1~M3 시트</div>
     <table class="bt"><tr><th>항목</th><th>적용</th></tr>${rows.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join("")}</table>
     <div class="bp" style="color:var(--sub)">바닥(AC-F-M1·M2) 규칙과 두께는 시트를 받으면 채운다 — 지금 실높이 계산의 바닥 M층은 가정값.</div>`;
+}
+/* 아파트형 · M 시리즈가 어디까지 잡는가 — 시트에 f₀ · STC 수치가 없어 대역별 대응으로 판정한다 */
+function aptReachHTML(B){
+  const A=B.apt;
+  const BANDS=[
+    {k:"100Hz 이상", test:f=>f>=100, C:"M1 대응", W:"M1 · M2 · M3 대응", cls:"ok"},
+    {k:"60 ~ 100Hz", test:f=>f>=60&&f<100, C:"M2 보완 — 100Hz 딥 완화, 삼중 리프는 남음", W:A.party==="건식"?"M3 불리 — 리프 4장 이상, 앰프 불가":"M2 콘크리트 — 실질 이중, 부분 대응", cls:"warn"},
+    {k:"60Hz 이하", test:f=>f<60, C:"비대응 — 대출력 저역", W:"전 등급 불가 — 킥드럼 40~60Hz · 서브우퍼", cls:"bad"}
+  ];
+  let h=`<div class="bp">아파트형은 등급 사다리(L1~L5)가 아니라 <b>M 시리즈가 대응하는 대역</b>으로 본다. 기존 천장 존치 · 슬래브 무접촉 조건이라 저역 상한이 구조적으로 정해져 있다.</div>`;
+  h+=`<table class="bt"><tr><th>대역</th><th>천장</th><th>벽 (경계벽 ${A.party})</th><th>체크하신 소리</th></tr>`;
+  BANDS.forEach(b=>{
+    const hits=B.picked.filter(([,f])=>b.test(f)).map(([n,f])=>`${n} ${f}`);
+    h+=`<tr class="${hits.length?(b.cls==="bad"?"hi":""):""}"><td class="b">${b.k}</td><td class="ins ${b.cls}">${b.C}</td><td class="ins ${b.cls}">${b.W}</td><td>${hits.join(", ")||"—"}</td></tr>`;
+  });
+  h+=`</table>`;
+  const bad=B.picked.filter(([,f])=>f<60), mid=B.picked.filter(([,f])=>f>=60&&f<100);
+  if(bad.length) h+=`<div class="bw"><b>${bad.map(x=>x[0]).join(", ")} — 아파트 구조에서 대응 불가.</b> 킥드럼 · 서브우퍼 · 베이스 저역은 어떤 벽 사양으로도 민원을 피하기 어렵다. 아파트가 아닌 현장으로 안내하거나, 음원을 바꾸는 것(전자드럼 헤드폰 · 서브우퍼 제거)이 전제다.</div>`;
+  if(mid.length) h+=`<div class="hint"><b>${mid.map(x=>x[0]).join(", ")} — 천장 M2로 보완</b>하되 "막는다"가 아니라 "줄인다"로 설명한다. 100Hz 딥은 완화될 뿐 삼중 리프가 남고, 대출력이면 비대응이다.</div>`;
+  if(B.hit) h+=`<div class="bw"><b>충격음 — 위층 · 아래층 전달 비대응.</b> 기존 천장 존치 조건에서 구조적으로 불가하며 계약 전 서면 고지한다.</div>`;
+  h+=`<div class="bp"><b>설계 기준 · M 시리즈 상한 100Hz(M1), 보완 60~100Hz(M2).</b> 그 아래는 아파트에서 다루지 않는다. 벽 등급보다 <b>기존 벽 종류(콘크리트/건식)</b>와 창호 · 기밀이 결과를 정한다.</div>`;
+  return h;
 }
 let Q03_ON=false;
 function toggleQ03(id){
