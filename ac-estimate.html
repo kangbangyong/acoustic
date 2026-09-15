@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>AC 개략 견적 — 통 견적 vs 실별 견적</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#12294a; --navy2:#1d3b63; --ink:#1f2937; --mute:#6b7280;
+  --line:#dfe3ea; --ivory:#fbf7ea; --ivory-line:#e6dcb8; --gold:#e3b23c;
+  --red:#b42323; --teal:#0f766e; --bg:#f6f7f9; --white:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'IBM Plex Sans KR',sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+header{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+header h1{font-size:22px;font-weight:700;color:var(--navy);margin:0}
+header span{color:var(--mute)}
+.sub{color:var(--mute);margin:0 0 22px}
+.bar{background:var(--navy);color:#fff;padding:9px 14px;font-weight:600;font-size:15px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center}
+.bar small{font-weight:400;opacity:.75}
+.panel{background:var(--white);border:1px solid var(--line);border-top:0;border-radius:0 0 6px 6px;padding:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:12px;color:var(--mute);margin-bottom:3px}
+input[type=number],select{font-family:inherit;font-size:14px;padding:7px 9px;border:1px solid var(--line);border-radius:4px;width:100%;background:#fff}
+input[type=number]:focus,select:focus{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold)}
+.row{display:grid;gap:10px;margin-bottom:12px}
+.r2{grid-template-columns:1fr 1fr}
+.r3{grid-template-columns:2fr 1fr 1fr}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--mute);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:6px 8px;border-bottom:1px solid #eef0f4;vertical-align:middle}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td input,td select{padding:5px 7px;font-size:13px}
+tr.total td{font-weight:700;border-top:2px solid var(--navy);border-bottom:0;padding-top:10px}
+tr.sub td{color:var(--mute)}
+.result{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.kpi{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:#fafbfc}
+.kpi b{display:block;font-size:20px;color:var(--navy);font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:var(--mute)}
+.kpi.mid{border-color:var(--gold);background:#fffaea}
+.per{margin-top:10px;font-size:13px;color:var(--mute)}
+.per b{color:var(--navy);font-size:16px}
+.note{background:var(--ivory);border:1px solid var(--ivory-line);border-radius:6px;padding:12px 14px;margin-top:20px;font-size:13px}
+.note strong{color:var(--navy)}
+.warn{border-left:4px solid var(--red);background:#fff5f5;padding:10px 14px;margin-top:20px;font-size:13px}
+.warn b{color:var(--red)}
+.btn{font-family:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:4px;cursor:pointer}
+.btn:hover{background:var(--navy);color:#fff}
+.btn.sm{padding:3px 8px;font-size:12px;border-color:var(--line);color:var(--mute)}
+.chk{display:flex;gap:16px;flex-wrap:wrap;margin:6px 0 4px}
+.chk label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);margin:0}
+.compare{margin-top:24px}
+.compare .panel{padding:18px 16px}
+.diff{font-size:15px;margin:0}
+.diff b{color:var(--navy)}
+.diff .up{color:var(--red)} .diff .dn{color:var(--teal)}
+.rate td:first-child{font-weight:500}
+.foot{color:var(--mute);font-size:12px;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>AC 개략 견적</h1><span>통 견적과 실별 견적을 나란히 놓고 비교</span></header>
+<p class="sub">상담 초기에 "얼마 정도 드나요"에 답하기 위한 실수 방지선입니다. 단가는 시장 조사(2026.9) 중앙값이며, 아래 단가표에서 직접 수정할 수 있습니다. 단위: 만원. 면적은 ㎡(헤베) 입력, 평은 자동 환산(1평 = 3.3058㎡).</p>
+
+<div class="grid">
+
+<!-- ① 통 견적 -->
+<section>
+  <div class="bar">① 통 견적 <small>전체 면적 × 용도 단가</small></div>
+  <div class="panel">
+    <div class="row r2">
+      <div><label>전체 면적 (㎡)</label><input type="number" id="tArea" value="66" min="1" step="1"></div>
+      <div><label>평 환산</label><input type="number" id="tPy" readonly style="background:#f3f4f6"></div>
+    </div>
+    <div class="row r2">
+      <div><label>공간 용도</label><select id="tType"></select></div>
+    </div>
+    <div class="result">
+      <div class="kpi"><b id="tLo">–</b><span>하한</span></div>
+      <div class="kpi mid"><b id="tMid">–</b><span>중앙</span></div>
+      <div class="kpi"><b id="tHi">–</b><span>상한</span></div>
+    </div>
+    <div class="per">평당 <b id="tPer">–</b> 만원 · ㎡당 <b id="tPerM">–</b> 만원 (중앙 기준)</div>
+  </div>
+</section>
+
+<!-- ② 실별 견적 -->
+<section>
+  <div class="bar">② 실별 견적 <small>실 + 공용 + 문</small></div>
+  <div class="panel">
+    <div class="row r2">
+      <div><label>전체 면적 (㎡)</label><input type="number" id="rArea" value="66" min="1" step="1"></div>
+      <div><label>평 환산</label><input type="number" id="rPy" readonly style="background:#f3f4f6"></div>
+    </div>
+    <div class="row r2">
+      <div><label>공용 면적 ㎡ (자동)</label><input type="number" id="rCommon" readonly style="background:#f3f4f6"></div>
+      <div><label>공용 평</label><input type="number" id="rCommonPy" readonly style="background:#f3f4f6"></div>
+    </div>
+    <table id="roomTbl">
+      <thead><tr><th>실 성격</th><th class="num">개수</th><th class="num">1실 ㎡</th><th class="num">소계 평</th><th class="num">금액(중앙)</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div style="margin:10px 0 4px"><button class="btn" id="addRoom">+ 실 추가</button></div>
+    <table>
+      <tbody>
+        <tr class="sub"><td>실 합계</td><td class="num" id="rRoomsSum">–</td></tr>
+        <tr class="sub"><td>공용 (일반 인테리어)</td><td class="num" id="rCommonSum">–</td></tr>
+        <tr class="sub"><td>방음문 (<span id="rDoorCnt">0</span>틀)</td><td class="num" id="rDoorSum">–</td></tr>
+      </tbody>
+    </table>
+    <div class="result">
+      <div class="kpi"><b id="rLo">–</b><span>하한</span></div>
+      <div class="kpi mid"><b id="rMid">–</b><span>중앙</span></div>
+      <div class="kpi"><b id="rHi">–</b><span>상한</span></div>
+    </div>
+    <div class="per">평당 <b id="rPer">–</b> 만원 · ㎡당 <b id="rPerM">–</b> 만원 (중앙 기준)</div>
+  </div>
+</section>
+</div>
+
+<!-- ③ 비교 -->
+<section class="compare">
+  <div class="bar">③ 비교</div>
+  <div class="panel">
+    <p class="diff" id="cmp">–</p>
+    <p class="foot">두 값이 20% 이상 벌어지면 실 구성이 용도 평균과 다르다는 뜻입니다. 방 수가 많거나 드럼·녹음실 비중이 크면 실별이 높게, 공용이 넓으면 실별이 낮게 나옵니다.</p>
+  </div>
+</section>
+
+<!-- ④ 단가표 -->
+<section class="compare">
+  <div class="bar">④ 단가표 <small>수정하면 위 계산에 바로 반영 · 우리 실적 쌓이면 갈아끼우기</small></div>
+  <div class="panel">
+    <table class="rate" id="rateTbl">
+      <thead><tr><th>구분 (평당 만원)</th><th class="num">하한</th><th class="num">중앙</th><th class="num">상한</th><th>AC 등급 매핑</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <table class="rate" style="margin-top:14px" id="miscTbl">
+      <thead><tr><th>공용 · 문</th><th class="num">하한</th><th class="num">중앙</th><th class="num">상한</th><th>단위</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div style="margin-top:10px"><button class="btn sm" id="resetRates">시장 기본값으로 되돌리기</button></div>
+  </div>
+</section>
+
+<div class="note">
+  <strong>이 숫자의 성격</strong> — 시장 표(연습실·음악학원·아파트 3종)를 합친 참고값이지 우리 원가가 아닙니다. 상담에서 예산 감을 잡고, 예산이 하한 아래면 실 수를 줄이거나 등급을 낮추는 방향으로 설득하는 데 씁니다. 실제 견적은 AC-Q-02 시공검토서로 갑니다.
+</div>
+<div class="note" style="margin-top:12px">
+  <strong>별도 항목 (위 금액에 미포함)</strong> — 공조(덕트·환기) · 냉난방(에어컨) · 철거 · 화장실. 견적서에 항상 별도 줄로 표기하고, 고객에게 총액을 말할 때는 "여기에 별도 항목이 붙는다"를 반드시 같이 말합니다.
+</div>
+<div class="warn">
+  <b>금지</b> — 이 계산 결과를 견적서 금액으로 그대로 고객에게 제시하지 않습니다. 소형(2~3평) 단독 시공, 지하·고층 양중, 인허가 현장은 별도 할증이 붙습니다.
+</div>
+</div>
+
+<script>
+const DEFAULT_RATES = [
+  {k:'midi',   name:'홈레코딩 · 미디실',        lo:200, mid:225, hi:250, ac:'AC-W L2 + AC-AB'},
+  {k:'vocal',  name:'보컬 · 피아노 연습실',     lo:220, mid:260, hi:300, ac:'AC-W L3 + 이중방음문'},
+  {k:'academy',name:'음악학원 (다실 평균)',     lo:240, mid:270, hi:300, ac:'AC-W L2~L3 + AC-AB 강화'},
+  {k:'band',   name:'드럼 · 합주실',            lo:300, mid:350, hi:400, ac:'AC-W L4~L5 + AC-F L4~L5 + 사운드락'},
+  {k:'studio', name:'녹음실 · 스튜디오',        lo:350, mid:425, hi:500, ac:'AC-B (박스인박스) + 룸어쿠스틱'},
+  {k:'apt',    name:'아파트 방 (풀세트)',       lo:250, mid:275, hi:300, ac:'경로별 AC-W/C/F (quiet형)'},
+  {k:'quiet',  name:'공부방 · 상담실 (유입 차단)', lo:180, mid:210, hi:240, ac:'AC-W L1~L2'},
+];
+const DEFAULT_MISC = [
+  {k:'common', name:'공용 공간 (일반 인테리어)', lo:100, mid:120, hi:150, unit:'평당'},
+  {k:'door',   name:'방음문',                    lo:100, mid:120, hi:150, unit:'틀당'},
+];
+let rates = JSON.parse(JSON.stringify(DEFAULT_RATES));
+let misc  = JSON.parse(JSON.stringify(DEFAULT_MISC));
+let rooms = [
+  {type:'vocal', n:3, m2:8},
+  {type:'band',  n:1, m2:13},
+];
+const $ = id => document.getElementById(id);
+const fmt = v => Math.round(v).toLocaleString('ko-KR');
+const PY = 3.3058; const toPy = m2 => m2/PY;
+const R = k => rates.find(r=>r.k===k);
+const M = k => misc.find(m=>m.k===k);
+
+function buildRateTables(){
+  const tb = $('rateTbl').querySelector('tbody'); tb.innerHTML='';
+  rates.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.name}</td>`+['lo','mid','hi'].map(f=>`<td class="num"><input type="number" data-k="${r.k}" data-f="${f}" value="${r[f]}" style="width:80px;text-align:right"></td>`).join('')+`<td style="color:var(--mute)">${r.ac}</td>`;
+    tb.appendChild(tr);
+  });
+  const mb = $('miscTbl').querySelector('tbody'); mb.innerHTML='';
+  misc.forEach(m=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${m.name}</td>`+['lo','mid','hi'].map(f=>`<td class="num"><input type="number" data-mk="${m.k}" data-f="${f}" value="${m[f]}" style="width:80px;text-align:right"></td>`).join('')+`<td style="color:var(--mute)">${m.unit}</td>`;
+    mb.appendChild(tr);
+  });
+  document.querySelectorAll('#rateTbl input').forEach(i=>i.addEventListener('input',e=>{R(e.target.dataset.k)[e.target.dataset.f]=+e.target.value||0;calc();}));
+  document.querySelectorAll('#miscTbl input').forEach(i=>i.addEventListener('input',e=>{M(e.target.dataset.mk)[e.target.dataset.f]=+e.target.value||0;calc();}));
+  const sel=$('tType'); const cur=sel.value; sel.innerHTML=rates.map(r=>`<option value="${r.k}">${r.name}</option>`).join(''); if(cur) sel.value=cur; else sel.value='academy';
+}
+
+function buildRooms(){
+  const tb=$('roomTbl').querySelector('tbody'); tb.innerHTML='';
+  rooms.forEach((rm,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><select data-i="${i}" data-f="type">${rates.map(r=>`<option value="${r.k}" ${r.k===rm.type?'selected':''}>${r.name}</option>`).join('')}</select></td>
+      <td class="num"><input type="number" data-i="${i}" data-f="n" value="${rm.n}" min="0" style="width:60px;text-align:right"></td>
+      <td class="num"><input type="number" data-i="${i}" data-f="m2" value="${rm.m2}" min="0" step="0.5" style="width:70px;text-align:right"></td>
+      <td class="num" id="rs${i}">–</td><td class="num" id="ra${i}">–</td>
+      <td><button class="btn sm" data-del="${i}">삭제</button></td>`;
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',e=>{
+    const rm=rooms[+e.target.dataset.i]; const f=e.target.dataset.f;
+    rm[f]= f==='type'? e.target.value : (+e.target.value||0); calc();
+  }));
+  tb.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{rooms.splice(+e.target.dataset.del,1);buildRooms();calc();}));
+}
+
+function calc(){
+  // ① 통
+  const tM=+$('tArea').value||0, tA=toPy(tM), tr=R($('tType').value);
+  $('tPy').value=tA.toFixed(1);
+  let t={lo:tA*tr.lo, mid:tA*tr.mid, hi:tA*tr.hi};
+  $('tLo').textContent=fmt(t.lo); $('tMid').textContent=fmt(t.mid); $('tHi').textContent=fmt(t.hi);
+  $('tPer').textContent=tA?fmt(t.mid/tA):'–'; $('tPerM').textContent=tM?(t.mid/tM).toFixed(1):'–';
+
+  // ② 실별
+  const rM=+$('rArea').value||0, rA=toPy(rM);
+  $('rPy').value=rA.toFixed(1);
+  let roomM=0, doors=0, rs={lo:0,mid:0,hi:0};
+  rooms.forEach((rm,i)=>{
+    const r=R(rm.type), subM=rm.n*rm.m2, sub=toPy(subM); roomM+=subM; doors+=rm.n;
+    ['lo','mid','hi'].forEach(f=>rs[f]+=sub*r[f]);
+    $('rs'+i).textContent=sub.toFixed(1); $('ra'+i).textContent=fmt(sub*r.mid);
+  });
+  const commonM=Math.max(rM-roomM,0), common=toPy(commonM);
+  $('rCommon').value=commonM.toFixed(1); $('rCommonPy').value=common.toFixed(1);
+  const cs={}, ds={}, tot={};
+  ['lo','mid','hi'].forEach(f=>{
+    cs[f]=common*M('common')[f]; ds[f]=doors*M('door')[f];
+    tot[f]=rs[f]+cs[f]+ds[f];
+  });
+  $('rRoomsSum').textContent=fmt(rs.mid); $('rCommonSum').textContent=fmt(cs.mid);
+  $('rDoorCnt').textContent=doors; $('rDoorSum').textContent=fmt(ds.mid);
+  $('rLo').textContent=fmt(tot.lo); $('rMid').textContent=fmt(tot.mid); $('rHi').textContent=fmt(tot.hi);
+  $('rPer').textContent=rA?fmt(tot.mid/rA):'–'; $('rPerM').textContent=rM?(tot.mid/rM).toFixed(1):'–';
+  if(roomM>rM) $('rCommon').style.color='var(--red)'; else $('rCommon').style.color='';
+
+  // ③ 비교
+  if(t.mid&&tot.mid){
+    const d=tot.mid-t.mid, p=d/t.mid*100;
+    const cls=p>0?'up':'dn';
+    $('cmp').innerHTML=`통 견적 <b>${fmt(t.mid)}</b> vs 실별 견적 <b>${fmt(tot.mid)}</b> — 실별이 <span class="${cls}">${d>=0?'+':''}${fmt(d)}만원 (${p.toFixed(0)}%)</span>${Math.abs(p)>=20?' · 20% 이상 차이, 실 구성 확인 필요':''}`;
+  }
+}
+
+buildRateTables(); buildRooms(); calc();
+['tArea','tType','rArea'].forEach(id=>$(id).addEventListener('input',calc));
+$('addRoom').addEventListener('click',()=>{rooms.push({type:'vocal',n:1,m2:8});buildRooms();calc();});
+$('resetRates').addEventListener('click',()=>{rates=JSON.parse(JSON.stringify(DEFAULT_RATES));misc=JSON.parse(JSON.stringify(DEFAULT_MISC));buildRateTables();buildRooms();calc();});
+</script>
+</body>
+</html>
