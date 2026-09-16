@@ -26,8 +26,11 @@
   .wrap{width:100%;max-width:440px;min-height:100%;padding:calc(28px + var(--sat)) 22px calc(28px + var(--sab));
     display:flex;flex-direction:column;gap:22px}
 
-  header{display:flex;align-items:center;gap:14px}
-  header img{width:52px;height:52px;border-radius:12px}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+  header img.ci{width:62%;max-width:260px;height:auto;display:block}
+  header .plat{text-align:right;line-height:1.15;padding-bottom:4px}
+  header .plat b{display:block;font-size:14px;font-weight:600;letter-spacing:.18em;color:var(--gold)}
+  header .plat span{display:block;font-size:11px;color:var(--mute);margin-top:6px;letter-spacing:.04em}
   header .name{font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
   header .name small{display:block;font-size:12px;font-weight:400;color:var(--mute);margin-top:4px}
 
@@ -68,8 +71,8 @@
 <div class="wrap">
 
   <header>
-    <img src="icons/icon-192.png" alt="">
-    <div class="name">Grid-A 4U<small>Draw for you | GRIDA4U</small></div>
+    <img class="ci" src="icons/ci-wide.png" alt="Grid-A 4U — 당신을위해그리다 | 그리드에이포유">
+    <div class="plat"><b>PLATFORM</b><span>Draw for you</span></div>
   </header>
 
   <button id="install">홈 화면에 앱으로 설치</button>

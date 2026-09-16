@@ -1,6 +1,6 @@
 // Grid-A 4U 방음 PWA — /acoustic/ 범위만 제어. 정적 파일만 캐시, AppsScript 등 외부 통신은 절대 캐시하지 않음.
-const CACHE = 'grida-acoustic-v2';
-const SHELL = ['app.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'home.js'];
+const CACHE = 'grida-acoustic-v5';
+const SHELL = ['app.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/ci-wide.png', 'home.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
