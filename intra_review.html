@@ -145,6 +145,16 @@ body{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,
 .idbox .l{font-size:9.5px;letter-spacing:.18em;color:var(--sub)}
 .idbox .no{font-size:24px;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-top:4px}
 .idbox .sm{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.6}
+.reqsum{margin-top:12px;border:1px solid var(--line);background:#fff}
+.rs-row{display:grid;grid-template-columns:26px 120px 1fr;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px dashed var(--hair);font-size:13px}
+.rs-row:last-child{border-bottom:0}
+.rs-n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+.rs-k{color:var(--sub);font-size:12px;letter-spacing:.04em}
+.rs-v{color:var(--ink);line-height:1.6}
+.rs-chip{display:inline-block;padding:2px 8px;margin:2px 4px 2px 0;border:1px solid var(--line);border-radius:3px;font-size:12px;background:#fbfaf7}
+.rs-sub{color:var(--sub);font-size:12px}
+.rs-none{color:#b6b4ab}
+@media(max-width:620px){.rs-row{grid-template-columns:22px 1fr}.rs-v{grid-column:2}}
 .card{margin-top:18px;border:1px solid var(--line)}
 .card-h{font-size:10px;letter-spacing:.14em;color:var(--sub);padding:9px 13px;
   border-bottom:1px solid var(--line);background:var(--fill)}
@@ -677,7 +687,7 @@ const M_SPAN = {600:2.7, 450:2.9};   // 박스빔 @600 / @450 스팬 한계 (m)
 
 function lvName(l){ return "L"+l; }
 
-const D = { space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
+const D = { area:"", py:"", space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
             w:"", d:"", noSize:false, h:"", noH:false, when:null,
             sido:null, gu:"", bldg:null, floor:null,
             ct:null, pt:null, pd:"", bud:"", bTBD:false,
@@ -2111,7 +2121,7 @@ function reviewDigest(id){
   const c=[];
   c.push(`[접수] ${id||"—"} · ${(D.name||"").trim()} · ${fmt(window.__lastRec&&window.__lastRec.at)} 접수 · 담당 ${D.staff||"—"}`);
   const site=`${D.sido||""} ${D.gu||""}${D.bldg?" · "+D.bldg:""}${D.floor?" · "+D.floor:""}`.trim();
-  c.push(`현장: ${site} / 공간: ${D.noSize?"실측 예정":D.w+" × "+D.d+" m"}${D.noH?" · 천장 실측 예정":" · 천장 "+D.h+" m"} / 용도: ${D.space==="기타"?D.spaceEtc:D.space} / 사용: ${D.when||"—"} / 계약: ${D.ct||"—"} · ${D.pt==="희망 날짜 지정"?D.pd:D.pt||"—"} / 예산: ${D.bTBD?"상담 후 결정":D.bud+" 만원"}`);
+  c.push(`현장: ${site} / 공간: ${D.noSize?"실측 예정":D.w+" × "+D.d+" m"}${D.area?` (${D.area}㎡ · ${D.py}평)`:""}${D.noH?" · 천장 실측 예정":" · 천장 "+D.h+" m"} / 용도: ${D.space==="기타"?D.spaceEtc:D.space} / 사용: ${D.when||"—"} / 계약: ${D.ct||"—"} · ${D.pt==="희망 날짜 지정"?D.pd:D.pt||"—"} / 예산: ${D.bTBD?"상담 후 결정":D.bud+" 만원"}`);
   const snd=D.sounds.filter(x=>x!=="그 밖의 악기"); if(D.soundEtc) snd.push(D.soundEtc);
   c.push(`소리: ${snd.join(", ")||"—"}`);
   if((D.rooms||[]).length) c.push(`실: `+D.rooms.map(r=>`${r.name} ${r.use||"?"} ${r.w&&r.d?r.w+"×"+r.d+(r.h?"×"+r.h:""):"치수 미정"} [${r.sounds.join(",")||"소리 없음"}]`).join(" / "));
@@ -2616,6 +2626,26 @@ function check(){
     m.length ? "미입력 " + m.length + "곳 — " + m.slice(0,4).join(", ") + (m.length>4?" 외":"") : "";
 }
 
+/* 관리자 상부 요약 — 접수 폼 1~5 순서로 */
+function reqSummaryHTML(){
+  const v=x=>x?x:`<span class="rs-none">—</span>`;
+  const space = D.space==="기타"?D.spaceEtc:(D.space==="흡음"?"실내 울림(흡음)만":D.space);
+  const snd = D.sounds.filter(x=>x!=="그 밖의 악기"); if(D.soundEtc) snd.push(D.soundEtc);
+  const size = D.noSize ? "크기 모름" : (D.w&&D.d ? `${D.w} × ${D.d} m` : "");
+  const area = D.area ? `${D.area}㎡ · ${D.py}평` : (!D.noSize&&parseFloat(D.w)&&parseFloat(D.d) ? `${(D.w*D.d).toFixed(2)}㎡ · ${(D.w*D.d/3.3058).toFixed(2)}평` : "");
+  const ceil = D.noH ? "천장 모름" : (D.h ? `천장 ${D.h} m` : "");
+  const site = [[D.sido,D.gu].filter(Boolean).join(" "), D.bldg, D.floor].filter(Boolean).join(" · ");
+  const when = D.pt==="희망 날짜 지정" ? (D.pd||"희망 날짜 미입력") : D.pt;
+  const bud = D.bTBD ? "상담 후 결정" : (D.bud ? `${Number(D.bud).toLocaleString()} 만원` : "");
+  const rows=[
+    ["1","어떤 공간", v(space)],
+    ["2","무엇을 하는가", D.space==="흡음" ? `<span class="rs-none">흡음 단독 — 소리 선택 없음</span>` : (snd.length?snd.map(x=>`<span class="rs-chip">${x}</span>`).join(""):v(""))],
+    ["3","공간 조건", [size,area,ceil].filter(Boolean).map(x=>`<b>${x}</b>`).join(" · ")+(D.when?` <span class="rs-sub">/ 사용 ${D.when}</span>`:"") || v("")],
+    ["4","현장", v(site)],
+    ["5","계약 · 시기 · 예산", [D.ct,when,bud].filter(Boolean).join(" · ") || v("")]
+  ];
+  return `<div class="reqsum">${rows.map(([n,k,val])=>`<div class="rs-row"><span class="rs-n">${n}</span><span class="rs-k">${k}</span><span class="rs-v">${val}</span></div>`).join("")}</div>`;
+}
 function summaryRows(){
   const r=[];
   r.push(["공간", D.space==="기타"?D.spaceEtc:(D.space==="흡음"?"실내 울림(흡음)만":D.space)]);
@@ -2624,7 +2654,7 @@ function summaryRows(){
     if(D.soundEtc) t.push(D.soundEtc);
     r.push(["소리", t.join(", ")||"—"]);
   }
-  r.push(["크기", D.noSize?"모름":`${D.w} × ${D.d} m`]);
+  r.push(["크기", (D.noSize?"모름":`${D.w} × ${D.d} m`)+(D.area?` · ${D.area}㎡ (${D.py}평)`:"")]);
   r.push(["천장", D.noH?"모름":`${D.h} m`]);
   r.push(["사용 시간", D.when]);
   r.push(["지역", `${D.sido} ${D.gu}`]);
@@ -2978,7 +3008,7 @@ async function showBrief(id){
   }
 
   /* 기본값으로 초기화한 뒤 덮어써야 이전 화면 값이 남지 않는다 */
-  const BLANK = { space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
+  const BLANK = { area:"", py:"", space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
     w:"", d:"", noSize:false, h:"", noH:false, when:null,
     sido:null, gu:"", bldg:null, floor:null,
     ct:null, pt:null, pd:"", bud:"", bTBD:false,
@@ -3012,6 +3042,7 @@ let FILES = [];   // {name,type,data(base64),thumb}
         <button class="btn gh" id="backBtn" style="padding:9px 20px;font-size:13px">◀ 목록</button>
         ${VIEW==="internal"?"":`<button class="btn go" id="editBtn" style="padding:9px 22px;font-size:13px" data-id="${id}">내용 수정</button>`}
         <button class="btn gh" id="q03Btn" style="padding:9px 20px;font-size:13px;color:var(--accent);border-color:var(--accent)">고객전송용 사전검토서</button></div></div>
+    ${reqSummaryHTML()}
     ${rec.files?`<div class="logbox"><div class="logh">현장 사진 ${rec.files}장</div>
         <a href="${rec.filesUrl}" target="_blank" class="flink">드라이브 폴더 열기 →</a></div>`:""}
     ${notesHTML(rec.status)}
