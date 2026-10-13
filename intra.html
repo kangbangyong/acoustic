@@ -91,6 +91,7 @@ body{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,
 .row i{font-style:normal;color:var(--sub);font-size:11.5px;padding-bottom:5px}
 .row b{font-weight:400;color:var(--sub);padding-bottom:4px}
 .w-num{width:74px;text-align:center}
+.area-hint{font-size:11.5px;color:var(--sub);margin-left:8px}
 .w-gu{width:150px}
 .w-bud{width:110px;text-align:center}
 .chk{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--sub);
@@ -145,6 +146,16 @@ body{font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,
 .idbox .l{font-size:9.5px;letter-spacing:.18em;color:var(--sub)}
 .idbox .no{font-size:24px;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-top:4px}
 .idbox .sm{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.6}
+.reqsum{margin-top:12px;border:1px solid var(--line);background:#fff}
+.rs-row{display:grid;grid-template-columns:26px 120px 1fr;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px dashed var(--hair);font-size:13px}
+.rs-row:last-child{border-bottom:0}
+.rs-n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+.rs-k{color:var(--sub);font-size:12px;letter-spacing:.04em}
+.rs-v{color:var(--ink);line-height:1.6}
+.rs-chip{display:inline-block;padding:2px 8px;margin:2px 4px 2px 0;border:1px solid var(--line);border-radius:3px;font-size:12px;background:#fbfaf7}
+.rs-sub{color:var(--sub);font-size:12px}
+.rs-none{color:#b6b4ab}
+@media(max-width:620px){.rs-row{grid-template-columns:22px 1fr}.rs-v{grid-column:2}}
 .card{margin-top:18px;border:1px solid var(--line)}
 .card-h{font-size:10px;letter-spacing:.14em;color:var(--sub);padding:9px 13px;
   border-bottom:1px solid var(--line);background:var(--fill)}
@@ -306,7 +317,17 @@ body.admin .sheet{max-width:1080px}
 .rm-sum{color:var(--sub);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;margin-left:auto}
 .rm-sum .vq{padding:1px 6px;border-radius:3px;font-family:inherit}
 .rm-sum .vq.ok{background:#E3F1EA;color:#2E7D5B}.rm-sum .vq.warn{background:#FBF1DA;color:#7A5208}.rm-sum .vq.bad{background:#F7E6E3;color:#B3402F}
-.rm-detb{padding:4px 12px 12px;background:#fff;border-top:1px solid var(--line)}
+.rm-detb{padding:6px 12px 12px;background:#fff;border-top:1px solid var(--line)}
+.rm-all{font-family:inherit;font-size:11px;padding:2px 8px;border:1px solid var(--line);border-radius:3px;background:#fff;color:var(--sub);cursor:pointer;margin-left:8px}
+.rm-all:hover{border-color:var(--accent);color:var(--accent)}
+.rm-sub{margin:6px 0;border:1px solid var(--hair);background:#fff}
+.rm-sub>summary{cursor:pointer;padding:7px 10px;font-size:12px;display:flex;gap:10px;align-items:center;list-style:none;background:#fbfaf7}
+.rm-sub>summary::-webkit-details-marker{display:none}
+.rm-sub>summary::before{content:"▸";color:var(--sub);font-size:11px}
+.rm-sub[open]>summary::before{content:"▾";color:var(--accent)}
+.rm-sub>summary>span:first-of-type{font-weight:700}
+.rm-subb{padding:4px 10px 10px;border-top:1px solid var(--hair)}
+@media print{.rm-sub{border:0}.rm-sub>summary{display:none}.rm-sub:not([open])>.rm-subb{display:block}.rm-all{display:none}}
 .rm-gauge{margin:8px 0 10px;padding:9px 12px;border:1px solid var(--line);background:#fbfaf7;font-size:12px}
 .rm-gauge .g-h span{color:var(--sub);font-size:11px}
 .rm-gauge .g-h em{font-style:normal;margin-left:8px;color:var(--ok, #2E7D5B);font-weight:700}
@@ -379,6 +400,10 @@ body.admin .sheet{max-width:1080px}
 .splitbar .save-note{margin-left:auto}
 .splitbar a{color:var(--accent)}
 td.ins{font-size:11.5px}
+.notes-inst{margin:8px 0;border:1px solid var(--line);background:#fbfaf7}
+.notes-inst summary{cursor:pointer;padding:7px 12px;font-size:12px;font-weight:700}
+.notes-inst .bl{margin:0 12px 6px}
+.notes-inst .nd{font-size:11px;color:var(--sub);font-weight:400}
 td.ins.ok{color:#2E7D5B}
 td.ins.warn{color:#7A5208}
 td.ins.bad{color:var(--stop);font-weight:700}
@@ -561,6 +586,50 @@ const INST = [
 ];
 const FIND = n => { for(const g of INST) for(const i of g.it) if(i[0]===n) return i; };
 
+/* ── 룸어쿠스틱 실 유형별 적용 (AC 사전 · 13유형) ── */
+const ROOMAC = {"컨트롤룸 · 믹싱": {"name": "컨트롤룸 · 믹싱", "rt": "0.25~0.30s", "corner": "필수", "refl": "필수", "ceil": "클라우드", "back": "확산", "floor": "러그만", "order": "① 코너 ② 측벽 1차 반사점 ③ 천장 클라우드 ④ 뒷벽 디퓨저(1m 이상 떨어질 때) ⑤ 측정 후 멤브레인. LEDE 원칙 그대로.", "kill": "측벽 1차 반사점 패널, 천장 클라우드, 앞벽 상부", "aim": "코너 트랩 두껍게, 측정 후 멤브레인", "live": "뒷벽 확산, 바닥 원목", "design": "뒷벽 전체를 깊이 다른 제작 책장 으로 — 디퓨저 자재비 대신 가구. 측벽 패널은 패브릭 색으로 포인트, 천장 클라우드에 조명 매립."}, "홈시어터": {"name": "홈시어터", "rt": "0.35s", "corner": "필수", "refl": "필수", "ceil": "클라우드", "back": "흡음+확산", "floor": "카펫", "order": "컨트롤룸과 같되 좌석이 여럿이라 측벽 흡음 범위를 넓힘. 서브우퍼 있으면 코너 트랩을 두껍게. 화면 뒤 앞벽 흡음.", "kill": "측벽 넓게, 천장, 화면 뒤 앞벽, 카펫", "aim": "코너 트랩(서브우퍼 대응)", "live": "뒷벽 일부 확산", "design": "측벽을 패브릭 월 커버링 (안에 50K)으로 통째로 — 극장 느낌 그대로 흡음. 뒷벽은 수납 겸 진열장."}, "유튜브 · 방송 데스크": {"name": "유튜브 · 방송 데스크", "rt": "0.30s", "corner": "권장", "refl": "필수", "ceil": "클라우드", "back": "흡음", "floor": "러그", "order": "마이크 뒤(화자 뒤) 벽과 천장이 핵심. 카메라에 잡히는 벽은 흡음판을 디자인 요소로. 확산은 거의 안 씀.", "kill": "화자 뒤 벽, 천장, 러그", "aim": "코너(선택)", "live": "카메라 화면에 잡히는 벽", "design": "카메라 뒤(화자 앞)는 살리고, 화자 뒤는 죽인다. 화면에 잡히는 벽이 살림 면이라 책장·소품·플루티드 패널로 꾸미고, 화자 뒤 흡음은 패브릭 아트월로."}, "보컬 부스 · 녹음실": {"name": "보컬 부스 · 녹음실", "rt": "0.25s", "corner": "필수", "refl": "—", "ceil": "전면 흡음", "back": "전면 흡음", "floor": "러그", "order": "순서 없음 — 거의 전면 흡음. 확산 안 씀. 단 얇은 흡음재로만 덮으면 저역만 남아 '먹먹한데 부풀음' → 코너 트랩과 두꺼운 패널(100T)로.", "kill": "전면 — 벽·천장·코너 전부", "aim": "—", "live": "바닥만 (러그 덮음)", "design": "디자인 여지가 가장 적은 방. 대신 흡음 패널 배열·색·조명으로 — 폭이 좁은 세로 패널을 리듬감 있게. 유리창으로 답답함 해소."}, "보컬 연습실": {"name": "보컬 연습실 (연습+녹음 겸용)", "rt": "0.45s ↔ 0.30s", "corner": "필수", "refl": "가변", "ceil": "부분", "back": "가변", "floor": "러그", "order": "연습 기준(20~30%)으로 짓고 가변형 패널로 녹음 모드 전환. 작은 방이라 ZONE 2가 300Hz대까지 — 코너 트랩 비중 크게. 마이크는 흡음벽을 등지고 가수가 흡음벽을 마주 보게.", "kill": "코너 트랩, 마주 보는 벽 한 면(가변)", "aim": "코너 트랩", "live": "나머지 벽, 바닥", "design": "뒤집는 패널 2~3장 이 이 방의 핵심 가구 — 원목 면/패브릭 면. 안 쓰는 이동식 패널은 벽에 세워 흡음판 겸용. 벨벳 커튼 레일이 가장 싼 가변 장치."}, "개인 연습실": {"name": "개인 연습실 (건반·관악·기타)", "rt": "0.40s", "corner": "필수", "refl": "한쪽 벽만", "ceil": "부분", "back": "선택", "floor": "나무 그대로", "order": "① 코너 ② 마주 보는 두 벽 중 한쪽만 흡음 ③ 천장 30%. 나머지는 나무. 너무 죽이면 자기 소리가 안 들려 더 세게 연주함.", "kill": "마주 보는 한 면(뒤 또는 옆), 천장 30%", "aim": "코너 트랩, 라인흡음판 한 면", "live": "연주자가 보는 앞벽, 나머지 벽, 바닥", "design": "앞벽은 원목·석고 그대로 + 거울 없이 . 뒤 한 면만 패브릭 벤치+쿠션이 있는 휴식 좌석 으로 만들면 흡음이 가구가 된다. 옆벽은 라인흡음판(나무처럼 보임)."}, "성악 · 현악 연습실": {"name": "성악 · 현악 연습실", "rt": "0.50~0.60s", "corner": "권장", "refl": "금지", "ceil": "선택", "back": "확산", "floor": "나무 그대로", "order": "살리는 방. 흡음은 코너와 플러터 나는 한 면만. 벽은 확산·나무. 흡음 과다가 이 방의 1위 클레임 — \"소리가 안 나온다\".", "kill": "플러터 나는 한 면만 (부분)", "aim": "코너 트랩, 라인흡음판", "live": "거의 전부 — 벽·천장·바닥", "design": "가장 살려야 하는 방. 벽은 원목·라인흡음판·책장, 천장은 목재 루버(틈 없이)로 확산. 흡음은 코너와 커튼 한 면. 반주 피아노 자리는 벽에서 띄움."}, "합주실 · 드럼실": {"name": "합주실 · 드럼실", "rt": "0.45s", "corner": "두껍게", "refl": "—", "ceil": "전면 흡음", "back": "흡음", "floor": "러그(드럼 하부)", "order": "음원이 여럿이라 1차 반사점 개념 없음. 청력 보호용 흡음량 이 먼저 — 천장 전면 + 벽 50%. 나머지 벽은 슬랫으로 저역까지.", "kill": "천장 전면, 벽 50%, 드럼 하부 러그", "aim": "코너 트랩 두껍게, 나머지 벽 슬랫", "live": "바닥, 벽 일부", "design": "천장을 격자 박스 흡음 천장 으로 — 박스(200~300mm 깊이) 안에 50K 100~150T + 목모보드 마감(불연), 박스 사이는 타공 석고, 절반은 조명 칸으로 비워 체커보드. 드럼 위는 흡음 칸을 몰고 보컬 위는 살림 칸. 천장이 저역까지 받으니 벽은 30%만 — 절반 패브릭·절반 라인판. '검은 스펀지 벽'을 피하는 방법."}, "라이브룸": {"name": "라이브룸 (녹음용 연주실)", "rt": "0.40~0.60s 가변", "corner": "필수", "refl": "—", "ceil": "클라우드", "back": "확산", "floor": "나무 그대로", "order": "벽은 반사·확산으로 두고 고보로 그때그때 조절. 드럼 코너만 흡음 강화. 바닥 반사는 자산 — 러그를 옮겨가며 씀.", "kill": "드럼 코너, 이동식 고보", "aim": "코너 트랩", "live": "벽·바닥 — 반사·확산", "design": "벽은 원목·확산 마감, 흡음은 전부 고보로 이동식 . 고보 자체를 디자인 오브제로(양면 다른 마감). 바닥 원목은 자산."}, "살롱 · 소형 리사이틀": {"name": "살롱 · 소형 리사이틀 (50~100석)", "rt": "1.0s 만석 / 1.2~1.3s 공실", "corner": "권장", "refl": "—", "ceil": "확산", "back": "확산+조준", "floor": "원목", "order": "방이 커서 잔향을 길게 둔다. 천장은 칸 깊이가 다른 확산(같으면 우물천장), 벽은 조준+살림, 흡음은 객석 의자·사람으로. 사람 1명 ≈ 흡음 0.4~0.5㎡라 만석 시 0.2~0.3s 줄어듦 — 빈 방에서 1초 맞추면 연주회 날 마름.", "kill": "거의 없음 — 객석 의자(패브릭)가 흡음", "aim": "코너·벽 하부 슬랫, 유공판", "live": "천장 확산, 벽 원목, 바닥", "design": "우물천장을 QRD 수열 깊이로 파면 디자인 천장이 곧 확산 천장. 벽은 유공·라인판과 원목 민판 교차. 저역(125Hz) 잔향이 중역의 1.2~1.3배면 정상(따뜻함), 그 이상이면 코너 조준 추가."}, "음악학원 강의실": {"name": "음악학원 강의실", "rt": "0.50s", "corner": "선택", "refl": "—", "ceil": "흡음 (1순위)", "back": "흡음", "floor": "—", "order": "말소리 명료도. ① 천장 흡음 ② 뒷벽 흡음(플러터 방지) ③ 코너. 불연 규정(AC-AB) 적용 — 타공 석고·금속.", "kill": "천장, 뒷벽", "aim": "코너(선택), 불연 타공 석고·금속", "live": "앞벽(선생님 뒤), 측벽", "design": "불연 규정이라 자재가 제한 — 타공 석고보드 천장 (도장 가능)과 금속 타공판이 답. 뒷벽 흡음은 게시판·수납장 겸용."}, "상담실 · 회의실": {"name": "상담실 · 회의실", "rt": "0.60s", "corner": "—", "refl": "—", "ceil": "흡음", "back": "흡음", "floor": "카펫", "order": "천장 흡음 + 마주 보는 벽 한쪽. 트랩·확산 불필요. 화상회의면 마이크 뒤 벽 추가.", "kill": "천장, 마주 보는 벽 한쪽, 카펫", "aim": "—", "live": "나머지 벽", "design": "패브릭 소파·커튼·러그가 흡음재. 별도 흡음판 없이 가구만으로 RT 0.6 나오는 경우 많음. 화상회의면 화자 뒤 벽 패브릭 아트월."}, "댄스 · 안무": {"name": "댄스 · 안무", "rt": "0.70s", "corner": "선택", "refl": "—", "ceil": "흡음", "back": "거울 맞은편 흡음", "floor": "—", "order": "거울 벽이 전면 반사라 천장 + 거울 맞은편 만 잡으면 됨. 나머지는 살림 — 음악이 죽으면 안 됨. 스피커 뒤 벽 흡음.", "kill": "천장, 거울 맞은편 벽, 스피커 뒤", "aim": "코너(선택)", "live": "거울 벽, 바닥", "design": "거울 맞은편을 패브릭 벤치 + 짐 수납장 으로 — 흡음이 곧 대기석. 천장은 클라우드로 조명과 통합."}};
+const ROOMAC_MAP = {"컨트롤룸":"컨트롤룸 · 믹싱","홈시어터":"홈시어터","유튜브 · 스트리밍":"유튜브 · 방송 데스크","유튜브 · 스트리밍 · 리딩방":"유튜브 · 방송 데스크",
+  "녹음실 · 스튜디오":"보컬 부스 · 녹음실","보컬 부스":"보컬 부스 · 녹음실","개인 연습실":"개인 연습실","합주실":"합주실 · 드럼실","음악학원":"음악학원 강의실","음악학원 강의실":"음악학원 강의실",
+  "상담실 · 회의실":"상담실 · 회의실","작업실":"상담실 · 회의실","공부방 · 주식방":"상담실 · 회의실","댄스 · 짐":"댄스 · 안무","대기실 · 공용":"상담실 · 회의실"};
+function roomAcOf(use, sounds){
+  let k=ROOMAC_MAP[use];
+  /* 소리로 세분 — 성악·현악 연습실 / 보컬 연습실(겸용) */
+  const S=sounds||[];
+  if(k==="개인 연습실" && S.some(n=>["성악","바이올린","비올라","첼로","콘트라베이스","판소리"].includes(n))) k="성악 · 현악 연습실";
+  if(k==="개인 연습실" && S.includes("노래 · 보컬") && !S.some(n=>!["노래 · 보컬","유튜브 · 방송 · 스트리밍"].includes(n))) k="보컬 연습실";
+  return k ? ROOMAC[k] : null;
+}
+function roomAcHTML(use, sounds, opts){
+  const r=roomAcOf(use, sounds); if(!r) return "";
+  const small=!!(opts&&opts.small);
+  let h=`<div class="bg">요소 배치 — ${r.name} (목표 RT60 ${r.rt})</div>`;
+  h+=`<table class="bt"><tr><th>코너 트랩</th><th>1차 반사점</th><th>천장</th><th>뒷벽</th><th>바닥</th></tr>
+    <tr><td>${r.corner}</td><td>${r.refl}</td><td>${r.ceil}</td><td>${r.back}</td><td>${r.floor}</td></tr></table>`;
+  h+=`<div class="bp"><b>순서 · 요령</b> — ${r.order}</div>`;
+  h+=`<table class="bt"><tr><th>죽임 (광대역 흡음)</th><th>조준 (저 · 중역만)</th><th>살림 (반사 · 확산)</th></tr>
+    <tr><td>${r.kill||"—"}</td><td>${r.aim||"—"}</td><td>${r.live||"—"}</td></tr></table>`;
+  if(r.design && !small) h+=`<div class="hint"><b>디자인 제안</b> — ${r.design}</div>`;
+  return h;
+}
+
+
+/* ── 악기별 설계 비고판 (AC 사전 · 9군 55항목) ── */
+const INSTNOTE = [{"g": "1", "n": "공부", "bg": "주간 40 / 야간 35dB", "ac": "L1~L2", "flag": "quiet", "path": "창·문 (도로), 옆집 말소리", "note": "STC가 유효한 유일한 영역. 대개 창호·문 교체와 기밀로 해결되며 벽 공사는 옆집 TV·말소리가 들릴 때만. 저역 유입(윗집 발소리)은 별개 — 천장 M등급."}, {"g": "1", "n": "주식 매매", "bg": "주간 40dB", "ac": "L1~L2", "flag": "quiet", "path": "창·문, 옆 실 통화", "note": "공부와 동일. 통화·회의가 잦으면 화상회의 행 참조."}, {"g": "1", "n": "화상회의", "bg": "주간 40dB", "ac": "L2", "flag": "양방향 quiet", "path": "문·복도, 옆 실", "note": "외부 유입도 막고 내 말소리도 안 나가야 함. 마이크가 잔향을 그대로 잡으므로 흡음 마감 병행. 문이 성패 — 방음문 1중 이상."}, {"g": "1", "n": "명상 · 요가", "bg": "35dB", "ac": "L2", "flag": "quiet", "path": "창, 옆집, 설비 소음", "note": "목표가 낮아 설비(환기 팬·에어컨) 자체 소음이 문제가 됨. 저속 팬, 사일런서. 요가 매트 소리는 무시."}, {"g": "1", "n": "수면", "bg": "야간 30dB", "ac": "L2~L3", "flag": "quiet low", "path": "창 (도로·항공), 윗집 발소리, 배관", "note": "가장 낮은 목표치. 도로 저역(트럭·버스)은 창호로 안 막혀 L3 벽까지 가는 경우 있음. 윗집 충격음은 천장 M2 + 그래도 잔존 고지."}, {"g": "2", "n": "노래 · 보컬", "lo": "82~100Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "녹음: 최대 연습: 적당히", "vib": "없음", "note": "녹음과 연습의 설계가 반대. 녹음은 최대 흡음, 연습은 흡음 과하면 목 상함. 겸용이면 연습 기준으로 짓고 녹음 시 이동식 흡음 패널."}, {"g": "2", "n": "강의 · 회의", "lo": "100Hz+", "ac": "L1", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "양방향", "absorb": "중음 (명료도)", "vib": "없음", "note": "차음보다 실내 명료도. RT60 0.6s 이하. 온라인 강의는 화상회의 행 기준 추가."}, {"g": "2", "n": "판소리", "lo": "≈100Hz", "ac": "L2+", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.6m", "booth": "△", "flag": "loud", "absorb": "중고음 (강하게)", "vib": "없음 (북 별도)", "note": "최저음 기준으로는 L1인데 음압이 110dB급 — 등급 하한을 최소 한 단계 올린다. 목이 상하면 안 되므로 흡음은 적당히, 대신 벽 질량·기밀로 승부. 고수(북) 동반 시 북·대북 행 합산."}, {"g": "2", "n": "성악", "lo": "≈80Hz (베이스)", "ac": "L2~L3", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.7m", "booth": "△", "flag": "loud", "absorb": "중고음 + 확산", "vib": "없음", "note": "100~110dB. 성악은 방이 울려야 연습이 되므로 흡음 과다 금지, 확산 병행 . 피아노 반주 동반이 대부분 — 업라이트 행 합산."}, {"g": "2", "n": "유튜브 · 방송 · 스트리밍", "lo": "100Hz+", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "양방향 quiet", "absorb": "최대 (RT 0.3s)", "vib": "없음", "note": "유출보다 유입 이 문제 — 마이크가 사이렌·윗집 소리를 다 잡음. 게임 방송이면 모니터 스피커 행 합산, 심야 방송이면 목표 30dB."}, {"g": "3", "n": "바이올린", "lo": "196Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O 연습 △ 녹음", "flag": "—", "absorb": "중고음", "vib": "없음", "note": "천장고는 같지만 면적이 달라짐 — 녹음은 마이크 거리 1~2m가 필요해 3평 이상. 좁으면 소리가 얇아짐."}, {"g": "3", "n": "비올라", "lo": "131Hz", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O 연습 △ 녹음", "flag": "—", "absorb": "중고음", "vib": "없음", "note": "바이올린과 동일 조건."}, {"g": "3", "n": "첼로", "lo": "65Hz", "ac": "L3", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.8m 이상", "booth": "△", "flag": "low", "absorb": "저음 트랩 필수", "vib": "있음", "note": "엔드핀이 바닥에 꽂혀 진동이 직접 전달. 방진 바닥 필수이며 천장 10~15cm 추가 손실. 건물 천장고 3.2m는 되어야 시공 후 2.8m. 2.4m에서 연습은 가능하나 특정 음이 부풀어 연주 습관이 틀어짐 — 전공자·입시생은 반드시 고지."}, {"g": "3", "n": "콘트라베이스", "lo": "41Hz", "ac": "L4", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.2m 이상", "booth": "X", "flag": "low", "absorb": "저음 트랩", "vib": "있음", "note": "41Hz를 완전히 피하려면 4.2m — 현실적으로 불가. 3.2m는 자주 쓰는 음역을 피하는 절충치. 5현(B0 31Hz)이면 AC-B."}, {"g": "3", "n": "통기타", "lo": "82Hz", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.5m", "booth": "O", "flag": "—", "absorb": "중고음 + 저음 일부", "vib": "없음", "note": "2~5평 권장. 2.1m 방은 울림이 82Hz로 6번줄 개방현과 정확히 겹침. 2.4m 이상 권장. 스틸현이라 나일론보다 5~10dB 큼."}, {"g": "3", "n": "클래식 기타", "lo": "82Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.5m", "booth": "O", "flag": "—", "absorb": "중고음 (적게)", "vib": "없음", "note": "나일론현, 음압 낮음(70~80dB). 최저음은 통기타와 같아도 실무 등급은 한 단계 아래. 흡음 과하면 소리가 죽음."}, {"g": "3", "n": "우쿨렐레", "lo": "262Hz (low-G 196)", "ac": "L1", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "고음", "vib": "없음", "note": "가장 조건이 느슨한 악기. 학원이면 여러 명 동시 → 실내 명료도만."}, {"g": "3", "n": "만돌린", "lo": "196Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "고음 (트레몰로)", "vib": "없음", "note": "바이올린과 동일 조현. 고음 트레몰로가 틈새로 잘 새므로 기밀 우선."}, {"g": "3", "n": "하프", "lo": "33Hz (C1)", "ac": "AC-B → 실무 L3", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.0m 이상", "booth": "X", "flag": "low", "absorb": "저음 트랩 + 확산", "vib": "있음 (바닥 접지)", "note": "로직상 AC-B이지만 음압이 낮아(75~90dB) 실무 하한은 L3. 악기 높이 1.8m·무게 40kg — 부스 불가, 문 폭 확인. 저역 현은 바닥으로 진동 전달 → 방진 받침."}, {"g": "4", "n": "가야금", "lo": "≈ 80~100Hz", "ac": "L2~L3", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.5m", "booth": "O", "flag": "—", "absorb": "중고음 (적게)", "vib": "약간", "note": "산조 12현 기준. 25현 개량은 더 낮음(≈78Hz) → L3. 음압 낮아 흡음 과하면 죽음. 바닥에 놓고 연주 — 바닥 방진 매트."}, {"g": "4", "n": "거문고", "lo": "≈ 65~80Hz", "ac": "L3", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.6m", "booth": "O", "flag": "low hit", "absorb": "저중음", "vib": "있음", "note": "술대로 내리치는 타현 악기 — 줄 소리보다 술대가 몸통·바닥을 치는 충격이 아래층으로 감. 바닥 방진이 우선."}, {"g": "4", "n": "해금", "lo": "≈ 200Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "중고음", "vib": "없음", "note": "바이올린 조건과 유사하나 비음 성분이 강해 고음 누설이 두드러짐 — 기밀."}, {"g": "4", "n": "아쟁", "lo": "≈ 55~65Hz (대아쟁)", "ac": "L3~L4", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.8m 이상", "booth": "△", "flag": "low", "absorb": "저음 트랩 필수", "vib": "있음", "note": "국악의 콘트라베이스. 첼로와 같은 조건 + 바닥에 놓고 연주하므로 몸통 전체가 바닥에 접지 — 방진 받침대 필수. 산조아쟁(소아쟁)은 ≈80Hz로 L3."}, {"g": "4", "n": "대금", "lo": "≈ 230Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "중고음", "vib": "없음", "note": "청공(갈대청) 떨림이 2~4kHz — 고음 누설. 관악 공통 환기 상향. 플루트 조건 + 기밀."}, {"g": "4", "n": "피리", "lo": "≈ 300Hz", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "loud", "absorb": "중고음 (강하게)", "vib": "없음", "note": "작지만 겹리드라 음압이 큼(100dB+). 최저음은 높아도 질량·기밀로 등급 하나 올림."}, {"g": "4", "n": "태평소", "lo": "≈ 400Hz", "ac": "L2+", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "△", "flag": "loud", "absorb": "중고음 (최대)", "vib": "없음", "note": "국악 최고 음압(110~120dB). 야외 악기라 실내 연습 자체가 청력 위험 — 흡음 넉넉히. 트럼펫 이상으로 취급, 벽 질량 우선, 문·창 기밀이 성패."}, {"g": "4", "n": "장구", "lo": "≈ 80~150Hz (궁편)", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.5m", "booth": "O", "flag": "hit loud", "absorb": "저중음 + 고음", "vib": "있음", "note": "채편(고음 105dB+)과 궁편(저음) 이중. 바닥에 놓고 침 → 방진 매트. 사물놀이 편성이면 북·꽹과리 합산."}, {"g": "4", "n": "북 · 대북", "lo": "≈ 40~60Hz", "ac": "L3~L4", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.0m 이상", "booth": "X", "flag": "hit low", "absorb": "저음 트랩", "vib": "매우 큼", "note": "드럼셋 조건. 대북은 킥드럼 이하 저역 + 충격이 받침대로 직결. 플로팅 바닥 필수, 아래층 있으면 상담 단계에서 한계 고지. 판소리 고수용 소리북은 L3."}, {"g": "4", "n": "꽹과리", "lo": "1~4kHz (기본음 없음)", "ac": "L2+", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "△", "flag": "loud", "absorb": "고음 (최대)", "vib": "없음", "note": "저역은 없지만 110~120dB 고음. 벽 두께보다 틈 하나 가 성패 — 문 가스켓·콘센트·관통부 전수 확인. 실내 흡음 없으면 청력 손상."}, {"g": "5", "n": "플루트", "lo": "262Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "중고음 (섬유형)", "vib": "없음", "note": "취구가 왼쪽 귀 옆 → 연주자 귀 위치 95dB 이상. 왼쪽 벽·맞은편 벽 우선 흡음."}, {"g": "5", "n": "클라리넷", "lo": "147Hz", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "중고음", "vib": "없음", "note": "밀폐 시 이산화탄소 축적으로 호흡이 흔들림 — 환기 상향. 베이스 클라리넷은 ≈70Hz → L3."}, {"g": "5", "n": "오보에", "lo": "233Hz", "ac": "L1~L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "—", "absorb": "중고음", "vib": "없음", "note": "겹리드 특유의 비음이 고음 누설로 두드러짐. 리드 깎는 작업 공간·조명 별도."}, {"g": "5", "n": "색소폰", "lo": "139Hz (알토)", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "loud", "absorb": "중고음", "vib": "없음", "note": "100~110dB. 테너 ≈104Hz, 바리톤 ≈65Hz → L3. 상담 시 기종 확인."}, {"g": "5", "n": "트럼펫", "lo": "165Hz", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "loud", "absorb": "중고음 (강하게)", "vib": "없음", "note": "음압이 가장 높은 악기군. 좁은 방에서 110dB 초과. 흡음을 넉넉히 넣어야 청력 보호. 최저음 기준 L1이지만 loud → L2."}, {"g": "5", "n": "트롬본", "lo": "82Hz (E2)", "ac": "L2~L3", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.6m", "booth": "△", "flag": "loud", "absorb": "중저음 (강하게)", "vib": "없음", "note": "트럼펫 음압 + 저역. 슬라이드 뻗는 길이 포함 전방 1.5m 여유 — 부스는 폭이 안 나옴. 베이스 트롬본 ≈58Hz → L3."}, {"g": "5", "n": "호른", "lo": "≈58Hz (B♭1)", "ac": "L3", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.7m", "booth": "△", "flag": "loud", "absorb": "중저음 + 후방", "vib": "없음", "note": "벨이 뒤를 향해 연주자 뒷벽이 1차 반사면 — 뒷벽 흡음·확산 우선. 페달음(≈44Hz)까지 쓰면 L4."}, {"g": "5", "n": "튜바", "lo": "≈37Hz (B♭ 튜바 D1)", "ac": "L4", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.0m 이상", "booth": "X", "flag": "low loud", "absorb": "저음 트랩", "vib": "약간", "note": "관악 중 유일하게 저역 구조전달 영역. 페달음(≈29Hz) 상용 시 AC-B. 악기 크기로도 부스 불가."}, {"g": "6", "n": "피아노 (그랜드)", "lo": "27Hz", "ac": "AC-B → 실무 L4", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.0m 이상", "booth": "X", "flag": "low", "absorb": "저음 트랩 + 확산", "vib": "있음", "note": "악기 길이 1.8~2.7m로 부스에 물리적으로 안 들어감. 10평 이상 권장. 흡음만 하면 답답해지므로 확산 병행. 최저 3옥타브는 실사용 빈도 낮아 실무 L4."}, {"g": "6", "n": "피아노 (업라이트)", "lo": "27Hz", "ac": "AC-B → 실무 L3", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.8m", "booth": "△", "flag": "low", "absorb": "저음 트랩", "vib": "있음", "note": "벽에 붙이면 진동이 벽으로 직접 전달. 벽에서 10cm 이상 띄우고 방진 캐스터. 아파트 민원의 대부분은 이 진동."}, {"g": "6", "n": "전자피아노", "lo": "27Hz (내장 스피커)", "ac": "L2 (스피커) / 없음 (헤드폰)", "hmin": "2.1m", "hpr": "2.4m", "hrec": "—", "booth": "O", "flag": "hit", "absorb": "중음", "vib": "있음 (타건)", "note": "상담 첫 질문: 헤드폰 쓰시나요? 헤드폰이면 남는 건 타건 충격음(아래층)뿐 → 방진 매트로 끝. 내장 스피커 사용 시 모니터 스피커 행 기준."}, {"g": "6", "n": "신디사이저", "lo": "스피커에 따름 (20Hz~)", "ac": "스피커 행 참조", "hmin": "2.1m", "hpr": "2.4m", "hrec": "—", "booth": "O", "flag": "—", "absorb": "중음", "vib": "없음", "note": "악기 자체는 무음. 등급은 연결된 스피커·서브우퍼 가 결정. 서브베이스 음색 상용이면 서브우퍼 행."}, {"g": "7", "n": "드럼", "lo": "50Hz", "ac": "L4", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.0m 이상", "booth": "X", "flag": "hit low loud", "absorb": "저음 + 중음", "vib": "매우 큼", "note": "플로팅 바닥 필수 — 공사비의 절반 가까이. 아랫집이 있으면 공기음보다 바닥 진동이 주 민원. 전자드럼도 킥 페달 충격은 동일 — 방진 플랫폼."}, {"g": "7", "n": "카혼", "lo": "60~80Hz", "ac": "L3", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.6m", "booth": "O", "flag": "hit", "absorb": "저중음", "vib": "있음", "note": "앉아서 치므로 몸통이 바닥에 직결 — 방진 매트 필수. 손 타격이라 드럼보다 약함."}, {"g": "7", "n": "젬베", "lo": "60~80Hz", "ac": "L3", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.6m", "booth": "O", "flag": "hit loud", "absorb": "저중음 + 고음", "vib": "있음", "note": "슬랩(고음) 100dB+. 카혼 조건 + 고음 기밀. 수업이면 여러 대 동시 → 합산."}, {"g": "7", "n": "팀파니", "lo": "≈65~73Hz", "ac": "L3", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.0m 이상", "booth": "X", "flag": "hit low", "absorb": "저음 트랩", "vib": "매우 큼", "note": "4대 세트 4평 이상 점유, 부스 불가. 페달 조작 진동 + 저역 지속음. 대북과 같은 바닥 조건."}, {"g": "7", "n": "마림바", "lo": "≈65Hz (5옥타브 C2)", "ac": "L3", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.7m", "booth": "X", "flag": "hit", "absorb": "저중음 + 확산", "vib": "약간", "note": "악기 길이 2.5m 이상 → 부스 불가. 4.3옥타브(A2 110Hz)면 L2. 공명관이 바닥 가까이 — 바닥 반사 관리."}, {"g": "8", "n": "일렉기타 앰프", "lo": "82Hz", "ac": "L2", "hmin": "2.1m", "hpr": "2.4m", "hrec": "2.4m", "booth": "O", "flag": "loud", "absorb": "중음", "vib": "약간", "note": "캐비닛이 바닥에 직접 닿으면 진동 전달 — 앰프 스탠드나 방진 패드. 드롭 튜닝·7현(≈62Hz)이면 L3. 밴드 음량이면 loud."}, {"g": "8", "n": "베이스 앰프", "lo": "41Hz (5현 31Hz)", "ac": "L4 / 5현 AC-B", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.2m 이상", "booth": "X", "flag": "low loud", "absorb": "저음 트랩", "vib": "큼", "note": "아파트에서 가장 해결이 안 되는 항목. 캐비닛 진동이 슬래브→기둥→대각선 세대까지. 완화 순서: 헤드폰/DI → 방진 스탠드 → 주간 한정 → 1층·최상층 이전."}, {"g": "8", "n": "모니터 스피커", "lo": "≈45~60Hz (5~8\")", "ac": "L3~L4", "hmin": "2.2m", "hpr": "2.4m", "hrec": "2.7m", "booth": "△", "flag": "low 양방향", "absorb": "1차 반사점 + 저음 트랩", "vib": "약간", "note": "믹싱은 유출보다 방 자체의 왜곡 이 문제 — 실내 음향 설계(AC-AB)가 본체. 스탠드·방진 패드로 데스크 진동 차단. 청취 음량 85dB 기준."}, {"g": "8", "n": "서브우퍼", "lo": "20~30Hz", "ac": "AC-B", "hmin": "2.4m", "hpr": "2.7m", "hrec": "3.0m 이상", "booth": "X", "flag": "low", "absorb": "저음 트랩 (다량)", "vib": "매우 큼", "note": "표준 아파트 공사로 해결 불가 영역. 30Hz 이하는 벽이 아니라 구조체 전체가 울림. 방진 플랫폼 + 음량 제한이 현실적 답. 상담에서 한계를 먼저 고지."}, {"g": "8", "n": "홈시어터", "lo": "20~30Hz (LFE)", "ac": "AC-B → 실무 L4 + 서브 제한", "hmin": "2.4m", "hpr": "2.7m", "hrec": "—", "booth": "X", "flag": "low quiet", "absorb": "RT 0.35s + 저음 트랩", "vib": "큼 (서브)", "note": "서브우퍼 행 + 유입 차단. 서브 음량을 제한하면 L4로 성립. 스크린·프로젝터 팬 소음, 환기 팬 소음이 목표 배경소음을 깨는 경우 많음."}, {"g": "9", "n": "발구름 · 점프 (안무·댄스)", "kind": "충격음 (기본음 없음)", "ac": "F-L4+ (바닥)", "hmin": "2.7m 이상", "booth": "X", "flag": "hit", "vib": "매우 큼", "note": "플로팅 바닥이 핵심이며 공사비 대부분. 거울 반사 대책은 실내 음향. 견적서에 바닥을 별도 항목으로 분리. 음악 재생은 모니터 스피커 행 합산."}, {"g": "9", "n": "러닝머신", "kind": "반복 충격 + 모터 진동", "ac": "F-L3+ (바닥)", "hmin": "2.4m", "booth": "O (방진 플랫폼)", "flag": "hit", "vib": "큼", "note": "벽 공사 불필요. 기기 하부 방진 플랫폼(고무+MDF 2중)이 답. 모터 저역 진동은 아래층으로 — 야간 사용 제한 고지."}, {"g": "9", "n": "웨이트 낙하", "kind": "단발 고충격", "ac": "F-L5 (바닥)", "hmin": "2.4m", "booth": "X", "flag": "hit", "vib": "극대", "note": "가장 큰 충격 하중. 드롭 존만 국부 플랫폼(고무 30T+ 다층)으로 처리. 아파트 중간층은 어떤 공사로도 완전 해결 안 됨 — 계약 전 문서 고지."}, {"g": "9", "n": "그 밖의 악기", "kind": "상담 결정", "ac": "—", "hmin": "—", "booth": "—", "flag": "—", "vib": "—", "note": "최저음(Hz)·음압·바닥 접촉 여부 세 가지를 확인해 위 군 중 가장 가까운 행으로 매핑. 아코디언→클라리넷, 밴조→만돌린, 콘가·봉고→젬베, 전자드럼→드럼(hit)."}];
+const NOTE_ALIAS = {"드럼 (어쿠스틱)":"드럼","드럼 (전자)":"드럼","발구름 · 점프":"발구름 · 점프 (안무·댄스)"};
+function noteOf(n){ const k=NOTE_ALIAS[n]||n; return INSTNOTE.find(d=>d.n===k)||null; }
+/* "2.8m 이상" → 2.8 · "—" → null */
+function hNum(v){ const m=String(v||"").match(/(\d+(?:\.\d+)?)\s*m/); return m?parseFloat(m[1]):null; }
+/* 녹음 겸용 판정 — 용도가 녹음·방송이면 녹음 값, 아니면 연습 값 */
+function isRecUse(use){ return /녹음|스튜디오|유튜브|스트리밍|컨트롤룸|부스/.test(use||""); }
+function needHeight(sounds, use){
+  const rec=isRecUse(use); let best=null;
+  sounds.forEach(n=>{ const d=noteOf(n); if(!d) return;
+    const v=hNum(rec?(d.hrec&&d.hrec!=="—"?d.hrec:d.hpr):d.hpr) ?? hNum(d.hmin);
+    if(v!==null && (!best||v>best.v)) best={v,n,src:rec?"녹음 겸용":"연습 전용",min:hNum(d.hmin)}; });
+  return best;
+}
+
+
 
 /* 등급별 벽 공진점(f₀)과 실질 차음 시작 주파수(√2·f₀) — 시트 값 */
 const F0 = {1:150, 2:95, 3:70, 4:52, 5:44};
@@ -619,7 +688,7 @@ const M_SPAN = {600:2.7, 450:2.9};   // 박스빔 @600 / @450 스팬 한계 (m)
 
 function lvName(l){ return "L"+l; }
 
-const D = { space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
+const D = { area:"", py:"", space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
             w:"", d:"", noSize:false, h:"", noH:false, when:null,
             sido:null, gu:"", bldg:null, floor:null,
             ct:null, pt:null, pd:"", bud:"", bTBD:false,
@@ -965,16 +1034,35 @@ function briefHTML(){
     h+=`<div class="bp">내보낼 소리가 없는 실(${B.quiet.join(", ")}).
         <b>등급은 무엇을 막느냐로 정한다.</b> 방해 소음원을 먼저 확정해야 설계가 시작된다.</div>`;
   } else {
-    h+=`<table class="bt"><tr><th>소리원천</th><th>최저기음</th><th>음압</th><th>별도 경로</th></tr>`;
+    h+=`<table class="bt"><tr><th>소리원천</th><th>최저기음</th><th>음압</th><th>필요 천장고<br><small>최저 · 연습 · 녹음</small></th><th>부스</th><th>진동</th></tr>`;
     B.picked.forEach(([n,f])=>{
-      const i=FIND(n);
+      const i=FIND(n), d=noteOf(n);
+      const bo=d?d.booth:"—", boCls=bo==="X"?"bad":bo==="△"?"warn":"ok";
       h+=`<tr${f===B.lo?' class="hi"':''}><td>${n}</td><td class="m">${f} Hz</td>
           <td class="m">${B.splOf(n)} dB</td>
-          <td class="m">${i&&(i[2]==="hit"||i[2]==="hitq")?"바닥 진동":"—"}</td></tr>`;
+          <td class="m">${d?[d.hmin,d.hpr,d.hrec].filter(Boolean).join(" · "):"—"}</td>
+          <td class="ins ${boCls}">${bo}</td>
+          <td class="ins ${d&&/큼/.test(d.vib||"")?"bad":""}">${d?d.vib:(i&&(i[2]==="hit"||i[2]==="hitq")?"바닥 진동":"—")}</td></tr>`;
     });
     h+=`</table>`;
     h+=`<div class="bp">가장 낮은 소리 <b>${B.lo}Hz</b> (${B.loName}) ·
-        가장 큰 소리 <b>${B.B_SPL}dB</b></div>`;
+        가장 큰 소리 <b>${B.B_SPL}dB</b>. 부스 O 가능 · △ 조건부 · X 룸 공사.</div>`;
+    /* 항목별 설계 비고 — AC 사전 비고판 */
+    const noted=B.picked.map(([n])=>[n,noteOf(n)]).filter(x=>x[1]);
+    if(noted.length){
+      h+=`<details class="notes-inst"${VIEW==="partner"?"":" open"}><summary>항목별 설계 비고 (${noted.length}) — AC 사전 비고판</summary>`;
+      noted.forEach(([n,d])=>{
+        h+=`<div class="bl"><b>${n}</b> <span class="nd">AC 하한 ${d.ac}${d.flag&&d.flag!=="—"?" · "+d.flag:""}${d.absorb?" · 흡음 "+d.absorb:""}</span><br>${d.note}${n==="드럼 (전자)"?" <i>(전자드럼: 킥 페달 충격은 어쿠스틱과 동일 — 방진 플랫폼)</i>":""}</div>`;
+      });
+      h+=`</details>`;
+    }
+    /* 필요 천장고 — 접수 공간 용도 기준 */
+    const nh=needHeight(B.picked.map(x=>x[0]), D.space);
+    if(nh){
+      const cur = B.H ? B.rest/1000 : null;
+      const bad = cur!==null && cur < nh.v - 0.005, tight = cur!==null && !bad && nh.min && cur < nh.min;
+      h+=`<div class="${bad?"bw":"bp"}"><b>필요 천장고 ${nh.v.toFixed(1)}m</b> (${nh.n} · ${nh.src} 기준)${cur!==null?` — 시공 후 실높이 <b>${cur.toFixed(2)}m</b>${bad?" 미달":" 충족"}`:" — 천장고 실측 후 비교"}.${bad?" 등급을 낮춰 높이를 벌지, 용도를 연습 전용으로 낮출지, 이 소리를 빼야 할지 정해야 한다.":""}</div>`;
+    }
   }
   h+=`</div>`;
 
@@ -1225,6 +1313,7 @@ function briefHTML(){
     if(D.space==="녹음실 · 스튜디오"||D.space==="유튜브 · 스트리밍 · 리딩방")
       h+=`<div class="bl">마이크 주변 초기 반사가 음질을 좌우한다. 마이크 위치 기준
           <b>1차 반사점</b>(측벽·천장·후벽)을 우선 처리한다.</div>`;
+    h+=roomAcHTML(D.space, D.sounds);
     h+=`<div class="bw"><b>흡음은 차음이 아니다.</b> 흡음재를 아무리 붙여도 밖으로 나가는 소리는
         줄지 않는다. 견적서에서 두 항목을 반드시 갈라 적어야 타사 비교에서 오해가 없다.
         (AC-AB 계열로 분리)</div>`;
@@ -1360,7 +1449,11 @@ const RM_C = 343;
 
 function roomName(i){ return String.fromCharCode(65+i); }
 function roomQty(r){ const q=parseInt(r.qty,10); return q>0?q:1; }
-const ROOM_OPEN=new Set();   // 세부 설계가 펼쳐진 실 (화면 상태)
+const ROOM_OPEN=new Set();   // 세부 설계가 펼쳐진 실 (화면 상태) — "i" 는 실 전체, "i:grade" 등은 하위 항목
+function subDet(i,key,title,sum,body){
+  const k=`${i}:${key}`;
+  return `<details class="rm-sub" data-k="${k}"${ROOM_OPEN.has(k)?" open":""}><summary><span>${title}</span><span class="rm-sum">${sum||""}</span></summary><div class="rm-subb">${body}</div></details>`;
+}
 function roomH(r,B){
   const v=parseFloat(r.h); if(v) return v;
   if(B && B.H && B.apt) return (B.H - SPECM.C[B.apt.C].h - SPECM.F[B.apt.F].h)/1000;
@@ -1711,55 +1804,61 @@ function roomsHTML(B){
     /* 세부 설계는 접어 둔다 — 계산할 때만 펼치고 닫으면 다음 실 배치가 편하다 */
     const mvq = dims ? modeVerdict(dims.L,dims.W,dims.H).st : null;
     const sumTxt = (B.apt?`M 시리즈 · F-${B.apt.F} · 내부 M1 · 경계 ${B.apt.Wp} · C-${B.apt.C}`:`F-L${ra.F} · WS-L${ra.WS} · WP-L${ra.WP} · C-L${ra.C}`)+(dims?` · 룸 모드 <b class="vq ${mvq}">${mvq==="bad"?"겹침":mvq==="warn"?"주의":"OK"}</b>`:" · 치수 입력 후 판정");
-    h+=`<details class="rm-det" data-i="${i}"${ROOM_OPEN.has(i)?" open":""}><summary><span>세부 설계 — 등급 · 룸 모드 · 잔향</span><span class="rm-sum">${sumTxt}</span></summary><div class="rm-detb">`;
+    h+=`<details class="rm-det" data-i="${i}"${ROOM_OPEN.has(i)?" open":""}><summary><span>세부 설계</span><span class="rm-sum">${sumTxt}</span><button class="rm-all" title="하위 항목 모두 펼치기 / 접기">모두</button></summary><div class="rm-detb">`;
+    let hb="";
     if(B.apt){
-      h+=`<span class="lb">부위 · 이 실 (아파트형 M 시리즈 · 05에서 지정)</span>`;
-      h+=`<div class="bp">바닥 AC-F-${B.apt.F} · 내부벽 AC-W-M1 · 세대 경계벽 AC-W-${B.apt.Wp}(${B.apt.party}) · 천장 AC-C-${B.apt.C}. 실간 칸막이는 내부벽 M1로 본다. 이 실이 경계벽에 닿는지는 배치도에서 확정.</div>`;
+      hb+=`<span class="lb">부위 · 이 실 (아파트형 M 시리즈 · 05에서 지정)</span>`;
+      hb+=`<div class="bp">바닥 AC-F-${B.apt.F} · 내부벽 AC-W-M1 · 세대 경계벽 AC-W-${B.apt.Wp}(${B.apt.party}) · 천장 AC-C-${B.apt.C}. 실간 칸막이는 내부벽 M1로 본다. 이 실이 경계벽에 닿는지는 배치도에서 확정.</div>`;
     } else {
-    h+=`<span class="lb">부위별 등급 · 이 실</span>`;
-    h+=`<table class="bt"><tr><th>부위</th><th>제안</th><th>실제 시공</th><th>공법</th><th>두께</th></tr>`;
-    h+=ovRow("F","바닥","AC-F",ra.prop.F,ra.F,0,i);
-    h+=ovRow("WS","벽 · 구조벽면","AC-WS",ra.prop.WS,ra.WS,1,i);
-    h+=ovRow("WP","벽 · 실간 칸막이","AC-WP",ra.prop.WP,ra.WP,1,i);
-    h+=ovRow("C","천장","AC-C",ra.prop.C,ra.C,0,i);
-    h+=`</table>`;
+    hb+=`<table class="bt"><tr><th>부위</th><th>제안</th><th>실제 시공</th><th>공법</th><th>두께</th></tr>`;
+    hb+=ovRow("F","바닥","AC-F",ra.prop.F,ra.F,0,i);
+    hb+=ovRow("WS","벽 · 구조벽면","AC-WS",ra.prop.WS,ra.WS,1,i);
+    hb+=ovRow("WP","벽 · 실간 칸막이","AC-WP",ra.prop.WP,ra.WP,1,i);
+    hb+=ovRow("C","천장","AC-C",ra.prop.C,ra.C,0,i);
+    hb+=`</table>`;
     }
     if(B.H && !parseFloat(r.h)){
       const rh=roomH(r,B);
-      h+=`<div class="bp" style="color:var(--sub)">이 실 방음실높이 <b>${rh.toFixed(2)}m</b> = ${D.h}m − ${B.apt?`천장 유닛 ${SPECM.C[B.apt.C].h}(128 + 공동 200) − 바닥 M층 ${SPECM.F[B.apt.F].h}mm(가정)`:`천장 ${SPEC.C[ra.C].h} − 바닥 ${FH[ra.F]}mm`}${rh<2.1?' · <b style="color:var(--stop)">2.1m 미달</b>':''}</div>`;
+      hb+=`<div class="bp" style="color:var(--sub)">이 실 방음실높이 <b>${rh.toFixed(2)}m</b> = ${D.h}m − ${B.apt?`천장 유닛 ${SPECM.C[B.apt.C].h}(128 + 공동 200) − 바닥 M층 ${SPECM.F[B.apt.F].h}mm(가정)`:`천장 ${SPEC.C[ra.C].h} − 바닥 ${FH[ra.F]}mm`}${rh<2.1?' · <b style="color:var(--stop)">2.1m 미달</b>':''}</div>`;
     }
-    if(!B.apt) h+=roomInsulHTML(r,B,g,ra);
+    let hSum=""; { const nh=needHeight(r.sounds, r.use); if(nh && B.H){ const rh=roomH(r,B); const bad=rh<nh.v-0.005; hSum=bad?` · <b class="vq bad">천장고 미달</b>`:"";
+        hb+=`<div class="${bad?"bw":"bp"}"><b>이 실 필요 천장고 ${nh.v.toFixed(1)}m</b> (${nh.n} · ${nh.src}) — 실높이 ${rh.toFixed(2)}m ${bad?"미달":"충족"}${bad&&!B.apt?" · 이 실만 천장·바닥 등급을 낮추거나 소리 배치를 바꿀 것":""}</div>`; } }
+    if(!B.apt) hb+=roomInsulHTML(r,B,g,ra);
+    h+=subDet(i,"grade","① 등급 · 차음 결과", (B.apt?`M 시리즈`:`F-L${ra.F} · WS-L${ra.WS} · WP-L${ra.WP} · C-L${ra.C}`)+hSum, hb);
 
     /* 치수 진단 */
+    if(!dims) h+=`<div class="bp" style="color:var(--sub)">가로·세로를 넣으면 룸 모드 · 잔향 · 진단이 나온다.</div>`;
     if(dims){
       const R=roomIssues(r,B,dims,g);
       const rtKey = RT[RT_USE[r.use]] ? RT_USE[r.use] : "기타";
       const V=dims.L*dims.W*dims.H, fs=2000*Math.sqrt(RT[rtKey][0]/V);
-      h+=roomCalcHTML(r,i,B,dims,g,ra,rtKey);
-      if(!R.out.length)
-        h+=`<div class="bp"><b>치수 문제 없음.</b> 정방형·정수비·모드 겹침·악기 충돌 모두 해당 없음.</div>`;
+      h+=subDet(i,"mode","② 룸 모드 (계산기)", `<b class="vq ${mvq}">${mvq==="bad"?"겹침":mvq==="warn"?"주의":"OK"}</b>`, roomCalcHTML(r,i,B,dims,g,ra,rtKey));
       /* 잔향 · 흡음 면적 (Sabine) */
-      {
+      { let ha="";
         const S=2*(dims.L*dims.W + dims.L*dims.H + dims.W*dims.H);
         const tgt=RT[rtKey][0], why=RT[rtKey][1];
         const a0=0.06, A0=a0*S, rtNow=0.161*V/A0, dA=0.161*V/tgt-A0, needA=dA>0?dA/(0.85-a0):0;
         const q=343/R.a.f1/4;
-        h+=`<div class="bg">잔향 · 흡음 (${r.use||"용도 미정"})</div>`;
-        h+=`<table class="bt"><tr><th>부피</th><th>표면적</th><th>목표 RT</th><th>흡음 없을 때</th><th>필요 흡음 면적</th></tr>
+        ha+=`<table class="bt"><tr><th>부피</th><th>표면적</th><th>목표 RT</th><th>흡음 없을 때</th><th>필요 흡음 면적</th></tr>
           <tr><td class="m">${V.toFixed(1)} m³</td><td class="m">${S.toFixed(1)} m²</td><td class="m b">${tgt.toFixed(2)} 초</td>
           <td class="m">약 ${rtNow.toFixed(2)} 초</td><td class="m b">약 ${needA.toFixed(1)} m² (${(needA/S*100).toFixed(0)}%)</td></tr></table>`;
-        h+=`<div class="bp">목표 ${tgt.toFixed(2)}초 — ${why}. 석고 마감만 하면 ${rtNow.toFixed(2)}초.
+        ha+=`<div class="bp">목표 ${tgt.toFixed(2)}초 — ${why}. 석고 마감만 하면 ${rtNow.toFixed(2)}초.
             가장 낮은 모드 ${R.a.f1.toFixed(0)}Hz는 다공질로 잡으려면 ${q.toFixed(1)}m 두께가 필요하므로 저역은 코너 멤브레인·레조네이터로.</div>`;
-        if(rtNow>1.2) h+=`<div class="bw"><b>차음만 하면 못 쓰는 방.</b> 흡음 계획을 견적에 처음부터 포함할 것.</div>`;
+        if(rtNow>1.2) ha+=`<div class="bw"><b>차음만 하면 못 쓰는 방.</b> 흡음 계획을 견적에 처음부터 포함할 것.</div>`;
         if(r.use==="합주실"||r.use==="개인 연습실"||r.use==="음악학원 강의실")
-          h+=`<div class="bl">과도한 흡음 금물 — 자기 소리를 못 들으면 더 세게 치고, 차음 부담이 다시 커진다.</div>`;
+          ha+=`<div class="bl">과도한 흡음 금물 — 자기 소리를 못 들으면 더 세게 치고, 차음 부담이 다시 커진다.</div>`;
         if(r.use==="녹음실 · 스튜디오"||r.use==="보컬 부스"||r.use==="컨트롤룸"||r.use==="유튜브 · 스트리밍")
-          h+=`<div class="bl">마이크·청취 위치 기준 1차 반사점(측벽·천장·후벽) 우선 처리.</div>`;
+          ha+=`<div class="bl">마이크·청취 위치 기준 1차 반사점(측벽·천장·후벽) 우선 처리.</div>`;
+        ha+=roomAcHTML(r.use, r.sounds);
+        h+=subDet(i,"rt","③ 잔향 · 흡음 · 요소 배치", `목표 ${tgt.toFixed(2)}s · 흡음 약 ${needA.toFixed(1)} m²`, ha);
       }
+      let hd="";
+      if(!R.out.length) hd+=`<div class="bp"><b>치수 문제 없음.</b> 정방형·긴 실·악기 충돌·압력 영역 모두 해당 없음.</div>`;
       R.out.forEach(([t,why,fix])=>{
-        h+=`<div class="bw"><b>${t}</b> — ${why}</div>`;
-        fix.forEach(f=>h+=`<div class="bl">${f}</div>`);
+        hd+=`<div class="bw"><b>${t}</b> — ${why}</div>`;
+        fix.forEach(f=>hd+=`<div class="bl">${f}</div>`);
       });
+      h+=subDet(i,"diag","④ 진단 · 보완책", R.out.length?`<b class="vq warn">${R.out.length}건</b>`:`<b class="vq ok">없음</b>`, hd);
     }
     h+=`</div></details>`;
     h+=`</div></div>`;
@@ -1882,6 +1981,11 @@ function bindRooms(id){
     repaintRooms(id); });
   sec.querySelectorAll(".rm-q").forEach(el=>{ el.onchange=e=>{ const v=parseInt(e.target.value,10); D.rooms[+el.dataset.i].qty=v>0?v:1; repaintRooms(id); }; });
   sec.querySelectorAll(".rm-det").forEach(d=>d.addEventListener("toggle",()=>{ const i=+d.dataset.i; d.open?ROOM_OPEN.add(i):ROOM_OPEN.delete(i); }));
+  sec.querySelectorAll(".rm-sub").forEach(d=>d.addEventListener("toggle",()=>{ d.open?ROOM_OPEN.add(d.dataset.k):ROOM_OPEN.delete(d.dataset.k); }));
+  /* 세부 설계 요약줄 오른쪽 '모두' 버튼 */
+  sec.querySelectorAll(".rm-all").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation();
+    const det=b.closest(".rm-det"), subs=det.querySelectorAll(".rm-sub"), anyClosed=[...subs].some(x=>!x.open);
+    subs.forEach(x=>{ x.open=anyClosed; anyClosed?ROOM_OPEN.add(x.dataset.k):ROOM_OPEN.delete(x.dataset.k); }); });
   if(g("rmSave")) g("rmSave").onclick=()=>saveRooms(id);
 }
 
@@ -2018,7 +2122,7 @@ function reviewDigest(id){
   const c=[];
   c.push(`[접수] ${id||"—"} · ${(D.name||"").trim()} · ${fmt(window.__lastRec&&window.__lastRec.at)} 접수 · 담당 ${D.staff||"—"}`);
   const site=`${D.sido||""} ${D.gu||""}${D.bldg?" · "+D.bldg:""}${D.floor?" · "+D.floor:""}`.trim();
-  c.push(`현장: ${site} / 공간: ${D.noSize?"실측 예정":D.w+" × "+D.d+" m"}${D.noH?" · 천장 실측 예정":" · 천장 "+D.h+" m"} / 용도: ${D.space==="기타"?D.spaceEtc:D.space} / 사용: ${D.when||"—"} / 계약: ${D.ct||"—"} · ${D.pt==="희망 날짜 지정"?D.pd:D.pt||"—"} / 예산: ${D.bTBD?"상담 후 결정":D.bud+" 만원"}`);
+  c.push(`현장: ${site} / 공간: ${D.noSize?"실측 예정":D.w+" × "+D.d+" m"}${D.area?` (${D.area}㎡ · ${D.py}평)`:""}${D.noH?" · 천장 실측 예정":" · 천장 "+D.h+" m"} / 용도: ${D.space==="기타"?D.spaceEtc:D.space} / 사용: ${D.when||"—"} / 계약: ${D.ct||"—"} · ${D.pt==="희망 날짜 지정"?D.pd:D.pt||"—"} / 예산: ${D.bTBD?"상담 후 결정":D.bud+" 만원"}`);
   const snd=D.sounds.filter(x=>x!=="그 밖의 악기"); if(D.soundEtc) snd.push(D.soundEtc);
   c.push(`소리: ${snd.join(", ")||"—"}`);
   if((D.rooms||[]).length) c.push(`실: `+D.rooms.map(r=>`${r.name} ${r.use||"?"} ${r.w&&r.d?r.w+"×"+r.d+(r.h?"×"+r.h:""):"치수 미정"} [${r.sounds.join(",")||"소리 없음"}]`).join(" / "));
@@ -2100,6 +2204,7 @@ function aptReachHTML(B){
   });
   h+=`</table>`;
   const bad=B.picked.filter(([,f])=>f<60), mid=B.picked.filter(([,f])=>f>=60&&f<100);
+  B.picked.forEach(([n])=>{ const d=noteOf(n); if(d && (d.booth==="X" || /큼/.test(d.vib||""))) h+=`<div class="hint"><b>${n}</b> — 비고판: ${d.note}</div>`; });
   if(bad.length) h+=`<div class="bw"><b>${bad.map(x=>x[0]).join(", ")} — 아파트 구조에서 대응 불가.</b> 킥드럼 · 서브우퍼 · 베이스 저역은 어떤 벽 사양으로도 민원을 피하기 어렵다. 아파트가 아닌 현장으로 안내하거나, 음원을 바꾸는 것(전자드럼 헤드폰 · 서브우퍼 제거)이 전제다.</div>`;
   if(mid.length) h+=`<div class="hint"><b>${mid.map(x=>x[0]).join(", ")} — 천장 M2로 보완</b>하되 "막는다"가 아니라 "줄인다"로 설명한다. 100Hz 딥은 완화될 뿐 삼중 리프가 남고, 대출력이면 비대응이다.</div>`;
   if(B.hit) h+=`<div class="bw"><b>충격음 — 위층 · 아래층 전달 비대응.</b> 기존 천장 존치 조건에서 구조적으로 불가하며 계약 전 서면 고지한다.</div>`;
@@ -2344,6 +2449,13 @@ function render(){
       <input class="txt w-num" id="inH" placeholder="2.4" inputmode="decimal" value="${D.h}"${D.noH?" disabled":""}><i>m</i>
       <span class="chk${D.noH?" on":""}" id="ckH"><span class="bx"></span>모름</span>
     </div>`;
+  h += `<div class="row" style="margin-top:10px">
+      <span class="il2">면적</span>
+      <input class="txt w-num" id="inArea" placeholder="㎡" inputmode="decimal" value="${D.area||""}"><i>㎡</i>
+      <b>=</b>
+      <input class="txt w-num" id="inPy" placeholder="평" inputmode="decimal" value="${D.py||""}"><i>평</i>
+      <span class="area-hint">가로 × 세로를 넣으면 자동 · 면적만 알면 ㎡ 또는 평 한쪽만 적어도 됨 (1평 = 3.3058㎡)</span>
+    </div>`;
   h += `<div class="row" style="margin-top:10px"><span class="il2">사용 시간</span>
       <span class="chips">` + ["낮에만 · 오후 6시까지","저녁까지 · 밤 10시까지","밤늦게도 · 10시 이후","정해지지 않음"]
         .map(v=>`<button class="chip wh${D.when===v?" on":""}" data-v="${v}">${v}</button>`).join("") + `</span></div>`;
@@ -2411,6 +2523,26 @@ function bind(){
     el.onblur=e=>{const v=parseFloat(e.target.value);
       if(!isNaN(v)){ D[key]=(Math.round(v*10)/10).toFixed(1); e.target.value=D[key]; } check(); }; };
   num(g("inW"),"w"); num(g("inD"),"d"); num(g("inH"),"h");
+
+  /* 면적 — 가로×세로 → ㎡ · 평 자동, ㎡ ↔ 평 서로 채움 (1평 = 3.3058㎡) */
+  const PY=3.3058, r2=v=>(Math.round(v*100)/100).toFixed(2);
+  const setArea=(m2, from)=>{
+    if(m2===null){ D.area=""; D.py=""; }
+    else { D.area=r2(m2); D.py=r2(m2/PY); }
+    if(from!=="area" && g("inArea")) g("inArea").value=D.area;
+    if(from!=="py"   && g("inPy"))   g("inPy").value=D.py;
+  };
+  const fromWD=()=>{ const w=parseFloat(D.w), d=parseFloat(D.d); if(w>0&&d>0) setArea(w*d,"wd"); };
+  ["inW","inD"].forEach(k=>{ const el=g(k); if(!el) return;
+    el.addEventListener("input",fromWD); el.addEventListener("blur",fromWD); });
+  if(g("inArea")){
+    g("inArea").oninput=e=>{ const v=parseFloat(e.target.value); if(isNaN(v)){ D.area=e.target.value; D.py=""; g("inPy").value=""; } else { D.area=e.target.value; D.py=r2(v/PY); g("inPy").value=D.py; } check(); };
+    g("inArea").onblur=e=>{ const v=parseFloat(e.target.value); setArea(isNaN(v)?null:v, null); check(); };
+  }
+  if(g("inPy")){
+    g("inPy").oninput=e=>{ const v=parseFloat(e.target.value); if(isNaN(v)){ D.py=e.target.value; D.area=""; g("inArea").value=""; } else { D.py=e.target.value; D.area=r2(v*PY); g("inArea").value=D.area; } check(); };
+    g("inPy").onblur=e=>{ const v=parseFloat(e.target.value); if(isNaN(v)) setArea(null,null); else { D.area=r2(v*PY); D.py=r2(v); g("inArea").value=D.area; g("inPy").value=D.py; } check(); };
+  }
 
   const txt=(el,key)=>{ if(el) el.oninput=e=>{D[key]=e.target.value;check()}; };
   txt(g("inGu"),"gu"); txt(g("inBud"),"bud");
@@ -2522,6 +2654,26 @@ function check(){
     m.length ? "미입력 " + m.length + "곳 — " + m.slice(0,4).join(", ") + (m.length>4?" 외":"") : "";
 }
 
+/* 관리자 상부 요약 — 접수 폼 1~5 순서로 */
+function reqSummaryHTML(){
+  const v=x=>x?x:`<span class="rs-none">—</span>`;
+  const space = D.space==="기타"?D.spaceEtc:(D.space==="흡음"?"실내 울림(흡음)만":D.space);
+  const snd = D.sounds.filter(x=>x!=="그 밖의 악기"); if(D.soundEtc) snd.push(D.soundEtc);
+  const size = D.noSize ? "크기 모름" : (D.w&&D.d ? `${D.w} × ${D.d} m` : "");
+  const area = D.area ? `${D.area}㎡ · ${D.py}평` : (!D.noSize&&parseFloat(D.w)&&parseFloat(D.d) ? `${(D.w*D.d).toFixed(2)}㎡ · ${(D.w*D.d/3.3058).toFixed(2)}평` : "");
+  const ceil = D.noH ? "천장 모름" : (D.h ? `천장 ${D.h} m` : "");
+  const site = [[D.sido,D.gu].filter(Boolean).join(" "), D.bldg, D.floor].filter(Boolean).join(" · ");
+  const when = D.pt==="희망 날짜 지정" ? (D.pd||"희망 날짜 미입력") : D.pt;
+  const bud = D.bTBD ? "상담 후 결정" : (D.bud ? `${Number(D.bud).toLocaleString()} 만원` : "");
+  const rows=[
+    ["1","어떤 공간", v(space)],
+    ["2","무엇을 하는가", D.space==="흡음" ? `<span class="rs-none">흡음 단독 — 소리 선택 없음</span>` : (snd.length?snd.map(x=>`<span class="rs-chip">${x}</span>`).join(""):v(""))],
+    ["3","공간 조건", [size,area,ceil].filter(Boolean).map(x=>`<b>${x}</b>`).join(" · ")+(D.when?` <span class="rs-sub">/ 사용 ${D.when}</span>`:"") || v("")],
+    ["4","현장", v(site)],
+    ["5","계약 · 시기 · 예산", [D.ct,when,bud].filter(Boolean).join(" · ") || v("")]
+  ];
+  return `<div class="reqsum">${rows.map(([n,k,val])=>`<div class="rs-row"><span class="rs-n">${n}</span><span class="rs-k">${k}</span><span class="rs-v">${val}</span></div>`).join("")}</div>`;
+}
 function summaryRows(){
   const r=[];
   r.push(["공간", D.space==="기타"?D.spaceEtc:(D.space==="흡음"?"실내 울림(흡음)만":D.space)]);
@@ -2530,7 +2682,7 @@ function summaryRows(){
     if(D.soundEtc) t.push(D.soundEtc);
     r.push(["소리", t.join(", ")||"—"]);
   }
-  r.push(["크기", D.noSize?"모름":`${D.w} × ${D.d} m`]);
+  r.push(["크기", (D.noSize?"모름":`${D.w} × ${D.d} m`)+(D.area?` · ${D.area}㎡ (${D.py}평)`:"")]);
   r.push(["천장", D.noH?"모름":`${D.h} m`]);
   r.push(["사용 시간", D.when]);
   r.push(["지역", `${D.sido} ${D.gu}`]);
@@ -2884,7 +3036,7 @@ async function showBrief(id){
   }
 
   /* 기본값으로 초기화한 뒤 덮어써야 이전 화면 값이 남지 않는다 */
-  const BLANK = { space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
+  const BLANK = { area:"", py:"", space:null, spaceEtc:"", sounds:[], soundEtc:"", rooms:[], split:false, apt:null, ovm:{}, ov:{F:null,WS:null,WP:null,C:null}, q03:{html:""},
     w:"", d:"", noSize:false, h:"", noH:false, when:null,
     sido:null, gu:"", bldg:null, floor:null,
     ct:null, pt:null, pd:"", bud:"", bTBD:false,
@@ -2918,6 +3070,7 @@ let FILES = [];   // {name,type,data(base64),thumb}
         <button class="btn gh" id="backBtn" style="padding:9px 20px;font-size:13px">◀ 목록</button>
         ${VIEW==="internal"?"":`<button class="btn go" id="editBtn" style="padding:9px 22px;font-size:13px" data-id="${id}">내용 수정</button>`}
         <button class="btn gh" id="q03Btn" style="padding:9px 20px;font-size:13px;color:var(--accent);border-color:var(--accent)">고객전송용 사전검토서</button></div></div>
+    ${reqSummaryHTML()}
     ${rec.files?`<div class="logbox"><div class="logh">현장 사진 ${rec.files}장</div>
         <a href="${rec.filesUrl}" target="_blank" class="flink">드라이브 폴더 열기 →</a></div>`:""}
     ${notesHTML(rec.status)}
