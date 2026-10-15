@@ -145,6 +145,7 @@ table.crew td.g{text-align:left;position:sticky;left:0;background:var(--surface)
 table.crew th.g{position:sticky;left:0;z-index:2}
 table.crew td.g input{width:100%;text-align:left}
 table.crew td.off{background:var(--surface-2)}
+table.crew th.d.off{background:var(--surface-3)}
 
 /* 일지 편집 */
 .dbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -296,6 +297,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
     <h2>공사 정보 <span class="hint">여기 적은 내용이 매일 일지 머리에 그대로 들어갑니다</span></h2>
     <div class="grid">
       <label class="f">신청번호<input id="pId" readonly></label>
+      <label class="f">시공사 <span class="hint">일지 아래 로고 · 도장</span><select id="pCt"></select></label>
       <label class="f">공사명<input id="pTitle" data-k="title"></label>
       <label class="f">발주처<input id="pClient" data-k="client"></label>
       <label class="f">현장 주소<input id="pSite" data-k="site"></label>
@@ -313,7 +315,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <button class="btn sm" data-shift="end,1">준공 하루 늘림</button>
       <span class="hint" id="pDays"></span>
     </div>
-    <label class="f" style="margin-top:10px">쉬는 날 <span class="hint">일차 계산에서 빠집니다 · 인원 탭에서 날짜를 눌러도 바뀝니다</span>
+    <label class="f" style="margin-top:10px">휴무일 <span class="hint">'공사 N일차' 계산에서만 빠지고, 인원·지출·일지 기록은 그날도 됩니다 · 인원 탭에서 날짜를 눌러도 바뀝니다</span>
       <input id="pOff" placeholder="2026-10-05, 2026-10-12" data-k="offRaw"></label>
   </div>
 
@@ -379,7 +381,8 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <label class="f">사용처 / 비고<input id="eUse" placeholder="흡음재"></label>
       <div class="photo-pick">
         <label class="f">영수증 사진<input type="file" id="ePhoto" accept="image/*" capture="environment"></label>
-        <img id="ePrev" class="thumb" hidden alt="">
+        <img id="ePrev" class="thumb" hidden alt="" style="width:64px;height:64px">
+        <b id="eRno" class="hint"></b>
       </div>
       <div class="row">
         <label class="hint" style="display:flex;gap:4px;align-items:center"><input type="checkbox" id="ePaid" checked> 지급 완료</label>
@@ -391,7 +394,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
     <datalist id="catList"></datalist>
   </div>
   <div class="card">
-    <h2>지출 내역 <span class="hint">사진은 드라이브 접수 건 폴더 › 공사일지 에 날짜_구분_지불처_금액 이름으로 저장</span>
+    <h2>지출 내역 <span class="hint">사진은 드라이브 접수 건 폴더 › 공사일지 › 날짜 폴더에 '날짜_번호번_항목_지불처_금액.jpg'로, 사진 위에 번호를 찍어 저장</span>
       <select id="eFilter" style="margin-left:auto"><option value="">전체 날짜</option></select></h2>
     <div class="tw"><table class="t" id="eTable"></table></div>
   </div>
@@ -400,7 +403,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
 <!-- ===== 인원 ===== -->
 <section data-pane="crew" hidden>
   <div class="card">
-    <h2>인원 투입 <span class="hint">날짜 칸에 인원 수를 적거나, 맨 오른쪽 '일당'을 켜면 날짜를 눌러 노무명단에서 사람을 고릅니다 (한 번 1 · 두 번 0.5) · 날짜 머리를 누르면 쉬는 날</span>
+    <h2>인원 투입 <span class="hint">날짜 칸에 인원 수를 적거나, 맨 오른쪽 '일당'을 켜면 날짜를 눌러 노무명단에서 사람을 고릅니다 (한 번 1 · 두 번 0.5) · 날짜 머리를 누르면 휴무 표시(일차에서만 빠지고 기록은 365일 가능)</span>
       <select id="cPick" style="margin-left:auto"></select></h2>
     <div class="tw"><table class="t crew" id="crewT"></table></div>
     <div id="pickPane"></div>
@@ -590,6 +593,7 @@ async function openProj(id){
   if(!data) data=LS.get("log:"+id,null);
   P = data || blank(id,rec);
   P.off=P.off||[]; P.gongs=P.gongs||[]; P.crew=P.crew||{}; P.logs=P.logs||{}; P.vendors=P.vendors||[]; P.expenses=P.expenses||[]; P.docs=P.docs||[]; P.picks=P.picks||{}; P.listMode=P.listMode||{}; P.lpays=P.lpays||[]; P.equip=P.equip||{}; P.wetc=P.wetc||{};
+  P.expenses.forEach(x=>{ if(!x.rno) x.rno=nextRno(x.date); });
   LS.set("log.last",id);
   const h=HITS.find(x=>x.id===id);
   if(!P.title && h) P.title=(h.name||"")+" "+(h.space||"");
@@ -601,7 +605,7 @@ async function openProj(id){
 /* ══════════ 공사 정보 ══════════ */
 function renderProj(){
   $("projCard").hidden=$("apvCard").hidden=!P; if(!P) return;
-  $("pId").value=P.id;
+  $("pId").value=P.id; drawCt();
   for(const el of document.querySelectorAll("#projCard [data-k]")){
     const k=el.dataset.k; el.value = k==="offRaw" ? (P.off||[]).join(", ") : (P[k]||"");
   }
@@ -639,11 +643,29 @@ $("apvEd").addEventListener("click",e=>{
 });
 $("apvAdd").onclick=()=>{ if(P.apv.length>=6) return toast("결재칸은 6칸까지"); P.apv.push({t:"",stamp:false}); touch(); renderApv(); };
 
-/* 도장 — 견적 DB 시공사 시트에서 */
-let STAMPS=[];
+/* 시공사 — 견적 DB 시공사 시트 (견적서와 같은 로고·도장). 고른 회사의 로고·도장은 일지 데이터에 함께 저장 */
+const okImg = v => /^data:image|^https?:|^\//.test(String(v||""));
+const DEF_LOGO="/estimate/img/logo-navy.png";
+let CTS=[], STAMPS=[];
+function drawCt(){
+  const sel=$("pCt"); if(!sel) return;
+  const cur=P&&P.ct?P.ct.bizno||P.ct.name:"";
+  const list=[...CTS]; if(P&&P.ct&&!list.some(c=>(c.bizno||c.name)===cur)) list.unshift(P.ct);
+  sel.innerHTML=(list.length?"":`<option value="">견적 DB 연결 없음 — 기본 로고</option>`)+list.map(c=>`<option value="${esc(c.bizno||c.name)}"${(c.bizno||c.name)===cur?" selected":""}>${esc(c.name)}${c.bizno?" · "+esc(c.bizno):""}</option>`).join("");
+  if(P&&!P.ct&&list.length){ setCt(list[0],false); }
+}
+function setCt(c,stampToo=true){
+  P.ct={bizno:c.bizno||"",name:c.name||"",logo:okImg(c.logo)?c.logo:"",stamp:okImg(c.stamp)?c.stamp:""};
+  if(stampToo||!P.stamp){ if(P.ct.stamp) P.stamp=P.ct.stamp; }
+  touch(); renderApv(); renderLog();
+}
+$("pCt").onchange=e=>{ const c=CTS.find(x=>(x.bizno||x.name)===e.target.value); if(c) setCt(c); };
 async function loadStamps(){
   const sel=$("stampSel");
-  try{ const j=await estGet("parties"); STAMPS=((j&&j.contractors)||[]).filter(c=>c.stamp&&/^data:image|^https?:/.test(c.stamp)); }catch(e){}
+  if(DEMO) CTS=demoCts();
+  else{ try{ const j=await estGet("parties"); CTS=((j&&j.contractors)||[]); }catch(e){} }
+  STAMPS=CTS.filter(c=>okImg(c.stamp));
+  if(P) drawCt();
   sel.innerHTML = STAMPS.length
     ? `<option value="">견적 DB 시공사 도장 고르기</option>`+STAMPS.map((c,i)=>`<option value="${i}">${esc(c.name)}${c.ceo?" · "+esc(c.ceo):""}</option>`).join("")
     : `<option value="">견적 DB 연결 없음 — 견적 화면을 이 브라우저에서 한 번 열어두면 뜹니다</option>`;
@@ -818,9 +840,9 @@ const fl10 = n => Math.floor(n/10)*10;
 function pickOf(d,g){ return ((P.picks[d]||{})[g])||{}; }
 function eqOf(d){ return P.equip[d]||{}; }
 function dayQ(d,wid){ return Object.values(P.picks[d]||{}).reduce((a,o)=>a+N(o[wid]),0); }
-function workerMan(wid){ return workDays().reduce((s,d)=>s+dayQ(d,wid),0); }
-function workerEq(wid){ return workDays().reduce((s,d)=>s+N(eqOf(d)[wid]),0); }
-const dayList = (fn) => workDays().map(d=>{ const q=fn(d); return q?`${pd(d).getDate()}${q===.5?"½":""}`:""; }).filter(Boolean);
+function workerMan(wid){ return days().reduce((s,d)=>s+dayQ(d,wid),0); }
+function workerEq(wid){ return days().reduce((s,d)=>s+N(eqOf(d)[wid]),0); }
+const dayList = (fn) => days().map(d=>{ const q=fn(d); return q?`${pd(d).getDate()}${q===.5?"½":""}`:""; }).filter(Boolean);
 function workerDays(wid){ return dayList(d=>dayQ(d,wid)); }
 function workerEqDays(wid){ return dayList(d=>N(eqOf(d)[wid])); }
 function workerEtc(wid){ return (P.wetc[wid]||[]).reduce((s,x)=>s+N(x.amt),0); }
@@ -831,12 +853,12 @@ function pay(w){
   let itax=0, ltax=0; const t=w.tax||TAXES[0];
   if(t===TAXES[0]){ itax=fl10(gross*.03); if(itax<1000) itax=0; ltax=fl10(itax*.1); }
   else if(t===TAXES[1]){ /* 날마다 (일당−15만원) × 6% × 45%, 1,000원 미만 안 걷음 — 장비료·기타는 근로소득이 아님 */
-    workDays().forEach(d=>{ const q=dayQ(d,w.id); if(!q) return; let it=fl10(Math.max(0,N(w.rate)*q-150000)*.06*.45); if(it<1000) it=0; itax+=it; ltax+=fl10(it*.1); }); }
+    days().forEach(d=>{ const q=dayQ(d,w.id); if(!q) return; let it=fl10(Math.max(0,N(w.rate)*q-150000)*.06*.45); if(it<1000) it=0; itax+=it; ltax+=fl10(it*.1); }); }
   return {man,eq,etc,wage,equip,gross,itax,ltax,net:gross-itax-ltax};
 }
-function laborCost(g){ return CO.workers.filter(w=>w.gong===g||workDays().some(d=>pickOf(d,g)[w.id])).reduce((s,w)=>{
+function laborCost(g){ return CO.workers.filter(w=>w.gong===g||days().some(d=>pickOf(d,g)[w.id])).reduce((s,w)=>{
     /* 일당은 체크한 공정으로, 장비·기타는 그 사람의 공정으로 */
-    const wage=workDays().reduce((a,d)=>a+N(pickOf(d,g)[w.id])*N(w.rate),0);
+    const wage=days().reduce((a,d)=>a+N(pickOf(d,g)[w.id])*N(w.rate),0);
     const extra=w.gong===g?workerEq(w.id)*N(w.mrate)+workerEtc(w.id):0;
     return s+wage+extra; },0); }
 function laborPaid(g){ return P.lpays.filter(x=>x.gong===g&&x.paid).reduce((s,x)=>s+N(x.amt),0); }
@@ -895,7 +917,7 @@ $("lT").addEventListener("click",e=>{ const t=e.target;
   if(t.dataset.etcadd){ const it=(prompt("기타 항목 (예: 식대, 잡철물, 유류비)")||"").trim(); if(!it) return; const a=N(prompt(`${it} 금액`)||""); if(!a) return;
     (P.wetc[t.dataset.etcadd]=P.wetc[t.dataset.etcadd]||[]).push({id:uid(),item:it,amt:a}); }
   else if(t.dataset.etcdel){ const [w,id]=t.dataset.etcdel.split(":"); P.wetc[w]=(P.wetc[w]||[]).filter(x=>x.id!==id); }
-  else if(t.dataset.eqsame){ const w=t.dataset.eqsame; workDays().forEach(d=>{ const q=dayQ(d,w); if(q) setEq(d,w,q); }); }
+  else if(t.dataset.eqsame){ const w=t.dataset.eqsame; days().forEach(d=>{ const q=dayQ(d,w); if(q) setEq(d,w,q); }); }
   else return;
   touch(); renderLabor(); renderCrew(); renderSum(); });
 $("lpAdd").onclick=()=>{ P.lpays.push({id:uid(),gong:laborGongs()[0]||"",date:SEL,amt:0,paid:false,note:""}); touch(); renderLabor(); };
@@ -1096,27 +1118,48 @@ function eTypeUI(){ const ex=$("eType").value==="경비"; $("eGongF").hidden=ex;
   $("ePayee").placeholder=ex?"점심(디렉터) · 주유소":"쿠팡"; $("eUse").placeholder=ex?"인원·내용":"흡음재"; }
 $("eType").onchange=eTypeUI;
 const xCat = x => x.type==="경비" ? (x.cat||"기타") : "";
+/* 영수증 번호 — 날짜마다 1번부터. 지운 번호는 다시 쓰지 않는다 (사진에 찍힌 번호와 어긋나지 않게) */
 let PHOTO=null;
-$("ePhoto").onchange=async e=>{ const f=e.target.files[0]; PHOTO=null; $("ePrev").hidden=true; if(!f) return;
-  PHOTO=await shrink(f,1600); $("ePrev").src=PHOTO; $("ePrev").hidden=false; };
+function nextRno(date){ return Math.max(0,...P.expenses.filter(x=>x.date===date).map(x=>N(x.rno)))+1; }
+const rnoNote = (x,txt) => [x.rno?`${x.rno}번`:"",txt].filter(Boolean).join(" · ");
+/* 사진 왼쪽 위에 '1번 · 10/03' 을 찍는다 */
+function stampImg(dataUrl,big,small){ return new Promise((res,rej)=>{ const im=new Image(); im.onerror=rej; im.onload=()=>{
+  const c=document.createElement("canvas"); c.width=im.width; c.height=im.height; const g=c.getContext("2d"); g.drawImage(im,0,0);
+  const s=Math.max(30,Math.round(Math.min(c.width,c.height)*.085)), s2=Math.round(s*.42), pad=Math.round(s*.35), m=Math.round(s*.3);
+  g.font=`700 ${s}px "IBM Plex Sans KR","Malgun Gothic",sans-serif`; const w1=g.measureText(big).width;
+  g.font=`600 ${s2}px "IBM Plex Sans KR","Malgun Gothic",sans-serif`; const w2=g.measureText(small).width;
+  const W=Math.max(w1,w2)+pad*2, H=s+s2+pad*2.2;
+  g.fillStyle="rgba(192,57,43,.93)"; g.beginPath(); if(g.roundRect) g.roundRect(m,m,W,H,pad*.6); else g.rect(m,m,W,H); g.fill();
+  g.strokeStyle="rgba(255,255,255,.9)"; g.lineWidth=Math.max(2,s*.05); g.stroke();
+  g.fillStyle="#fff"; g.textBaseline="top";
+  g.font=`700 ${s}px "IBM Plex Sans KR","Malgun Gothic",sans-serif`; g.fillText(big,m+pad,m+pad*.8);
+  g.font=`600 ${s2}px "IBM Plex Sans KR","Malgun Gothic",sans-serif`; g.fillText(small,m+pad,m+pad*.8+s*1.08);
+  res(c.toDataURL("image/jpeg",.85)); }; im.src=dataUrl; }); }
+const stampLabel = (date,n) => [`${n}번`, `${dateSh(date)} 영수증`];
+async function ePreview(){ if(!PHOTO){ $("ePrev").hidden=true; $("eRno").textContent=""; return; }
+  const d=$("eDate").value||SEL, n=nextRno(d); $("ePrev").src=await stampImg(PHOTO,...stampLabel(d,n)); $("ePrev").hidden=false; $("eRno").textContent=`${n}번으로 저장`; }
+$("ePhoto").onchange=async e=>{ const f=e.target.files[0]; PHOTO=null; if(f) PHOTO=await shrink(f,1600); ePreview(); };
+$("eDate").addEventListener("change",ePreview);
 $("eAmt").addEventListener("input",e=>{ const n=N(e.target.value); e.target.value=n?F(n):""; });
 $("eAddBtn").onclick=async()=>{
   const x={id:uid(),date:$("eDate").value||SEL,type:$("eType").value,gong:$("eType").value==="경비"?"":$("eGong").value.trim(),cat:$("eType").value==="경비"?$("eCat").value:"",payee:$("ePayee").value.trim(),
            amt:N($("eAmt").value),use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,photo:null};
+  x.rno=nextRno(x.date);
   if(!x.payee||!x.amt) return toast("지불처와 금액을 넣어주세요");
   if(x.gong&&!P.gongs.includes(x.gong)) P.gongs.push(x.gong);
   $("eAddBtn").disabled=true;
   if(PHOTO){
     const safe=s=>String(s).replace(/[\\/:*?"<>|\s]+/g,"").slice(0,20);
-    const name=`${x.date}_${x.type}_${safe(x.payee)}_${x.amt}_${x.id.slice(0,3)}.jpg`;
-    if(DEMO){ x.photo={name,url:PHOTO}; }
-    else{ try{ toast("사진 올리는 중…"); const r=await api({action:"putfile",id:P.id,sub:SUB,name,type:"image/jpeg",data:PHOTO.split(",")[1]});
+    const name=`${x.date}_${String(x.rno).padStart(2,"0")}번_${x.type==="경비"?xCat(x):x.type}_${safe(x.payee)}_${x.amt}.jpg`;
+    const img=await stampImg(PHOTO,...stampLabel(x.date,x.rno));
+    if(DEMO){ x.photo={name,url:img}; }
+    else{ try{ toast(`${x.rno}번 영수증 올리는 중…`); const r=await api({action:"putfile",id:P.id,sub:`${SUB}/${x.date}`,name,type:"image/jpeg",data:img.split(",")[1]});
                if(r&&r.ok) x.photo={name,url:r.url||""}; else toast("사진 저장 실패 — 내역만 넣었습니다"); }
           catch(e){ toast("사진 저장 실패 — 내역만 넣었습니다"); } }
   }
   P.expenses.push(x); P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
-  ["eGong","ePayee","eAmt","eUse","ePhoto"].forEach(id=>$(id).value=""); $("ePrev").hidden=true; PHOTO=null; $("eIn").checked=false;
-  $("eAddBtn").disabled=false; touch(); renderExp(); renderLog(); toast("넣었습니다");
+  ["eGong","ePayee","eAmt","eUse","ePhoto"].forEach(id=>$(id).value=""); $("ePrev").hidden=true; PHOTO=null; $("eIn").checked=false; $("eRno").textContent="";
+  $("eAddBtn").disabled=false; touch(); renderExp(); renderLog(); toast(`${x.rno}번으로 넣었습니다`);
 };
 function renderExp(){
   $("cExp").textContent=P.expenses.length||"";
@@ -1127,12 +1170,12 @@ function renderExp(){
   $("eFilter").innerHTML=`<option value="">전체 날짜</option>`+ds_.map(d=>`<option value="${d}"${d===cur?" selected":""}>${dateKo(d)}</option>`).join("");
   const xs=P.expenses.filter(x=>!cur||x.date===cur);
   const sum=t=>xs.filter(x=>x.type===t).reduce((s,x)=>s+x.amt,0);
-  $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>구분</th><th>공정 / 경비 항목</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>사진</th><th>지급</th><th></th></tr></thead>
-    <tbody>${xs.map(x=>`<tr><td class="num">${dateSh(x.date)}</td><td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
+  $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>번호</th><th>구분</th><th>공정 / 경비 항목</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>사진</th><th>지급</th><th></th></tr></thead>
+    <tbody>${xs.map(x=>`<tr><td class="num">${dateSh(x.date)}</td><td class="num"><b>${x.rno?x.rno+"번":""}</b></td><td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
       <td>${x.type==="경비"?`<span class="chip">${esc(xCat(x))}</span>`:esc(x.gong)}</td><td>${esc(x.payee)}</td><td class="n num">${F(x.amt)}</td><td>${esc(x.use)}</td>
       <td>${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:"보기"}</a>`:'<span class="hint">—</span>'}</td>
       <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td><button class="x" data-xdel="${x.id}">×</button></td></tr>`).join("")}</tbody>
-    <tfoot><tr><td colspan="4">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}</td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
+    <tfoot><tr><td colspan="5">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}</td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
     : `<tr><td class="empty">지출 내역이 없습니다</td></tr>`;
   gongList();
 }
@@ -1143,23 +1186,23 @@ $("eTable").addEventListener("click",e=>{ const id=e.target.dataset.xdel; if(id&
 /* ══════════ 인원 ══════════ */
 const isList = g => !!P.listMode[g];
 function crewOn(d,g){ if(isList(g)) return Object.values(pickOf(d,g)).reduce((s,q)=>s+N(q),0); return N((P.crew[d]||{})[g]); }
-function manTot(g){ return workDays().reduce((s,d)=>s+crewOn(d,g),0); }
-function crewCum(d,g){ return workDays().filter(x=>x<=d).reduce((s,x)=>s+crewOn(x,g),0); }
+function manTot(g){ return days().reduce((s,d)=>s+crewOn(d,g),0); }
+function crewCum(d,g){ return days().filter(x=>x<=d).reduce((s,x)=>s+crewOn(x,g),0); }
 let PICK=null;
 function renderCrew(){
   const dd=days(), off=new Set(P.off);
   if(!P.gongs.length) { $("crewT").innerHTML=`<tr><td class="empty">오른쪽 위에서 공정을 골라 시작하세요 (용역비·지출에 적은 공정은 자동으로 들어옵니다)</td></tr>`; $("pickPane").innerHTML=""; return; }
   $("crewT").innerHTML=`<thead><tr><th class="g">공정</th>${dd.map(d=>{ const n=dayNo(d);
-      return `<th class="d${off.has(d)?" off":""}${d===SEL?" sel":""}" data-off="${d}" title="눌러서 쉬는 날 전환">${dateSh(d)}<br>${WK[pd(d).getDay()]}${off.has(d)?"·휴":n?`·${n}일`:""}</th>`; }).join("")}<th class="n">합계</th><th class="n">노무비</th><th>일당 <span class="hint">명단</span></th><th></th></tr></thead>
+      return `<th class="d${off.has(d)?" off":""}${d===SEL?" sel":""}" data-off="${d}" title="눌러서 휴무 표시 — 일차 계산에서만 빠지고 기록은 그대로 됩니다">${dateSh(d)}<br>${WK[pd(d).getDay()]}${off.has(d)?"·휴":n?`·${n}일`:""}</th>`; }).join("")}<th class="n">합계</th><th class="n">노무비</th><th>일당 <span class="hint">명단</span></th><th></th></tr></thead>
    <tbody>${P.gongs.map((g,i)=>`<tr><td class="g"><input value="${esc(g)}" data-gn="${i}"></td>
-      ${dd.map(d=>off.has(d)?`<td class="off"></td>`: isList(g)
+      ${dd.map(d=>isList(g)
         ? `<td><button class="pick${PICK&&PICK.d===d&&PICK.g===g?" on":""}" data-pk="${d}" data-pg="${esc(g)}">${FQ(crewOn(d,g))||"·"}</button></td>`
         : `<td><input inputmode="decimal" data-cd="${d}" data-cg="${esc(g)}" value="${crewOn(d,g)||""}"></td>`).join("")}
       <td class="n num"><b>${FQ(manTot(g))||"0"}</b></td>
       <td class="n num">${isList(g)?F(laborCost(g)):""}</td>
       <td><label class="lm"><input type="checkbox" data-lm="${esc(g)}" ${isList(g)?"checked":""}></label></td>
       <td><button class="x" data-gdel="${i}">×</button></td></tr>`).join("")}</tbody>
-   <tfoot><tr><td class="g">금일계</td>${dd.map(d=>`<td class="num">${off.has(d)?"":FQ(P.gongs.reduce((s,g)=>s+crewOn(d,g),0))}</td>`).join("")}
+   <tfoot><tr><td class="g">금일계</td>${dd.map(d=>`<td class="num">${FQ(P.gongs.reduce((s,g)=>s+crewOn(d,g),0))}</td>`).join("")}
       <td class="n num">${FQ(P.gongs.reduce((s,g)=>s+manTot(g),0))}</td><td class="n num">${F0(P.gongs.reduce((s,g)=>s+(isList(g)?laborCost(g):0),0))}</td><td></td><td></td></tr></tfoot>`;
   renderPick();
 }
@@ -1187,8 +1230,8 @@ $("pickPane").addEventListener("click",e=>{ const t=e.target.closest("button"); 
   if(t.dataset.wk){ const q=N(pickOf(d,g)[t.dataset.wk]); setPick(d,g,t.dataset.wk, q===0?1:q===1?.5:0); }
   else if(t.dataset.we){ const q=N(eqOf(d)[t.dataset.we]); setEq(d,t.dataset.we, q===0?1:q===1?.5:0); }
   else if(t.dataset.pclose){ PICK=null; }
-  else if(t.dataset.pnav){ const w=workDays(); const i=w.indexOf(d)+(+t.dataset.pnav); if(w[i]) PICK={d:w[i],g}; }
-  else if(t.dataset.pprev){ const prev=workDays().filter(x=>x<d).pop(); if(!prev) return toast("전날 기록이 없습니다"); const o=pickOf(prev,g); if(!Object.keys(o).length) return toast("전날 체크한 사람이 없습니다");
+  else if(t.dataset.pnav){ const w=days(); const i=w.indexOf(d)+(+t.dataset.pnav); if(w[i]) PICK={d:w[i],g}; }
+  else if(t.dataset.pprev){ const prev=days().filter(x=>x<d).pop(); if(!prev) return toast("전날 기록이 없습니다"); const o=pickOf(prev,g); if(!Object.keys(o).length) return toast("전날 체크한 사람이 없습니다");
     if(P.picks[d]) delete P.picks[d][g]; Object.entries(o).forEach(([w,q])=>setPick(d,g,w,q));
     const eo=eqOf(prev); Object.keys(eqOf(d)).forEach(w=>{ if(coW(w)&&coW(w).gong===g) setEq(d,w,0); }); Object.entries(eo).forEach(([w,q])=>{ if(coW(w)&&coW(w).gong===g) setEq(d,w,q); }); }
   else return;
@@ -1199,8 +1242,8 @@ $("cPick").onchange=e=>{ let g=e.target.value; e.target.value=""; if(g==="__") g
   if(!P.gongs.includes(g)) P.gongs.push(g); touch(); renderCrew(); gongList(); };
 $("crewT").addEventListener("change",e=>{ const t=e.target;
   if(t.dataset.lm!=null){ const g=t.dataset.lm;
-    if(t.checked){ P.listMode[g]=true; const has=workDays().some(d=>N((P.crew[d]||{})[g])); if(has) toast("적어둔 인원 수는 보관되고, 이제 명단 체크로 셉니다"); }
-    else{ if(workDays().some(d=>Object.keys(pickOf(d,g)).length)&&!confirm("명단 체크를 끄면 숫자 입력으로 돌아갑니다 (체크 기록은 보관). 끌까요?")) return renderCrew(); delete P.listMode[g]; if(PICK&&PICK.g===g) PICK=null; }
+    if(t.checked){ P.listMode[g]=true; const has=days().some(d=>N((P.crew[d]||{})[g])); if(has) toast("적어둔 인원 수는 보관되고, 이제 명단 체크로 셉니다"); }
+    else{ if(days().some(d=>Object.keys(pickOf(d,g)).length)&&!confirm("명단 체크를 끄면 숫자 입력으로 돌아갑니다 (체크 기록은 보관). 끌까요?")) return renderCrew(); delete P.listMode[g]; if(PICK&&PICK.g===g) PICK=null; }
     touch(); renderCrew(); renderLog(); renderLabor(); renderSum(); return; }
   if(t.dataset.cd){ const d=t.dataset.cd, g=t.dataset.cg; P.crew[d]=P.crew[d]||{}; const n=N(t.value); if(n) P.crew[d][g]=n; else delete P.crew[d][g]; touch(); renderCrew(); renderLog(); }
   if(t.dataset.gn!=null){ const i=+t.dataset.gn, o=P.gongs[i], n=t.value.trim(); if(!n||P.gongs.includes(n)) return renderCrew();
@@ -1221,12 +1264,12 @@ const vis = o => VIEW==="internal" || !o.internal;
 function leftItems(d){   /* 용역비 지급분 + 자재 */
   const a=[];
   P.vendors.filter(vis).forEach(v=>v.pays.forEach(p=>{ if(p.date===d&&N(p.amt)) a.push({payee:v.co||v.gong,amt:N(p.amt),note:`${p.k}${v.direct?" · 발주처지급":""}`,paid:p.paid,direct:v.direct}); }));
-  P.expenses.filter(x=>x.date===d&&x.type==="자재"&&vis(x)).forEach(x=>a.push({payee:x.payee,amt:x.amt,note:x.use||x.gong,paid:x.paid}));
+  P.expenses.filter(x=>x.date===d&&x.type==="자재"&&vis(x)).forEach(x=>a.push({payee:x.payee,amt:x.amt,note:rnoNote(x,x.use||x.gong),paid:x.paid}));
   P.docs.filter(x=>x.type==="자재"&&vis(x)).forEach(x=>{ const amt=docOnDate(x,d); if(amt) a.push({payee:x.co, amt, note:x.note1||x.gong||"자재", paid:x.paid}); });
   P.lpays.filter(x=>x.date===d&&N(x.amt)).forEach(x=>a.push({payee:`${x.gong||""} 노무비`,amt:N(x.amt),note:x.note||"직영",paid:x.paid}));
   return a;
 }
-function rightItems(d){ return P.expenses.filter(x=>x.date===d&&x.type==="경비"&&vis(x)).map(x=>({payee:x.payee,amt:x.amt,note:x.use,paid:x.paid})); }
+function rightItems(d){ return P.expenses.filter(x=>x.date===d&&x.type==="경비"&&vis(x)).map(x=>({payee:x.payee,amt:x.amt,note:rnoNote(x,x.use),paid:x.paid})); }
 function upto(d,fn){ return days().filter(x=>x<=d).flatMap(fn); }
 const ours = a => a.filter(i=>!i.direct);
 const sumA = a => a.reduce((s,i)=>s+i.amt,0);
@@ -1253,7 +1296,7 @@ function docHtml(d){
   const st=P.apv.findIndex(a=>a.stamp);
   return `<div class="paper">
     <div class="dh">
-      <div class="tt"><h1>공사일지</h1><span class="no">${esc(P.id)}${n?` · 공사 ${n}일차`:" · 휴무"}</span></div>
+      <div class="tt"><h1>공사일지</h1><span class="no">${esc(P.id)}${n?` · 공사 ${n}일차`:" · 휴무일 작업"}</span></div>
       <table class="apv"><tr>${P.apv.map(a=>`<th>${esc(a.t)}</th>`).join("")}</tr>
         <tr>${P.apv.map((a,i)=>`<td>${i===st&&P.stamp?`<img src="${P.stamp}" alt="">`:""}</td>`).join("")}</tr></table>
     </div>
@@ -1291,13 +1334,13 @@ function docHtml(d){
       <tr class="gt"><th>총지급액(누계)</th><th>기지급분</th><th>미지급분</th><th>비고</th></tr>
       <tr class="gt"><td class="n">${F0(m.total)}</td><td class="n">${F0(m.paid)}</td><td class="n">${m.unpaid?F0(m.unpaid):"0"}</td><td class="c" style="font-weight:400;font-size:9pt">${m.remain>0?`용역 잔여 ${F0(m.remain)}`:""}</td></tr>
     </table>
-    <div class="df"><span>${esc(P.client||"")}${P.site?" · "+esc(P.site):""}</span><img src="/estimate/img/logo-navy.png" alt="Grid-A 4U"></div>
+    <div class="df"><span>${esc(P.client||"")}${P.site?" · "+esc(P.site):""}</span><img src="${esc(P.ct&&P.ct.logo?P.ct.logo:DEF_LOGO)}" alt="${esc(P.ct?P.ct.name:"Grid-A 4U")}"></div>
   </div>`;
 }
 function renderLog(){
   if(!P) return;
   $("dDate").value=SEL; $("dDate").min=P.start; $("dDate").max=P.end;
-  const n=dayNo(SEL); $("dLabel").textContent = n?`공사 ${n}일차`:"쉬는 날";
+  const n=dayNo(SEL); $("dLabel").textContent = n?`공사 ${n}일차`:"휴무일 — 기록은 그대로 됩니다";
   const lg=P.logs[SEL]||{};
   if(document.activeElement!==$("dPlan")) $("dPlan").value=lg.plan||"";
   if(document.activeElement!==$("dRep")) $("dRep").value=lg.rep||"";
@@ -1307,13 +1350,13 @@ function go(n){ const dd=days(); const i=dd.indexOf(SEL); const j=Math.max(0,Mat
 $("dPrev").onclick=()=>go(-1); $("dNext").onclick=()=>go(1);
 $("dDate").onchange=e=>{ if(e.target.value){ SEL=e.target.value; renderLog(); renderCrew(); } };
 ["dPlan","dRep"].forEach(id=>$(id).addEventListener("input",e=>{ P.logs[SEL]=P.logs[SEL]||{}; P.logs[SEL][id==="dPlan"?"plan":"rep"]=e.target.value; touch(); clearTimeout(window._lt); window._lt=setTimeout(()=>{ $("paperWrap").innerHTML=docHtml(SEL); },250); }));
-$("dCopy").onclick=()=>{ const prev=workDays().filter(x=>x<SEL).pop(); if(!prev||!(P.logs[prev]&&P.logs[prev].plan)) return toast("가져올 이전 계획이 없습니다");
+$("dCopy").onclick=()=>{ const prev=days().filter(x=>x<SEL).pop(); if(!prev||!(P.logs[prev]&&P.logs[prev].plan)) return toast("가져올 이전 계획이 없습니다");
   P.logs[SEL]=P.logs[SEL]||{}; P.logs[SEL].plan=P.logs[prev].plan; touch(); renderLog(); };
 $("dPrint").onclick=()=>{ document.body.classList.remove("print-sum"); const t=document.title; document.title=`공사일지_${P.id}_${SEL}`; window.print(); document.title=t; };
 
 /* ══════════ 총괄 ══════════ */
 function renderSum(){
-  const dd=workDays(); const vs=P.vendors.filter(vis); const xs=P.expenses.filter(vis);
+  const dd=days(); const vs=P.vendors.filter(vis); const xs=P.expenses.filter(vis);
   const gs=[...new Set([...P.gongs,...vs.map(v=>v.gong),...xs.map(x=>x.gong),...P.docs.filter(d=>d.type==="자재").map(d=>d.gong),...P.lpays.map(x=>x.gong)].filter(Boolean))];
   const row=g=>{ const vv=vs.filter(v=>v.gong===g);
     const crew=dd.map(d=>crewOn(d,g)); const ct=vv.reduce((s,v)=>s+vAmt(v),0);
@@ -1365,6 +1408,12 @@ function demoCommon(){
              {id:"wD",gong:"목공사",name:"조공 D",rate:180000,rrn:"",tel:"",bank:"",acct:""},
              {id:"wE",gong:"전기 공사",name:"전기 E",rate:280000,rrn:"",tel:"",bank:"",acct:""}] };
 }
+/* 데모 시공사 — 실제는 견적 DB 시공사 시트에서 */
+function demoCts(){
+  const svg=(t,c)=>"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="360" height="80"><rect width="360" height="80" fill="white"/><rect x="4" y="14" width="52" height="52" rx="6" fill="${c}"/><text x="70" y="52" font-family="sans-serif" font-size="30" font-weight="700" fill="${c}">${t}</text></svg>`);
+  return [{bizno:"000-00-00001",name:"그리드에이포유",ceo:"",logo:DEF_LOGO,stamp:""},
+          {bizno:"000-00-00002",name:"조용한청년들",ceo:"",logo:svg("조용한청년들","#1f2a44"),stamp:""}];
+}
 /* 데모 단가 — 실제 견적 단가가 아닌 가짜 숫자 (화면 확인용) */
 function demoCat(){
   const C=(gong,name,spec,unit,mat,lab,exp,use=true)=>({id:"d"+name+spec,dae:"실내건축(인테리어)",gong,name,spec,unit,mat,lab,exp,cost:0,use});
@@ -1377,7 +1426,7 @@ function demoCat(){
 function demoSeed(){
   HITS=[{id:"조용한청년들-AC26-0003",space:"유튜브 · 스트리밍 · 리딩방",name:"정문선 이사님 (세무지원닷컴)",staff:"김새롬",status:"시공완료"},
         {id:"조용한청년들-AC26-0006",space:"작업실",name:"최서경",staff:"김희숙",status:"계약완료"}];
-  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=6) return;
+  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=7) return;
   LS.set("co.demo",demoCommon()); LS.set("cat.demo",demoCat());
   const L=(item,spec,unit,qty,price,kind,date="",gong="")=>({date,gong,item,spec,unit,qty,price,amt:0,kind});
   const doc=(o,lines)=>({id:uid(),type:"용역",co:"",gong:"",date:"",payDate:"",paid:false,vat:"+10%",adj:0,note:"",note1:"",file:null,internal:false,...o,lines});
@@ -1433,14 +1482,14 @@ function demoSeed(){
   ];
   const v=(d,pays,extra={})=>({id:uid(),vid:"",gong:d.gong,co:d.co,supply:docSupply(d),vat:"10%",docId:d.id,note:d.note,direct:false,internal:false,
     pays:PAYK.map((k,i)=>({k,amt:pays[i]?pays[i][0]:0,date:pays[i]?pays[i][1]:"",paid:pays[i]?pays[i][2]:false})),...extra});
-  const D={ v:6,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
+  const D={ v:7,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
     start:"2026-10-02",end:"2026-10-14",off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}],stamp:"",
     docs, vendors:[],
     expenses:[
-      {id:uid(),date:"2026-10-03",type:"자재",gong:"목공사",payee:"쿠팡",amt:44700,use:"흡음재",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-03",type:"경비",gong:"",cat:"식대",payee:"점심(디렉터)",amt:14500,use:"1번",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-03",type:"경비",gong:"",cat:"간식",payee:"작업자(음료)",amt:5000,use:"2번",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"자재",gong:"목공사",rno:3,payee:"쿠팡",amt:44700,use:"흡음재",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"경비",gong:"",rno:1,cat:"식대",payee:"점심(디렉터)",amt:14500,use:"",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"경비",gong:"",rno:2,cat:"간식",payee:"작업자(음료)",amt:5000,use:"",paid:true,internal:false,photo:null},
 ],
     gongs:["목공사","전기 공사","소방공사","공조 공사"], listMode:{"목공사":true},
     crew:{"2026-10-03":{"전기 공사":1,"소방공사":2,"공조 공사":2}},
