@@ -290,8 +290,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
 <!-- ===== 프로젝트 ===== -->
 <section data-pane="proj">
   <div class="card">
-    <h2>접수 건 <span class="hint">인트라넷 접수 중 계약진행·계약완료·시공완료</span>
-      <label class="hint" style="margin-left:auto;display:flex;gap:4px;align-items:center"><input type="checkbox" id="plAll"> 전체 보기</label></h2>
+    <h2>접수 건 <span class="hint">인트라넷에서 '계약완료' 또는 '시공완료'인 건만 공사일지를 씁니다</span></h2>
     <div class="plist" id="plist"><div class="empty">불러오는 중…</div></div>
   </div>
 
@@ -467,7 +466,8 @@ table.sum th.g{position:sticky;left:0;z-index:1}
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbyWXma_XP258QwbwWC4tNw4lWRKx_PD720UUZ0sErn0QVUXj0RQm0ZF3Uwl1_qxeEcO/exec";
 const SUB = "공사일지", DATA_FILE = "공사일지.json";
 const DEMO = new URLSearchParams(location.search).has("demo");
-const OPEN_ST = ["계약진행","계약완료","시공완료"];
+const OPEN_ST = ["계약완료","시공완료"];
+const isOpen = id => { const h=HITS.find(x=>x.id===id); return !!h&&OPEN_ST.includes(h.status||""); };
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -565,7 +565,7 @@ async function start(){
   loadCat();
   await loadCommon();
   await loadList();
-  const last=LS.get("log.last",""); if(last && HITS.some(h=>h.id===last)) openProj(last);
+  const last=LS.get("log.last",""); if(last && isOpen(last)) openProj(last);
 }
 
 /* ══════════ 프로젝트 목록 ══════════ */
@@ -574,17 +574,17 @@ async function loadList(){
   drawList();
 }
 function drawList(){
-  const all=$("plAll").checked;
-  const hs=HITS.filter(h=>all||OPEN_ST.includes(h.status||""));
+  const hs=HITS.filter(h=>OPEN_ST.includes(h.status||""));
   $("plist").innerHTML = hs.length ? hs.map(h=>`<button class="pitem${P&&P.id===h.id?" on":""}" data-id="${esc(h.id)}">
       <span><b>${esc(h.id)}</b><br><small>${esc(h.space||"—")} · ${esc(h.name||"—")}${h.staff?" · "+esc(h.staff):""}</small></span>
       <span class="st">${esc(h.status||"신규")}</span></button>`).join("")
     : `<div class="empty">계약된 접수 건이 없습니다 — 인트라넷에서 상태를 '계약완료'로 바꾸면 여기에 뜹니다</div>`;
 }
-$("plAll").onchange=drawList;
+
 $("plist").onclick=e=>{ const b=e.target.closest(".pitem"); if(b) openProj(b.dataset.id); };
 
 async function openProj(id){
+  if(!isOpen(id)) return toast("계약완료·시공완료 건만 공사일지를 열 수 있습니다");
   if(dirty) await save();
   setSave("busy","불러오는 중…");
   let data=null, rec=null;
@@ -1143,6 +1143,17 @@ async function ePreview(){ if(!PHOTO){ $("ePrev").hidden=true; $("eRno").textCon
 $("ePhoto").onchange=async e=>{ const f=e.target.files[0]; PHOTO=null; if(f) PHOTO=await shrink(f,1600); ePreview(); };
 $("eDate").addEventListener("change",ePreview);
 $("eAmt").addEventListener("input",e=>{ const n=N(e.target.value); e.target.value=n?F(n):""; });
+/* 영수증 사진 저장 — 처음 넣을 때와 나중에 올리거나 바꿀 때 같은 이름·같은 번호로 (같은 이름이면 드라이브에서 바꿔 끼움) */
+async function uploadReceipt(x, raw){
+  const safe=s=>String(s).replace(/[\\/:*?"<>|\s]+/g,"").slice(0,20);
+  const name=(x.photo&&x.photo.name)||`${x.date}_${String(x.rno).padStart(2,"0")}번_${x.type==="경비"?xCat(x):x.type}_${safe(x.payee)}_${x.amt}.jpg`;
+  const img=await stampImg(raw,...stampLabel(x.date,x.rno));
+  if(DEMO){ x.photo={name,url:img}; return true; }
+  try{ toast(`${x.rno}번 영수증 올리는 중…`);
+    const r=await api({action:"putfile",id:P.id,sub:`${SUB}/${x.date}`,name,type:"image/jpeg",data:img.split(",")[1]});
+    if(r&&r.ok){ x.photo={name,url:r.url||""}; return true; } }catch(e){}
+  return false;
+}
 $("eAddBtn").onclick=async()=>{
   const x={id:uid(),date:$("eDate").value||SEL,type:$("eType").value,gong:$("eType").value==="경비"?"":$("eGong").value.trim(),cat:$("eType").value==="경비"?$("eCat").value:"",payee:$("ePayee").value.trim(),
            amt:N($("eAmt").value),use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,photo:null};
@@ -1150,15 +1161,7 @@ $("eAddBtn").onclick=async()=>{
   if(!x.payee||!x.amt) return toast("지불처와 금액을 넣어주세요");
   if(x.gong&&!P.gongs.includes(x.gong)) P.gongs.push(x.gong);
   $("eAddBtn").disabled=true;
-  if(PHOTO){
-    const safe=s=>String(s).replace(/[\\/:*?"<>|\s]+/g,"").slice(0,20);
-    const name=`${x.date}_${String(x.rno).padStart(2,"0")}번_${x.type==="경비"?xCat(x):x.type}_${safe(x.payee)}_${x.amt}.jpg`;
-    const img=await stampImg(PHOTO,...stampLabel(x.date,x.rno));
-    if(DEMO){ x.photo={name,url:img}; }
-    else{ try{ toast(`${x.rno}번 영수증 올리는 중…`); const r=await api({action:"putfile",id:P.id,sub:`${SUB}/${x.date}`,name,type:"image/jpeg",data:img.split(",")[1]});
-               if(r&&r.ok) x.photo={name,url:r.url||""}; else toast("사진 저장 실패 — 내역만 넣었습니다"); }
-          catch(e){ toast("사진 저장 실패 — 내역만 넣었습니다"); } }
-  }
+  if(PHOTO){ if(!await uploadReceipt(x,PHOTO)) toast("사진 저장 실패 — 내역만 넣었습니다"); }
   P.expenses.push(x); P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
   ["eGong","ePayee","eAmt","eUse","ePhoto"].forEach(id=>$(id).value=""); $("ePrev").hidden=true; PHOTO=null; $("eIn").checked=false; $("eRno").textContent="";
   $("eAddBtn").disabled=false; touch(); renderExp(); renderLog(); toast(`${x.rno}번으로 넣었습니다`);
@@ -1170,19 +1173,25 @@ function renderExp(){
   const ds_=[...new Set(P.expenses.map(x=>x.date))].sort();
   const cur=$("eFilter").value;
   $("eFilter").innerHTML=`<option value="">전체 날짜</option>`+ds_.map(d=>`<option value="${d}"${d===cur?" selected":""}>${dateKo(d)}</option>`).join("");
-  const xs=P.expenses.filter(x=>!cur||x.date===cur);
+  const xs=P.expenses.filter(x=>!cur||x.date===cur).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:N(a.rno)-N(b.rno));
   const sum=t=>xs.filter(x=>x.type===t).reduce((s,x)=>s+x.amt,0);
   $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>번호</th><th>구분</th><th>공정 / 경비 항목</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>사진</th><th>지급</th><th></th></tr></thead>
     <tbody>${xs.map(x=>`<tr><td class="num">${dateSh(x.date)}</td><td class="num"><b>${x.rno?x.rno+"번":""}</b></td><td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
       <td>${x.type==="경비"?`<span class="chip">${esc(xCat(x))}</span>`:esc(x.gong)}</td><td>${esc(x.payee)}</td><td class="n num">${F(x.amt)}</td><td>${esc(x.use)}</td>
-      <td>${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:"보기"}</a>`:'<span class="hint">—</span>'}</td>
+      <td><span class="row" style="gap:6px;flex-wrap:nowrap">${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:"보기"}</a>`:""}
+        <label class="btn sm" title="${x.photo?"같은 번호로 사진을 바꿉니다":"영수증 사진을 나중에 올립니다"}">${x.photo?"바꾸기":"📷 올리기"}<input type="file" accept="image/*" data-xph="${x.id}" hidden></label></span></td>
       <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td><button class="x" data-xdel="${x.id}">×</button></td></tr>`).join("")}</tbody>
     <tfoot><tr><td colspan="5">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}</td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
     : `<tr><td class="empty">지출 내역이 없습니다</td></tr>`;
   gongList();
 }
 $("eFilter").onchange=renderExp;
-$("eTable").addEventListener("change",e=>{ const id=e.target.dataset.xpaid; if(id){ P.expenses.find(x=>x.id===id).paid=e.target.checked; touch(); renderLog(); } });
+$("eTable").addEventListener("change",async e=>{ const id=e.target.dataset.xpaid; if(id){ P.expenses.find(x=>x.id===id).paid=e.target.checked; touch(); renderLog(); return; }
+  const pid=e.target.dataset.xph; if(!pid) return; const x=P.expenses.find(y=>y.id===pid), f=e.target.files[0]; if(!x||!f) return;
+  if(x.photo&&!confirm(`${x.rno}번 영수증 사진을 새 사진으로 바꿀까요?`)) return renderExp();
+  const ok=await uploadReceipt(x, await shrink(f,1600));
+  if(ok){ touch(); toast(`${x.rno}번 영수증 사진 저장`); } else toast("사진 저장 실패 — Apps Script v6 배포를 확인하세요");
+  renderExp(); });
 $("eTable").addEventListener("click",e=>{ const id=e.target.dataset.xdel; if(id&&confirm("이 지출을 지울까요? (드라이브 사진은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
 
 /* ══════════ 인원 ══════════ */
