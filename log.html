@@ -166,8 +166,10 @@ table.apv th{background:#F4D9C6;font-size:9pt;font-weight:600;padding:1.4mm 2mm;
 table.apv td{height:19mm;border:1px solid #5a5a5a;text-align:center;vertical-align:middle;position:relative}
 table.apv td img{max-width:19mm;max-height:19mm;opacity:.95}
 table.dt{width:100%;border-collapse:collapse;table-layout:fixed}
-table.dt td,table.dt th{border:1px solid #5a5a5a;padding:1.2mm 2mm;font-size:9.5pt;height:6.7mm;vertical-align:middle;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+table.dt td,table.dt th{border:1px solid #5a5a5a;padding:.8mm 2mm;font-size:9.5pt;line-height:1.25;height:6.75mm;vertical-align:middle;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 table.dt td{border-top-style:dotted;border-bottom-style:dotted}
+table.dt tr:last-child td{border-bottom-style:solid}
+table.dt tr:first-child td,table.dt th+td{border-top-style:solid}
 table.dt th{background:#F4D9C6;font-weight:600;text-align:center}
 table.dt th.sec{background:#F4D9C6;font-size:10pt}
 table.dt th.sub{background:#FAEBDF;font-size:9pt}
@@ -1287,9 +1289,9 @@ function docHtml(d){
   const plan=(lg.plan||"").split("\n").filter(s=>s.trim()), rep=(lg.rep||"").split("\n").filter(s=>s.trim());
   const L=leftItems(d), R=rightItems(d), m=money(d);
   const rowsN=Math.max(6,plan.length,rep.length);
-  const exN=Math.max(7,L.length,R.length);
+  const exN=Math.max(9,L.length,R.length);
   const gs=P.gongs.filter(g=>crewOn(d,g)||crewCum(d,g));
-  const half=Math.max(4,Math.ceil(gs.length/2));
+  const half=Math.max(6,Math.ceil(gs.length/2));
   const crewCell=g=>g?`<td class="c">${esc(g)}</td><td class="n">${FQ(crewOn(d,g))||"–"}</td><td class="n">${FQ(crewCum(d,g))}</td>`:`<td></td><td></td><td></td>`;
   const red=s=>s.startsWith("!");
   const line=s=>esc(red(s)?s.slice(1).trim():s);
