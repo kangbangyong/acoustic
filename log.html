@@ -71,6 +71,7 @@ label.f{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--
 input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:13px;min-width:0}
 input[type=number]{text-align:right}
 textarea{resize:vertical;line-height:1.55}
+::placeholder{color:var(--ink-3);opacity:.5;font-style:italic;font-weight:400}
 .btn{background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 12px;font-size:12.5px}
 .btn:hover{border-color:var(--ink-3)}
 .btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -279,6 +280,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <button id="vInternal" aria-pressed="false">내부용</button>
     </div>
     <span class="save"><span class="dot" id="saveDot"></span><span id="saveTxt">—</span></span>
+    <button class="ghost" id="saveNow" title="지금 바로 드라이브에 저장 (Ctrl+S)">저장</button>
   </div>
   <nav class="tabs" role="tablist">
     <button class="tab" data-tab="proj" aria-selected="true">프로젝트</button>
@@ -317,8 +319,8 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <label class="f">공사명<input id="pTitle" data-k="title"></label>
       <label class="f">발주처<input id="pClient" data-k="client"></label>
       <label class="f">현장 주소<input id="pSite" data-k="site"></label>
-      <label class="f">Project Manager<input id="pPm" data-k="pm" placeholder="강방용 시니어디렉터"></label>
-      <label class="f">견적번호 <span class="hint">그리다 견적 연결 (선택)</span><input id="pEst" data-k="estNo" list="estList" placeholder="G-260930-01"></label>
+      <label class="f">Project Manager<input id="pPm" data-k="pm" placeholder="예) 강방용 시니어디렉터"></label>
+      <label class="f">견적번호 <span class="hint">그리다 견적 연결 (선택)</span><input id="pEst" data-k="estNo" list="estList" placeholder="예) G-260930-01"></label>
       <label class="f">착공일<input id="pStart" type="date" data-k="start"></label>
       <label class="f">준공일<input id="pEnd" type="date" data-k="end"></label>
     </div>
@@ -332,7 +334,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <span class="hint" id="pDays"></span>
     </div>
     <label class="f" style="margin-top:10px">휴무일 <span class="hint">'공사 N일차' 계산에서만 빠지고, 인원·지출·일지 기록은 그날도 됩니다 · 인원 탭에서 날짜를 눌러도 바뀝니다</span>
-      <input id="pOff" placeholder="2026-10-05, 2026-10-12" data-k="offRaw"></label>
+      <input id="pOff" placeholder="예) 2026-10-05, 2026-10-12" data-k="offRaw"></label>
   </div>
 
   <div class="card" id="apvCard" hidden>
@@ -384,24 +386,24 @@ table.sum th.g{position:sticky;left:0;z-index:1}
 <!-- ===== 지출 ===== -->
 <section data-pane="exp" hidden>
   <div class="card">
-    <h2>지출 넣기 <span class="hint">자재는 일지 왼쪽(용역비 및 자재사용현황), 경비는 오른쪽(기타경비지출현황)으로 갑니다</span></h2>
+    <h2><span id="eTitle">지출 넣기</span> <span class="hint">자재는 일지 왼쪽(용역비 및 자재사용현황), 경비는 오른쪽(기타경비지출현황)으로 갑니다</span></h2>
     <div class="exform">
       <label class="f">날짜<input type="date" id="eDate"></label>
       <label class="f">구분<select id="eType"><option value="자재">자재</option><option value="경비">경비</option></select></label>
-      <label class="f" id="eGongF">공정<input id="eGong" list="gongList" placeholder="목공사"></label>
+      <label class="f" id="eGongF">공정<input id="eGong" list="gongList" placeholder="예) 목공사"></label>
       <label class="f" id="eCatF" hidden>경비 항목<select id="eCat"></select></label>
-      <label class="f">지불처<input id="ePayee" placeholder="쿠팡"></label>
-      <label class="f">금액<input id="eAmt" type="text" inputmode="numeric" placeholder="0"></label>
+      <label class="f"><span id="ePayeeT">지불처</span><input id="ePayee" placeholder="예) 쿠팡"></label>
+      <label class="f">금액<input id="eAmt" type="text" inputmode="numeric" placeholder="예) 50,000"></label>
     </div>
     <div class="paybar">
       <span class="hint">지급 방법</span>
       <label><input type="radio" name="ePay" value="계좌이체" checked> 계좌이체 <span class="hint">· 견적서</span></label>
       <label><input type="radio" name="ePay" value="법인카드"> 법인카드 <span class="hint">· 영수증 번호</span></label>
       <label><input type="radio" name="ePay" value="기타"> 기타</label>
-      <input id="ePayEtc" placeholder="현금 · 개인카드 · 발주처 지급 등" hidden>
+      <input id="ePayEtc" placeholder="예) 현금 · 개인카드" hidden>
     </div>
     <div class="exform2">
-      <label class="f">사용처 / 비고<input id="eUse" placeholder="흡음재"></label>
+      <label class="f">사용처 / 비고<input id="eUse" placeholder="예) 흡음재"></label>
       <div class="photo-pick">
         <label class="f"><span id="ePhotoT">견적서 (사진·PDF)</span><input type="file" id="ePhoto" accept="image/*,.pdf"></label>
         <img id="ePrev" class="thumb" hidden alt="" style="width:64px;height:64px">
@@ -410,6 +412,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <div class="row">
         <label class="hint" style="display:flex;gap:4px;align-items:center"><input type="checkbox" id="ePaid" checked> 지급 완료</label>
         <label class="hint" style="display:flex;gap:4px;align-items:center"><input type="checkbox" id="eIn"> 내부용만</label>
+        <button class="btn" id="eCancel" hidden>취소</button>
         <button class="btn pri" id="eAddBtn">넣기</button>
       </div>
     </div>
@@ -564,6 +567,12 @@ async function save(){
        throw new Error((r&&r.error)||"저장 실패"); }
   catch(e){ dirty=true; setSave("bad","저장 실패 — 브라우저에만 있음"); toast("드라이브 저장 실패: "+e.message); }
 }
+/* 저장 버튼 · Ctrl+S — 자동 저장(고친 뒤 1.5초)을 기다리지 않고 바로 */
+async function saveNow(){ if(!P) return toast("먼저 접수 건을 고르세요"); clearTimeout(saveT); dirty=true;
+  const b=$("saveNow"); b.disabled=true; await save(); b.disabled=false;
+  if(!dirty) toast("드라이브에 저장했습니다"); }
+$("saveNow").onclick=saveNow;
+document.addEventListener("keydown",e=>{ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){ e.preventDefault(); saveNow(); } });
 window.addEventListener("beforeunload",e=>{ if(dirty){ save(); e.preventDefault(); e.returnValue=""; } });
 
 /* ══════════ 잠금 · 시작 ══════════ */
@@ -929,7 +938,7 @@ function renderLabor(){
       <td><input type="date" data-lf="date" value="${esc(x.date)}"></td>
       <td class="n"><input data-lf="amt" value="${F(x.amt)}" inputmode="numeric" style="text-align:right;width:110px"></td>
       <td><input type="checkbox" data-lf="paid" ${x.paid?"checked":""}></td>
-      <td><input data-lf="note" value="${esc(x.note||"")}" placeholder="직영 노무비"></td><td><button class="x" data-lpdel="${x.id}">×</button></td></tr>`).join("")}</tbody>
+      <td><input data-lf="note" value="${esc(x.note||"")}" placeholder="예) 직영 노무비"></td><td><button class="x" data-lpdel="${x.id}">×</button></td></tr>`).join("")}</tbody>
     <tfoot><tr><td colspan="6">${laborGongs().map(g=>`${esc(g)} 노무비 ${F0(laborCost(g))} · 지급 ${F0(laborPaid(g))} · 남음 <b>${F0(laborCost(g)-laborPaid(g))}</b>`).join("<br>")}</td></tr></tfoot>`
     : `<tr><td class="empty">아직 지급 기록이 없습니다</td></tr>`;
 }
@@ -1144,7 +1153,8 @@ function csvActual(){
 const EXP_CATS=["식대","유류비","교통비","간식","기타"];
 $("eCat").innerHTML=EXP_CATS.map(c=>`<option>${c}</option>`).join("");
 function eTypeUI(){ const ex=$("eType").value==="경비"; $("eGongF").hidden=ex; $("eCatF").hidden=!ex;
-  $("ePayee").placeholder=ex?"점심(디렉터) · 주유소":"쿠팡"; $("eUse").placeholder=ex?"인원·내용":"흡음재"; }
+  $("ePayeeT").textContent=ex?"지불처(목적)":"지불처";
+  $("ePayee").placeholder=ex?"예) 점심(디렉터) · 주유(현장 이동)":"예) 쿠팡"; $("eUse").placeholder=ex?"예) 4명":"예) 흡음재"; }
 $("eType").onchange=()=>{ eTypeUI(); if(!PAY_TOUCHED) setPay($("eType").value==="경비"?"법인카드":"계좌이체"); };
 const xCat = x => x.type==="경비" ? (x.cat||"기타") : "";
 /* 지급 방법 — 계좌이체(견적서) · 법인카드(영수증 · 날짜별 번호) · 기타(직접 기재) */
@@ -1208,7 +1218,19 @@ async function uploadDoc(x, pick){
     if(r&&r.ok){ x.photo={name,url:r.url||""}; return true; } }catch(e){}
   return false;
 }
-$("eAddBtn").onclick=async()=>{
+/* 편집 — 표의 '편집'을 누르면 위 입력칸에 불러와 고친 뒤 '수정 저장' */
+let EDIT_ID=null;
+function eReset(){ EDIT_ID=null; ["eGong","ePayee","eAmt","eUse","ePhoto","ePayEtc"].forEach(id=>$(id).value=""); $("ePrev").hidden=true; PHOTO=null; $("eIn").checked=false; $("ePaid").checked=true; $("eRno").textContent="";
+  $("eAddBtn").textContent="넣기"; $("eCancel").hidden=true; $("eTitle").textContent="지출 넣기"; PAY_TOUCHED=false; }
+function eEdit(id){ const x=P.expenses.find(y=>y.id===id); if(!x) return; EDIT_ID=id;
+  $("eDate").value=x.date; $("eType").value=x.type; eTypeUI(); $("eGong").value=x.gong||""; if(x.type==="경비") $("eCat").value=xCat(x);
+  $("ePayee").value=x.payee; $("eAmt").value=F(x.amt); $("eUse").value=x.use||""; $("ePaid").checked=!!x.paid; $("eIn").checked=!!x.internal;
+  PAY_TOUCHED=true; setPay(xPay(x)); $("ePayEtc").value=x.payEtc||""; $("ePhoto").value=""; PHOTO=null; ePreview();
+  $("eRno").textContent=x.photo?"올려둔 파일 있음 — 새로 고르면 바뀜":""; $("eAddBtn").textContent="수정 저장"; $("eCancel").hidden=false;
+  $("eTitle").textContent=`지출 편집 — ${dateSh(x.date)} ${x.payee}${isCard(x)&&x.rno?` (${x.rno}번)`:""}`;
+  document.querySelector('[data-pane="exp"] .card').scrollIntoView({behavior:"smooth",block:"start"}); renderExp(); }
+$("eCancel").onclick=()=>{ eReset(); renderExp(); };
+$("eAddBtn").onclick=async()=>{ if(EDIT_ID) return eSaveEdit();
   const pay=curPay();
   const x={id:uid(),date:$("eDate").value||SEL,type:$("eType").value,gong:$("eType").value==="경비"?"":$("eGong").value.trim(),cat:$("eType").value==="경비"?$("eCat").value:"",payee:$("ePayee").value.trim(),
            amt:N($("eAmt").value),use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,photo:null,pay,payEtc:pay==="기타"?$("ePayEtc").value.trim():""};
@@ -1219,9 +1241,26 @@ $("eAddBtn").onclick=async()=>{
   $("eAddBtn").disabled=true;
   if(PHOTO){ if(!await uploadDoc(x,PHOTO)) toast("파일 저장 실패 — 내역만 넣었습니다"); }
   P.expenses.push(x); P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
-  ["eGong","ePayee","eAmt","eUse","ePhoto"].forEach(id=>$(id).value=""); $("ePrev").hidden=true; PHOTO=null; $("eIn").checked=false; $("eRno").textContent="";
+  eReset();
   $("eAddBtn").disabled=false; touch(); renderExp(); renderLog(); toast(x.rno?`영수증 ${x.rno}번으로 넣었습니다`:"넣었습니다");
 };
+async function eSaveEdit(){
+  const x=P.expenses.find(y=>y.id===EDIT_ID); if(!x) return eReset();
+  const pay=curPay(), date=$("eDate").value||x.date, payee=$("ePayee").value.trim(), amt=N($("eAmt").value);
+  if(!payee||!amt) return toast("지불처와 금액을 넣어주세요");
+  if(pay==="기타"&&!$("ePayEtc").value.trim()) return toast("기타 지급 방법을 적어주세요");
+  const wasCard=isCard(x), oldDate=x.date;
+  Object.assign(x,{date,type:$("eType").value,gong:$("eType").value==="경비"?"":$("eGong").value.trim(),cat:$("eType").value==="경비"?$("eCat").value:"",
+    payee,amt,use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,pay,payEtc:pay==="기타"?$("ePayEtc").value.trim():""});
+  /* 번호 — 법인카드가 되었거나 날짜가 바뀌면 그날 새 번호, 법인카드가 아니면 번호 없음 */
+  if(pay==="법인카드"){ if(!wasCard||date!==oldDate||!x.rno){ x.rno=0; x.rno=nextRno(date); } } else x.rno=0;
+  if(x.gong&&!P.gongs.includes(x.gong)) P.gongs.push(x.gong);
+  $("eAddBtn").disabled=true;
+  if(PHOTO){ if(!await uploadDoc(x,PHOTO)) toast("파일 저장 실패 — 내역만 고쳤습니다"); }
+  else if(x.photo&&(date!==oldDate||wasCard!==isCard(x))) toast("올려둔 파일의 이름·번호 표시는 그대로입니다 — 필요하면 '바꾸기'로 다시 올리세요");
+  P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  $("eAddBtn").disabled=false; eReset(); touch(); renderExp(); renderLog(); renderSum(); toast("고쳤습니다");
+}
 function renderExp(){
   $("cExp").textContent=P.expenses.length||"";
   if(!$("eDate").value) $("eDate").value=SEL;
@@ -1235,14 +1274,14 @@ function renderExp(){
   const bySum=p=>xs.filter(x=>xPay(x)===p).reduce((s,x)=>s+x.amt,0);
   $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>지급구분</th><th>번호</th><th>구분</th><th>공정 / 경비 항목</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>견적서 · 영수증</th><th>지급</th><th></th></tr></thead>
     <tbody>${xs.map(x=>{ const p=xPay(x), w=docWord(p);
-      return `<tr><td class="num">${dateSh(x.date)}</td>
-      <td><span class="paysel"><select data-xpay="${x.id}">${PAYS.map(o=>`<option${o===p?" selected":""}>${o}</option>`).join("")}</select>${p==="기타"?`<input data-xpe="${x.id}" value="${esc(x.payEtc||"")}" placeholder="방법 기재">`:""}</span></td>
+      return `<tr${x.id===EDIT_ID?' style="background:var(--accent-soft)"':""}><td class="num">${dateSh(x.date)}</td>
+      <td><span class="paysel"><select data-xpay="${x.id}">${PAYS.map(o=>`<option${o===p?" selected":""}>${o}</option>`).join("")}</select>${p==="기타"?`<input data-xpe="${x.id}" value="${esc(x.payEtc||"")}" placeholder="예) 현금">`:""}</span></td>
       <td class="num"><b>${isCard(x)&&x.rno?x.rno+"번":""}</b></td>
       <td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
       <td>${x.type==="경비"?`<span class="chip">${esc(xCat(x))}</span>`:esc(x.gong)}</td><td>${esc(x.payee)}</td><td class="n num">${F(x.amt)}</td><td>${esc(x.use)}</td>
       <td><span class="row" style="gap:6px;flex-wrap:nowrap">${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:image/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:w+" 보기"}</a>`:""}
         <label class="btn sm" title="${x.photo?"같은 이름으로 바꿉니다":w+"를 나중에 올립니다"}">${x.photo?"바꾸기":(p==="법인카드"?"📷 ":"📎 ")+w}<input type="file" accept="${p==="법인카드"?"image/*":"image/*,.pdf"}" data-xph="${x.id}" hidden></label></span></td>
-      <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td><button class="x" data-xdel="${x.id}">×</button></td></tr>`; }).join("")}</tbody>
+      <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td style="white-space:nowrap"><button class="btn sm" data-xedit="${x.id}">편집</button> <button class="x" data-xdel="${x.id}">×</button></td></tr>`; }).join("")}</tbody>
     <tfoot><tr><td colspan="6">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}
       <br><span class="hint">${PAYS.map(p=>{ const v=bySum(p); return v?`${p} ${F0(v)}`:""; }).filter(Boolean).join(" · ")}</span></td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
     : `<tr><td class="empty">지출 내역이 없습니다</td></tr>`;
@@ -1262,7 +1301,7 @@ $("eTable").addEventListener("change",async e=>{ const t=e.target;
   const ok=await uploadDoc(x, await readPick(f));
   if(ok){ touch(); toast(isCard(x)?`${x.rno}번 영수증 저장`:`${docWord(xPay(x))} 저장`); } else toast("저장 실패 — Apps Script v6 배포를 확인하세요");
   renderExp(); });
-$("eTable").addEventListener("click",e=>{ const id=e.target.dataset.xdel; if(id&&confirm("이 지출을 지울까요? (드라이브 파일은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
+$("eTable").addEventListener("click",e=>{ if(e.target.dataset.xedit) return eEdit(e.target.dataset.xedit); const id=e.target.dataset.xdel; if(id&&id===EDIT_ID) eReset(); if(id&&confirm("이 지출을 지울까요? (드라이브 파일은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
 
 /* ══════════ 인원 ══════════ */
 /* PM — 인원 표 맨 위 고정. 날마다 15만 / 20만(두 현장 이상) / FREE */
