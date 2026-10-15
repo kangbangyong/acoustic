@@ -134,6 +134,16 @@ table.t tfoot td{font-weight:600;background:var(--surface-2);border-top:1px soli
 @media (max-width:760px){.exform{grid-template-columns:1fr 1fr}.exform2{grid-template-columns:1fr}}
 .thumb{width:42px;height:42px;object-fit:cover;border-radius:4px;border:1px solid var(--line);display:block}
 .photo-pick{display:flex;align-items:center;gap:8px}
+.docbtn{border:1px dashed var(--line);background:transparent;color:var(--ink-2)}
+.docbtn.has{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.docbtn.has:hover{background:color-mix(in srgb,var(--accent) 22%,var(--surface))}
+#viewer{position:fixed;inset:0;z-index:90;background:rgba(10,12,14,.72);display:flex;align-items:center;justify-content:center;padding:16px}
+#viewer .vbox{background:var(--surface);border-radius:10px;width:min(980px,100%);height:min(92vh,1100px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.4)}
+#viewer .vhd{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+#viewer .vhd b{font-size:13.5px;margin-right:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#viewer .vbd{flex:1;background:#2a2e31;display:flex;align-items:center;justify-content:center;overflow:auto}
+#viewer .vbd img{max-width:100%;max-height:100%;object-fit:contain}
+#viewer .vbd iframe{width:100%;height:100%;border:0;background:#fff}
 .paybar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px;padding:8px 10px;border:1px solid var(--line-2);border-radius:6px;background:var(--surface-2);font-size:12.5px}
 .paybar label{display:flex;gap:4px;align-items:center}
 .paybar #ePayEtc{width:220px}
@@ -284,11 +294,11 @@ table.sum th.g{position:sticky;left:0;z-index:1}
   </div>
   <nav class="tabs" role="tablist">
     <button class="tab" data-tab="proj" aria-selected="true">프로젝트</button>
+    <button class="tab" data-tab="log" aria-selected="false">일지</button>
+    <button class="tab" data-tab="crew" aria-selected="false">인원</button>
+    <button class="tab" data-tab="exp" aria-selected="false">지출<span class="count" id="cExp"></span></button>
     <button class="tab" data-tab="vend" aria-selected="false">용역비<span class="count" id="cVend"></span></button>
     <button class="tab" data-tab="labor" aria-selected="false">노무비</button>
-    <button class="tab" data-tab="exp" aria-selected="false">지출<span class="count" id="cExp"></span></button>
-    <button class="tab" data-tab="crew" aria-selected="false">인원</button>
-    <button class="tab" data-tab="log" aria-selected="false">일지</button>
     <button class="tab" data-tab="docs" aria-selected="false">내역서<span class="count" id="cDocs"></span></button>
     <button class="tab" data-tab="sum" aria-selected="false">총괄</button>
   </nav>
@@ -388,7 +398,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
   <div class="card">
     <h2><span id="eTitle">지출 넣기</span> <span class="hint">자재는 일지 왼쪽(용역비 및 자재사용현황), 경비는 오른쪽(기타경비지출현황)으로 갑니다</span></h2>
     <div class="exform">
-      <label class="f">날짜<input type="date" id="eDate"></label>
+      <label class="f"><span id="eDateT">날짜</span><input type="date" id="eDate"></label>
       <label class="f">구분<select id="eType"><option value="자재">자재</option><option value="경비">경비</option></select></label>
       <label class="f" id="eGongF">공정<input id="eGong" list="gongList" placeholder="예) 목공사"></label>
       <label class="f" id="eCatF" hidden>경비 항목<select id="eCat"></select></label>
@@ -481,6 +491,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
 </section>
 </main>
 
+<div id="viewer" hidden></div>
 <div id="toast"></div>
 
 <script>
@@ -1221,12 +1232,13 @@ async function uploadDoc(x, pick){
 /* 편집 — 표의 '편집'을 누르면 위 입력칸에 불러와 고친 뒤 '수정 저장' */
 let EDIT_ID=null;
 function eReset(){ EDIT_ID=null; ["eGong","ePayee","eAmt","eUse","ePhoto","ePayEtc"].forEach(id=>$(id).value=""); $("ePrev").hidden=true; PHOTO=null; $("eIn").checked=false; $("ePaid").checked=true; $("eRno").textContent="";
-  $("eAddBtn").textContent="넣기"; $("eCancel").hidden=true; $("eTitle").textContent="지출 넣기"; PAY_TOUCHED=false; }
+  $("eAddBtn").textContent="넣기"; $("eCancel").hidden=true; $("eTitle").textContent="지출 넣기"; $("eDateT").textContent="날짜"; PAY_TOUCHED=false; }
 function eEdit(id){ const x=P.expenses.find(y=>y.id===id); if(!x) return; EDIT_ID=id;
   $("eDate").value=x.date; $("eType").value=x.type; eTypeUI(); $("eGong").value=x.gong||""; if(x.type==="경비") $("eCat").value=xCat(x);
   $("ePayee").value=x.payee; $("eAmt").value=F(x.amt); $("eUse").value=x.use||""; $("ePaid").checked=!!x.paid; $("eIn").checked=!!x.internal;
   PAY_TOUCHED=true; setPay(xPay(x)); $("ePayEtc").value=x.payEtc||""; $("ePhoto").value=""; PHOTO=null; ePreview();
   $("eRno").textContent=x.photo?"올려둔 파일 있음 — 새로 고르면 바뀜":""; $("eAddBtn").textContent="수정 저장"; $("eCancel").hidden=false;
+  $("eDateT").innerHTML='<span style="color:var(--accent);font-weight:600">지급일 변경</span>';
   $("eTitle").textContent=`지출 편집 — ${dateSh(x.date)} ${x.payee}${isCard(x)&&x.rno?` (${x.rno}번)`:""}`;
   document.querySelector('[data-pane="exp"] .card').scrollIntoView({behavior:"smooth",block:"start"}); renderExp(); }
 $("eCancel").onclick=()=>{ eReset(); renderExp(); };
@@ -1244,6 +1256,26 @@ $("eAddBtn").onclick=async()=>{ if(EDIT_ID) return eSaveEdit();
   eReset();
   $("eAddBtn").disabled=false; touch(); renderExp(); renderLog(); toast(x.rno?`영수증 ${x.rno}번으로 넣었습니다`:"넣었습니다");
 };
+/* 견적서·영수증 보기 — 드라이브 파일은 미리보기로, 바꾸기도 여기서 */
+function previewUrl(u){ const m=String(u||"").match(/\/file\/d\/([^/?#]+)/)||String(u||"").match(/[?&]id=([^&#]+)/); return m?`https://drive.google.com/file/d/${m[1]}/preview`:u; }
+function openViewer(x){
+  const w=docWord(xPay(x)), u=x.photo.url, isImg=/^data:image/.test(u), isData=/^data:/.test(u);
+  const v=$("viewer"); v.hidden=false;
+  v.innerHTML=`<div class="vbox"><div class="vhd"><b>${dateSh(x.date)} · ${isCard(x)&&x.rno?x.rno+"번 ":""}${w} — ${esc(x.payee)} ${F0(x.amt)}원</b>
+      ${isData?"":`<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener">새 창으로</a>`}
+      <label class="btn sm">바꾸기<input type="file" accept="${isCard(x)?"image/*":"image/*,.pdf"}" data-vrep="${x.id}" hidden></label>
+      <button class="btn sm pri" data-vclose="1">닫기</button></div>
+    <div class="vbd">${isImg?`<img src="${u}" alt="">`:`<iframe src="${esc(isData?u:previewUrl(u))}" title="${w}"></iframe>`}</div></div>`;
+}
+function closeViewer(){ const v=$("viewer"); v.hidden=true; v.innerHTML=""; }
+$("viewer").addEventListener("click",e=>{ if(e.target.id==="viewer"||e.target.dataset.vclose) closeViewer(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("viewer").hidden) closeViewer(); });
+$("viewer").addEventListener("change",async e=>{ const id=e.target.dataset.vrep; if(!id) return; const x=P.expenses.find(y=>y.id===id), f=e.target.files[0]; if(!x||!f) return;
+  const ok=await uploadDoc(x, await readPick(f)); if(ok){ touch(); toast(`${docWord(xPay(x))}를 바꿨습니다`); renderExp(); openViewer(x); } else toast("저장 실패 — Apps Script v6 배포를 확인하세요"); });
+
+/* 지급일 이동 — 법인카드면 옮긴 날의 새 영수증 번호 */
+function moveExp(x,date){ if(!date||date===x.date) return false; const card=isCard(x); x.date=date; if(card){ x.rno=0; x.rno=nextRno(date); }
+  P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0); return true; }
 async function eSaveEdit(){
   const x=P.expenses.find(y=>y.id===EDIT_ID); if(!x) return eReset();
   const pay=curPay(), date=$("eDate").value||x.date, payee=$("ePayee").value.trim(), amt=N($("eAmt").value);
@@ -1279,9 +1311,11 @@ function renderExp(){
       <td class="num"><b>${isCard(x)&&x.rno?x.rno+"번":""}</b></td>
       <td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
       <td>${x.type==="경비"?`<span class="chip">${esc(xCat(x))}</span>`:esc(x.gong)}</td><td>${esc(x.payee)}</td><td class="n num">${F(x.amt)}</td><td>${esc(x.use)}</td>
-      <td><span class="row" style="gap:6px;flex-wrap:nowrap">${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:image/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:w+" 보기"}</a>`:""}
-        <label class="btn sm" title="${x.photo?"같은 이름으로 바꿉니다":w+"를 나중에 올립니다"}">${x.photo?"바꾸기":(p==="법인카드"?"📷 ":"📎 ")+w}<input type="file" accept="${p==="법인카드"?"image/*":"image/*,.pdf"}" data-xph="${x.id}" hidden></label></span></td>
-      <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td style="white-space:nowrap"><button class="btn sm" data-xedit="${x.id}">편집</button> <button class="x" data-xdel="${x.id}">×</button></td></tr>`; }).join("")}</tbody>
+      <td>${x.photo
+        ? `<button class="btn sm docbtn has" data-xview="${x.id}" title="눌러서 보기">📄 ${w} 보기</button>`
+        : `<label class="btn sm docbtn" title="${w} 파일을 골라 올립니다">${p==="법인카드"?"📷":"📎"} ${w} 올리기<input type="file" accept="${p==="법인카드"?"image/*":"image/*,.pdf"}" data-xph="${x.id}" hidden></label>`}</td>
+      <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td style="white-space:nowrap"><button class="btn sm" data-xedit="${x.id}">편집</button>
+        <label class="btn sm" style="position:relative" title="지급일 변경 — 고른 날짜로 이동">📅 이동<input type="date" data-xmove="${x.id}" value="${x.date}" style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none"></label> <button class="x" data-xdel="${x.id}">×</button></td></tr>`; }).join("")}</tbody>
     <tfoot><tr><td colspan="6">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}
       <br><span class="hint">${PAYS.map(p=>{ const v=bySum(p); return v?`${p} ${F0(v)}`:""; }).filter(Boolean).join(" · ")}</span></td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
     : `<tr><td class="empty">지출 내역이 없습니다</td></tr>`;
@@ -1295,13 +1329,18 @@ $("eTable").addEventListener("change",async e=>{ const t=e.target;
     if(x.pay!=="법인카드") x.rno=0;
     if(x.pay!=="기타") x.payEtc="";
     touch(); renderExp(); renderLog(); if(x.photo) toast("이미 올린 파일 이름·번호 표시는 그대로입니다 — 필요하면 '바꾸기'로 다시 올리세요"); return; }
+  if(t.dataset.xmove){ const x=P.expenses.find(y=>y.id===t.dataset.xmove), old=x.date;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(t.value)) return renderExp();
+    if(moveExp(x,t.value)){ touch(); renderExp(); renderLog(); renderSum(); toast(`${dateSh(old)} → ${dateSh(x.date)}로 옮겼습니다${isCard(x)?` (영수증 ${x.rno}번)`:""}${x.photo?" — 올린 파일 번호 표시는 '바꾸기'로 다시":""}`); } return; }
   if(t.dataset.xpe){ const x=P.expenses.find(y=>y.id===t.dataset.xpe); x.payEtc=t.value.trim(); touch(); renderLog(); return; }
   const pid=t.dataset.xph; if(!pid) return; const x=P.expenses.find(y=>y.id===pid), f=t.files[0]; if(!x||!f) return;
   if(x.photo&&!confirm("올려둔 파일을 새 파일로 바꿀까요?")) return renderExp();
   const ok=await uploadDoc(x, await readPick(f));
   if(ok){ touch(); toast(isCard(x)?`${x.rno}번 영수증 저장`:`${docWord(xPay(x))} 저장`); } else toast("저장 실패 — Apps Script v6 배포를 확인하세요");
   renderExp(); });
-$("eTable").addEventListener("click",e=>{ if(e.target.dataset.xedit) return eEdit(e.target.dataset.xedit); const id=e.target.dataset.xdel; if(id&&id===EDIT_ID) eReset(); if(id&&confirm("이 지출을 지울까요? (드라이브 파일은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
+$("eTable").addEventListener("click",e=>{ if(e.target.dataset.xedit) return eEdit(e.target.dataset.xedit);
+  const vb=e.target.closest("[data-xview]"); if(vb){ const x=P.expenses.find(y=>y.id===vb.dataset.xview); if(x&&x.photo) openViewer(x); return; }
+  const mv=e.target.closest("label")&&e.target.closest("label").querySelector("[data-xmove]"); if(mv&&e.target!==mv){ e.preventDefault(); try{ mv.showPicker(); }catch(_){ const d=prompt("옮길 지급일 (예: 2026-10-04)",mv.value); if(d){ mv.value=d; mv.dispatchEvent(new Event("change",{bubbles:true})); } } return; } const id=e.target.dataset.xdel; if(id&&id===EDIT_ID) eReset(); if(id&&confirm("이 지출을 지울까요? (드라이브 파일은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
 
 /* ══════════ 인원 ══════════ */
 /* PM — 인원 표 맨 위 고정. 날마다 15만 / 20만(두 현장 이상) / FREE */
