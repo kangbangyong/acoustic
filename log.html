@@ -133,6 +133,11 @@ table.t tfoot td{font-weight:600;background:var(--surface-2);border-top:1px soli
 @media (max-width:760px){.exform{grid-template-columns:1fr 1fr}.exform2{grid-template-columns:1fr}}
 .thumb{width:42px;height:42px;object-fit:cover;border-radius:4px;border:1px solid var(--line);display:block}
 .photo-pick{display:flex;align-items:center;gap:8px}
+.paybar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px;padding:8px 10px;border:1px solid var(--line-2);border-radius:6px;background:var(--surface-2);font-size:12.5px}
+.paybar label{display:flex;gap:4px;align-items:center}
+.paybar #ePayEtc{width:220px}
+.paysel{display:flex;gap:4px;align-items:center}
+.paysel select{padding:3px 4px;font-size:12px}.paysel input{width:96px;padding:3px 5px;font-size:12px}
 .photo-pick input[type=file]{max-width:220px}
 
 /* 인원 격자 */
@@ -388,10 +393,17 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <label class="f">지불처<input id="ePayee" placeholder="쿠팡"></label>
       <label class="f">금액<input id="eAmt" type="text" inputmode="numeric" placeholder="0"></label>
     </div>
+    <div class="paybar">
+      <span class="hint">지급 방법</span>
+      <label><input type="radio" name="ePay" value="계좌이체" checked> 계좌이체 <span class="hint">· 견적서</span></label>
+      <label><input type="radio" name="ePay" value="법인카드"> 법인카드 <span class="hint">· 영수증 번호</span></label>
+      <label><input type="radio" name="ePay" value="기타"> 기타</label>
+      <input id="ePayEtc" placeholder="현금 · 개인카드 · 발주처 지급 등" hidden>
+    </div>
     <div class="exform2">
       <label class="f">사용처 / 비고<input id="eUse" placeholder="흡음재"></label>
       <div class="photo-pick">
-        <label class="f">영수증 사진<input type="file" id="ePhoto" accept="image/*" capture="environment"></label>
+        <label class="f"><span id="ePhotoT">견적서 (사진·PDF)</span><input type="file" id="ePhoto" accept="image/*,.pdf"></label>
         <img id="ePrev" class="thumb" hidden alt="" style="width:64px;height:64px">
         <b id="eRno" class="hint"></b>
       </div>
@@ -405,7 +417,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
     <datalist id="catList"></datalist>
   </div>
   <div class="card">
-    <h2>지출 내역 <span class="hint">사진은 드라이브 접수 건 폴더 › 공사일지 › 날짜 폴더에 '날짜_번호번_항목_지불처_금액.jpg'로, 사진 위에 번호를 찍어 저장</span>
+    <h2>지출 내역 <span class="hint">드라이브 접수 건 폴더 › 공사일지 › 날짜 폴더 — 법인카드 영수증은 번호를 찍어 '날짜_번호번_…', 계좌이체 견적서는 '날짜_견적서_…'</span>
       <select id="eFilter" style="margin-left:auto"><option value="">전체 날짜</option></select></h2>
     <div class="tw"><table class="t" id="eTable"></table></div>
   </div>
@@ -606,7 +618,7 @@ async function openProj(id){
   if(!data) data=LS.get("log:"+id,null);
   P = data || blank(id,rec);
   P.off=P.off||[]; P.gongs=P.gongs||[]; P.crew=P.crew||{}; P.logs=P.logs||{}; P.vendors=P.vendors||[]; P.expenses=P.expenses||[]; P.docs=P.docs||[]; P.picks=P.picks||{}; P.listMode=P.listMode||{}; P.lpays=P.lpays||[]; P.equip=P.equip||{}; P.wetc=P.wetc||{}; P.pmd=P.pmd||{}; P.gongs=P.gongs.filter(g=>g!==PMG);
-  P.expenses.forEach(x=>{ if(!x.rno) x.rno=nextRno(x.date); });
+  P.expenses.forEach(x=>{ if(!x.pay) x.pay = x.rno ? "법인카드" : "계좌이체"; });
   LS.set("log.last",id);
   const h=HITS.find(x=>x.id===id);
   if(!P.title && h) P.title=(h.name||"")+" "+(h.space||"");
@@ -1133,12 +1145,24 @@ const EXP_CATS=["식대","유류비","교통비","간식","기타"];
 $("eCat").innerHTML=EXP_CATS.map(c=>`<option>${c}</option>`).join("");
 function eTypeUI(){ const ex=$("eType").value==="경비"; $("eGongF").hidden=ex; $("eCatF").hidden=!ex;
   $("ePayee").placeholder=ex?"점심(디렉터) · 주유소":"쿠팡"; $("eUse").placeholder=ex?"인원·내용":"흡음재"; }
-$("eType").onchange=eTypeUI;
+$("eType").onchange=()=>{ eTypeUI(); if(!PAY_TOUCHED) setPay($("eType").value==="경비"?"법인카드":"계좌이체"); };
 const xCat = x => x.type==="경비" ? (x.cat||"기타") : "";
-/* 영수증 번호 — 날짜마다 1번부터. 지운 번호는 다시 쓰지 않는다 (사진에 찍힌 번호와 어긋나지 않게) */
-let PHOTO=null;
+/* 지급 방법 — 계좌이체(견적서) · 법인카드(영수증 · 날짜별 번호) · 기타(직접 기재) */
+const PAYS=["계좌이체","법인카드","기타"];
+const xPay = x => x.pay || (x.rno ? "법인카드" : "계좌이체");
+const isCard = x => xPay(x)==="법인카드";
+const payLabel = x => xPay(x)==="기타" ? (x.payEtc||"기타") : xPay(x);
+const docWord = p => p==="법인카드"?"영수증":p==="계좌이체"?"견적서":"증빙";
+let PHOTO=null, PAY_TOUCHED=false;
+function curPay(){ const r=document.querySelector('input[name="ePay"]:checked'); return r?r.value:"계좌이체"; }
+function setPay(p){ const r=document.querySelector(`input[name="ePay"][value="${p}"]`); if(r) r.checked=true; ePayUI(); }
+function ePayUI(){ const p=curPay(); $("ePayEtc").hidden=p!=="기타";
+  $("ePhotoT").textContent = p==="법인카드"?"영수증 사진":p==="계좌이체"?"견적서 (사진·PDF)":"증빙 (사진·PDF)";
+  $("ePhoto").accept = p==="법인카드"?"image/*":"image/*,.pdf"; ePreview(); }
+document.querySelectorAll('input[name="ePay"]').forEach(r=>r.addEventListener("change",()=>{ PAY_TOUCHED=true; ePayUI(); }));
+/* 영수증 번호 — 법인카드만, 날짜마다 1번부터. 지운 번호는 다시 쓰지 않는다 (사진에 찍힌 번호와 어긋나지 않게) */
 function nextRno(date){ return Math.max(0,...P.expenses.filter(x=>x.date===date).map(x=>N(x.rno)))+1; }
-const rnoNote = (x,txt) => [x.rno?`${x.rno}번`:"",txt].filter(Boolean).join(" · ");
+const rnoNote = (x,txt) => [isCard(x)&&x.rno?`${x.rno}번`:"", xPay(x)==="기타"?x.payEtc:"", txt].filter(Boolean).join(" · ");
 /* 사진 왼쪽 위에 '1번 · 10/03' 을 찍는다 */
 function stampImg(dataUrl,big,small){ return new Promise((res,rej)=>{ const im=new Image(); im.onerror=rej; im.onload=()=>{
   const c=document.createElement("canvas"); c.width=im.width; c.height=im.height; const g=c.getContext("2d"); g.drawImage(im,0,0);
@@ -1153,33 +1177,50 @@ function stampImg(dataUrl,big,small){ return new Promise((res,rej)=>{ const im=n
   g.font=`600 ${s2}px "IBM Plex Sans KR","Malgun Gothic",sans-serif`; g.fillText(small,m+pad,m+pad*.8+s*1.08);
   res(c.toDataURL("image/jpeg",.85)); }; im.src=dataUrl; }); }
 const stampLabel = (date,n) => [`${n}번`, `${dateSh(date)} 영수증`];
-async function ePreview(){ if(!PHOTO){ $("ePrev").hidden=true; $("eRno").textContent=""; return; }
-  const d=$("eDate").value||SEL, n=nextRno(d); $("ePrev").src=await stampImg(PHOTO,...stampLabel(d,n)); $("ePrev").hidden=false; $("eRno").textContent=`${n}번으로 저장`; }
-$("ePhoto").onchange=async e=>{ const f=e.target.files[0]; PHOTO=null; if(f) PHOTO=await shrink(f,1600); ePreview(); };
+/* 고른 파일 → {img: 줄인 사진} 또는 {raw, type, ext} (PDF 등) */
+async function readPick(f){
+  if(/^image\//.test(f.type)) return {img:await shrink(f,1600)};
+  return {raw:await upload64(f), type:f.type||"application/pdf", ext:(f.name.match(/\.[^.]+$/)||[".pdf"])[0].toLowerCase()};
+}
+async function ePreview(){
+  if(!PHOTO){ $("ePrev").hidden=true; $("eRno").textContent=""; return; }
+  const p=curPay(), d=$("eDate").value||SEL;
+  if(PHOTO.img){ if(p==="법인카드"){ const n=nextRno(d); $("ePrev").src=await stampImg(PHOTO.img,...stampLabel(d,n)); $("eRno").textContent=`영수증 ${n}번으로 저장`; }
+                 else{ $("ePrev").src=PHOTO.img; $("eRno").textContent=`${docWord(p)}로 저장`; }
+                 $("ePrev").hidden=false; }
+  else{ $("ePrev").hidden=true; $("eRno").textContent=`PDF ${docWord(p)}로 저장`; }
+}
+$("ePhoto").onchange=async e=>{ const f=e.target.files[0]; PHOTO=null; if(f) PHOTO=await readPick(f); ePreview(); };
 $("eDate").addEventListener("change",ePreview);
 $("eAmt").addEventListener("input",e=>{ const n=N(e.target.value); e.target.value=n?F(n):""; });
-/* 영수증 사진 저장 — 처음 넣을 때와 나중에 올리거나 바꿀 때 같은 이름·같은 번호로 (같은 이름이면 드라이브에서 바꿔 끼움) */
-async function uploadReceipt(x, raw){
+/* 견적서·영수증 저장 — 처음 넣을 때와 나중에 올리거나 바꿀 때. 같은 이름이면 드라이브에서 바꿔 끼움 */
+async function uploadDoc(x, pick){
   const safe=s=>String(s).replace(/[\\/:*?"<>|\s]+/g,"").slice(0,20);
-  const name=(x.photo&&x.photo.name)||`${x.date}_${String(x.rno).padStart(2,"0")}번_${x.type==="경비"?xCat(x):x.type}_${safe(x.payee)}_${x.amt}.jpg`;
-  const img=await stampImg(raw,...stampLabel(x.date,x.rno));
-  if(DEMO){ x.photo={name,url:img}; return true; }
-  try{ toast(`${x.rno}번 영수증 올리는 중…`);
-    const r=await api({action:"putfile",id:P.id,sub:`${SUB}/${x.date}`,name,type:"image/jpeg",data:img.split(",")[1]});
+  const card=isCard(x), item=x.type==="경비"?xCat(x):x.type;
+  const ext=pick.img?".jpg":pick.ext;
+  const base=card?`${x.date}_${String(x.rno).padStart(2,"0")}번_${item}_${safe(x.payee)}_${x.amt}`:`${x.date}_${docWord(xPay(x))}_${item}_${safe(x.payee)}_${x.amt}`;
+  const name=(x.photo&&x.photo.name&&x.photo.name.startsWith(base))?x.photo.name:base+ext;
+  let data, type;
+  if(pick.img){ const im=card?await stampImg(pick.img,...stampLabel(x.date,x.rno)):pick.img; data=im.split(",")[1]; type="image/jpeg"; if(DEMO){ x.photo={name,url:im}; return true; } }
+  else{ data=pick.raw; type=pick.type; if(DEMO){ x.photo={name,url:`data:${type};base64,${data}`}; return true; } }
+  try{ toast(`${card?x.rno+"번 영수증":docWord(xPay(x))} 올리는 중…`);
+    const r=await api({action:"putfile",id:P.id,sub:`${SUB}/${x.date}`,name,type,data});
     if(r&&r.ok){ x.photo={name,url:r.url||""}; return true; } }catch(e){}
   return false;
 }
 $("eAddBtn").onclick=async()=>{
+  const pay=curPay();
   const x={id:uid(),date:$("eDate").value||SEL,type:$("eType").value,gong:$("eType").value==="경비"?"":$("eGong").value.trim(),cat:$("eType").value==="경비"?$("eCat").value:"",payee:$("ePayee").value.trim(),
-           amt:N($("eAmt").value),use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,photo:null};
-  x.rno=nextRno(x.date);
+           amt:N($("eAmt").value),use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,photo:null,pay,payEtc:pay==="기타"?$("ePayEtc").value.trim():""};
   if(!x.payee||!x.amt) return toast("지불처와 금액을 넣어주세요");
+  if(pay==="기타"&&!x.payEtc) return toast("기타 지급 방법을 적어주세요");
+  x.rno = pay==="법인카드" ? nextRno(x.date) : 0;
   if(x.gong&&!P.gongs.includes(x.gong)) P.gongs.push(x.gong);
   $("eAddBtn").disabled=true;
-  if(PHOTO){ if(!await uploadReceipt(x,PHOTO)) toast("사진 저장 실패 — 내역만 넣었습니다"); }
+  if(PHOTO){ if(!await uploadDoc(x,PHOTO)) toast("파일 저장 실패 — 내역만 넣었습니다"); }
   P.expenses.push(x); P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
   ["eGong","ePayee","eAmt","eUse","ePhoto"].forEach(id=>$(id).value=""); $("ePrev").hidden=true; PHOTO=null; $("eIn").checked=false; $("eRno").textContent="";
-  $("eAddBtn").disabled=false; touch(); renderExp(); renderLog(); toast(`${x.rno}번으로 넣었습니다`);
+  $("eAddBtn").disabled=false; touch(); renderExp(); renderLog(); toast(x.rno?`영수증 ${x.rno}번으로 넣었습니다`:"넣었습니다");
 };
 function renderExp(){
   $("cExp").textContent=P.expenses.length||"";
@@ -1188,26 +1229,40 @@ function renderExp(){
   const ds_=[...new Set(P.expenses.map(x=>x.date))].sort();
   const cur=$("eFilter").value;
   $("eFilter").innerHTML=`<option value="">전체 날짜</option>`+ds_.map(d=>`<option value="${d}"${d===cur?" selected":""}>${dateKo(d)}</option>`).join("");
-  const xs=P.expenses.filter(x=>!cur||x.date===cur).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:N(a.rno)-N(b.rno));
+  const po={"계좌이체":0,"법인카드":1,"기타":2};
+  const xs=P.expenses.filter(x=>!cur||x.date===cur).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:(po[xPay(a)]-po[xPay(b)])||(N(a.rno)-N(b.rno)));
   const sum=t=>xs.filter(x=>x.type===t).reduce((s,x)=>s+x.amt,0);
-  $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>번호</th><th>구분</th><th>공정 / 경비 항목</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>사진</th><th>지급</th><th></th></tr></thead>
-    <tbody>${xs.map(x=>`<tr><td class="num">${dateSh(x.date)}</td><td class="num"><b>${x.rno?x.rno+"번":""}</b></td><td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
+  const bySum=p=>xs.filter(x=>xPay(x)===p).reduce((s,x)=>s+x.amt,0);
+  $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>지급구분</th><th>번호</th><th>구분</th><th>공정 / 경비 항목</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>견적서 · 영수증</th><th>지급</th><th></th></tr></thead>
+    <tbody>${xs.map(x=>{ const p=xPay(x), w=docWord(p);
+      return `<tr><td class="num">${dateSh(x.date)}</td>
+      <td><span class="paysel"><select data-xpay="${x.id}">${PAYS.map(o=>`<option${o===p?" selected":""}>${o}</option>`).join("")}</select>${p==="기타"?`<input data-xpe="${x.id}" value="${esc(x.payEtc||"")}" placeholder="방법 기재">`:""}</span></td>
+      <td class="num"><b>${isCard(x)&&x.rno?x.rno+"번":""}</b></td>
+      <td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
       <td>${x.type==="경비"?`<span class="chip">${esc(xCat(x))}</span>`:esc(x.gong)}</td><td>${esc(x.payee)}</td><td class="n num">${F(x.amt)}</td><td>${esc(x.use)}</td>
-      <td><span class="row" style="gap:6px;flex-wrap:nowrap">${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:"보기"}</a>`:""}
-        <label class="btn sm" title="${x.photo?"같은 번호로 사진을 바꿉니다":"영수증 사진을 나중에 올립니다"}">${x.photo?"바꾸기":"📷 올리기"}<input type="file" accept="image/*" data-xph="${x.id}" hidden></label></span></td>
-      <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td><button class="x" data-xdel="${x.id}">×</button></td></tr>`).join("")}</tbody>
-    <tfoot><tr><td colspan="5">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}</td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
+      <td><span class="row" style="gap:6px;flex-wrap:nowrap">${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:image/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:w+" 보기"}</a>`:""}
+        <label class="btn sm" title="${x.photo?"같은 이름으로 바꿉니다":w+"를 나중에 올립니다"}">${x.photo?"바꾸기":(p==="법인카드"?"📷 ":"📎 ")+w}<input type="file" accept="${p==="법인카드"?"image/*":"image/*,.pdf"}" data-xph="${x.id}" hidden></label></span></td>
+      <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td><button class="x" data-xdel="${x.id}">×</button></td></tr>`; }).join("")}</tbody>
+    <tfoot><tr><td colspan="6">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}
+      <br><span class="hint">${PAYS.map(p=>{ const v=bySum(p); return v?`${p} ${F0(v)}`:""; }).filter(Boolean).join(" · ")}</span></td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
     : `<tr><td class="empty">지출 내역이 없습니다</td></tr>`;
   gongList();
 }
 $("eFilter").onchange=renderExp;
-$("eTable").addEventListener("change",async e=>{ const id=e.target.dataset.xpaid; if(id){ P.expenses.find(x=>x.id===id).paid=e.target.checked; touch(); renderLog(); return; }
-  const pid=e.target.dataset.xph; if(!pid) return; const x=P.expenses.find(y=>y.id===pid), f=e.target.files[0]; if(!x||!f) return;
-  if(x.photo&&!confirm(`${x.rno}번 영수증 사진을 새 사진으로 바꿀까요?`)) return renderExp();
-  const ok=await uploadReceipt(x, await shrink(f,1600));
-  if(ok){ touch(); toast(`${x.rno}번 영수증 사진 저장`); } else toast("사진 저장 실패 — Apps Script v6 배포를 확인하세요");
+$("eTable").addEventListener("change",async e=>{ const t=e.target;
+  const id=t.dataset.xpaid; if(id){ P.expenses.find(x=>x.id===id).paid=t.checked; touch(); renderLog(); return; }
+  if(t.dataset.xpay){ const x=P.expenses.find(y=>y.id===t.dataset.xpay); x.pay=t.value;
+    if(x.pay==="법인카드"&&!x.rno) x.rno=nextRno(x.date);
+    if(x.pay!=="법인카드") x.rno=0;
+    if(x.pay!=="기타") x.payEtc="";
+    touch(); renderExp(); renderLog(); if(x.photo) toast("이미 올린 파일 이름·번호 표시는 그대로입니다 — 필요하면 '바꾸기'로 다시 올리세요"); return; }
+  if(t.dataset.xpe){ const x=P.expenses.find(y=>y.id===t.dataset.xpe); x.payEtc=t.value.trim(); touch(); renderLog(); return; }
+  const pid=t.dataset.xph; if(!pid) return; const x=P.expenses.find(y=>y.id===pid), f=t.files[0]; if(!x||!f) return;
+  if(x.photo&&!confirm("올려둔 파일을 새 파일로 바꿀까요?")) return renderExp();
+  const ok=await uploadDoc(x, await readPick(f));
+  if(ok){ touch(); toast(isCard(x)?`${x.rno}번 영수증 저장`:`${docWord(xPay(x))} 저장`); } else toast("저장 실패 — Apps Script v6 배포를 확인하세요");
   renderExp(); });
-$("eTable").addEventListener("click",e=>{ const id=e.target.dataset.xdel; if(id&&confirm("이 지출을 지울까요? (드라이브 사진은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
+$("eTable").addEventListener("click",e=>{ const id=e.target.dataset.xdel; if(id&&confirm("이 지출을 지울까요? (드라이브 파일은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
 
 /* ══════════ 인원 ══════════ */
 /* PM — 인원 표 맨 위 고정. 날마다 15만 / 20만(두 현장 이상) / FREE */
@@ -1478,7 +1533,7 @@ function demoCat(){
 function demoSeed(){
   HITS=[{id:"조용한청년들-AC26-0003",space:"유튜브 · 스트리밍 · 리딩방",name:"정문선 이사님 (세무지원닷컴)",staff:"김새롬",status:"시공완료"},
         {id:"조용한청년들-AC26-0006",space:"작업실",name:"최서경",staff:"김희숙",status:"계약완료"}];
-  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=9) return;
+  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=10) return;
   LS.set("co.demo",demoCommon()); LS.set("cat.demo",demoCat());
   const L=(item,spec,unit,qty,price,kind,date="",gong="")=>({date,gong,item,spec,unit,qty,price,amt:0,kind});
   const doc=(o,lines)=>({id:uid(),type:"용역",co:"",gong:"",date:"",payDate:"",paid:false,vat:"+10%",adj:0,note:"",note1:"",file:null,internal:false,...o,lines});
@@ -1534,14 +1589,14 @@ function demoSeed(){
   ];
   const v=(d,pays,extra={})=>({id:uid(),vid:"",gong:d.gong,co:d.co,supply:docSupply(d),vat:"10%",docId:d.id,note:d.note,direct:false,internal:false,
     pays:PAYK.map((k,i)=>({k,amt:pays[i]?pays[i][0]:0,date:pays[i]?pays[i][1]:"",paid:pays[i]?pays[i][2]:false})),...extra});
-  const D={ v:9,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
+  const D={ v:10,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
     start:"2026-10-02",end:"2026-10-14",off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}],stamp:"",
     docs, vendors:[],
     expenses:[
-      {id:uid(),date:"2026-10-03",type:"자재",gong:"목공사",rno:3,payee:"쿠팡",amt:44700,use:"흡음재",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-03",type:"경비",gong:"",rno:1,cat:"식대",payee:"점심(디렉터)",amt:14500,use:"",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-03",type:"경비",gong:"",rno:2,cat:"간식",payee:"작업자(음료)",amt:5000,use:"",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"자재",gong:"목공사",pay:"법인카드",rno:3,payee:"쿠팡",amt:44700,use:"흡음재",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"경비",gong:"",pay:"법인카드",rno:1,cat:"식대",payee:"점심(디렉터)",amt:14500,use:"",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"경비",gong:"",pay:"법인카드",rno:2,cat:"간식",payee:"작업자(음료)",amt:5000,use:"",paid:true,internal:false,photo:null},
 ],
     gongs:["목공사","전기 공사","소방공사","공조 공사"], listMode:{"목공사":true},
     crew:{"2026-10-03":{"전기 공사":1,"소방공사":2,"공조 공사":2}},
