@@ -430,8 +430,9 @@ table.sum th.g{position:sticky;left:0;z-index:1}
     <datalist id="catList"></datalist>
   </div>
   <div class="card">
-    <h2>지출 내역 <span class="hint">드라이브 접수 건 폴더 › 공사일지 › 날짜 폴더 — 법인카드 영수증은 번호를 찍어 '날짜_번호번_…', 계좌이체 견적서는 '날짜_견적서_…'</span>
-      <select id="eFilter" style="margin-left:auto"><option value="">전체 날짜</option></select></h2>
+    <h2>지출 내역 <span class="hint">드라이브 접수 건 폴더 › 공사일지 › 날짜 폴더 — 법인카드 영수증은 공사 누적 번호를 찍어 '날짜_번호번_…', 계좌이체 견적서는 '날짜_견적서_…'</span>
+      <span class="row" style="margin-left:auto"><button class="btn sm" id="eRenum" title="법인카드 영수증 번호를 날짜순으로 1번부터 다시 매깁니다">번호 날짜순 정리</button>
+      <select id="eFilter"><option value="">전체 날짜</option></select></span></h2>
     <div class="tw"><table class="t" id="eTable"></table></div>
   </div>
 </section>
@@ -639,6 +640,7 @@ async function openProj(id){
   P = data || blank(id,rec);
   P.off=P.off||[]; P.gongs=P.gongs||[]; P.crew=P.crew||{}; P.logs=P.logs||{}; P.vendors=P.vendors||[]; P.expenses=P.expenses||[]; P.docs=P.docs||[]; P.picks=P.picks||{}; P.listMode=P.listMode||{}; P.lpays=P.lpays||[]; P.equip=P.equip||{}; P.wetc=P.wetc||{}; P.pmd=P.pmd||{}; P.gongs=P.gongs.filter(g=>g!==PMG);
   P.expenses.forEach(x=>{ if(!x.pay) x.pay = x.rno ? "법인카드" : "계좌이체"; });
+  if(!P.rnoCum){ renumberRno(); P.rnoCum=true; }   /* 예전(날짜마다 1번) → 공사 누적 번호로 한 번만 정리 */
   LS.set("log.last",id);
   const h=HITS.find(x=>x.id===id);
   if(!P.title && h) P.title=(h.name||"")+" "+(h.space||"");
@@ -1184,8 +1186,12 @@ function ePayUI(){ const p=curPay(); $("ePayEtc").hidden=p!=="기타";
   $("ePhotoT").textContent = p==="법인카드"?"영수증 사진":p==="계좌이체"?"견적서 (사진·PDF)":"증빙 (사진·PDF)";
   $("ePhoto").accept = p==="법인카드"?"image/*":"image/*,.pdf"; ePreview(); }
 document.querySelectorAll('input[name="ePay"]').forEach(r=>r.addEventListener("change",()=>{ PAY_TOUCHED=true; ePayUI(); }));
-/* 영수증 번호 — 법인카드만, 날짜마다 1번부터. 지운 번호는 다시 쓰지 않는다 (사진에 찍힌 번호와 어긋나지 않게) */
-function nextRno(date){ return Math.max(0,...P.expenses.filter(x=>x.date===date).map(x=>N(x.rno)))+1; }
+/* 영수증 번호 — 법인카드만, 공사 전체 누적(1번부터 계속). 한 번 붙은 번호는 날짜를 옮겨도 안 바뀐다
+   (영수증·사진에 적힌 번호, 이미 낸 일지의 비고와 어긋나지 않게). 지운 번호도 다시 쓰지 않는다 */
+function nextRno(){ return Math.max(0,P.rnoMax||0,...P.expenses.map(x=>N(x.rno)))+1; }
+function takeRno(){ const n=nextRno(); P.rnoMax=n; return n; }
+/* 날짜순으로 1번부터 다시 — 사진에 찍힌 번호는 그대로라 '바꾸기'로 다시 올려야 맞음 */
+function renumberRno(){ let n=0; P.expenses.filter(isCard).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:N(a.rno)-N(b.rno)).forEach(x=>x.rno=++n); P.rnoMax=n; }
 const rnoNote = (x,txt) => [isCard(x)&&x.rno?`${x.rno}번`:"", xPay(x)==="기타"?x.payEtc:"", txt].filter(Boolean).join(" · ");
 /* 사진 왼쪽 위에 '1번 · 10/03' 을 찍는다 */
 function stampImg(dataUrl,big,small){ return new Promise((res,rej)=>{ const im=new Image(); im.onerror=rej; im.onload=()=>{
@@ -1209,7 +1215,7 @@ async function readPick(f){
 async function ePreview(){
   if(!PHOTO){ $("ePrev").hidden=true; $("eRno").textContent=""; return; }
   const p=curPay(), d=$("eDate").value||SEL;
-  if(PHOTO.img){ if(p==="법인카드"){ const n=nextRno(d); $("ePrev").src=await stampImg(PHOTO.img,...stampLabel(d,n)); $("eRno").textContent=`영수증 ${n}번으로 저장`; }
+  if(PHOTO.img){ if(p==="법인카드"){ const n=nextRno(); $("ePrev").src=await stampImg(PHOTO.img,...stampLabel(d,n)); $("eRno").textContent=`영수증 ${n}번으로 저장`; }
                  else{ $("ePrev").src=PHOTO.img; $("eRno").textContent=`${docWord(p)}로 저장`; }
                  $("ePrev").hidden=false; }
   else{ $("ePrev").hidden=true; $("eRno").textContent=`PDF ${docWord(p)}로 저장`; }
@@ -1251,7 +1257,7 @@ $("eAddBtn").onclick=async()=>{ if(EDIT_ID) return eSaveEdit();
            amt:N($("eAmt").value),use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,photo:null,pay,payEtc:pay==="기타"?$("ePayEtc").value.trim():""};
   if(!x.payee||!x.amt) return toast("지불처와 금액을 넣어주세요");
   if(pay==="기타"&&!x.payEtc) return toast("기타 지급 방법을 적어주세요");
-  x.rno = pay==="법인카드" ? nextRno(x.date) : 0;
+  x.rno = pay==="법인카드" ? takeRno() : 0;
   if(x.gong&&!P.gongs.includes(x.gong)) P.gongs.push(x.gong);
   $("eAddBtn").disabled=true;
   if(PHOTO){ if(!await uploadDoc(x,PHOTO)) toast("파일 저장 실패 — 내역만 넣었습니다"); }
@@ -1277,7 +1283,7 @@ $("viewer").addEventListener("change",async e=>{ const id=e.target.dataset.vrep;
   const ok=await uploadDoc(x, await readPick(f)); if(ok){ touch(); toast(`${docWord(xPay(x))}를 바꿨습니다`); renderExp(); openViewer(x); } else toast("저장 실패 — Apps Script v6 배포를 확인하세요"); });
 
 /* 지급일 이동 — 법인카드면 옮긴 날의 새 영수증 번호 */
-function moveExp(x,date){ if(!date||date===x.date) return false; const card=isCard(x); x.date=date; if(card){ x.rno=0; x.rno=nextRno(date); }
+function moveExp(x,date){ if(!date||date===x.date) return false; x.date=date;
   P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0); return true; }
 async function eSaveEdit(){
   const x=P.expenses.find(y=>y.id===EDIT_ID); if(!x) return eReset();
@@ -1288,11 +1294,11 @@ async function eSaveEdit(){
   Object.assign(x,{date,type:$("eType").value,gong:$("eType").value==="경비"?"":$("eGong").value.trim(),cat:$("eType").value==="경비"?$("eCat").value:"",
     payee,amt,use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,pay,payEtc:pay==="기타"?$("ePayEtc").value.trim():""});
   /* 번호 — 법인카드가 되었거나 날짜가 바뀌면 그날 새 번호, 법인카드가 아니면 번호 없음 */
-  if(pay==="법인카드"){ if(!wasCard||date!==oldDate||!x.rno){ x.rno=0; x.rno=nextRno(date); } } else x.rno=0;
+  if(pay==="법인카드"){ if(!x.rno) x.rno=takeRno(); } else x.rno=0;
   if(x.gong&&!P.gongs.includes(x.gong)) P.gongs.push(x.gong);
   $("eAddBtn").disabled=true;
   if(PHOTO){ if(!await uploadDoc(x,PHOTO)) toast("파일 저장 실패 — 내역만 고쳤습니다"); }
-  else if(x.photo&&(date!==oldDate||wasCard!==isCard(x))) toast("올려둔 파일의 이름·번호 표시는 그대로입니다 — 필요하면 '바꾸기'로 다시 올리세요");
+  else if(x.photo&&wasCard!==isCard(x)) toast("올려둔 파일의 이름·번호 표시는 그대로입니다 — 필요하면 '바꾸기'로 다시 올리세요");
   P.expenses.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
   $("eAddBtn").disabled=false; eReset(); touch(); renderExp(); renderLog(); renderSum(); toast("고쳤습니다");
 }
@@ -1325,16 +1331,19 @@ function renderExp(){
   gongList();
 }
 $("eFilter").onchange=renderExp;
+$("eRenum").onclick=()=>{ const ph=P.expenses.filter(x=>isCard(x)&&x.photo).length;
+  if(!confirm(`법인카드 영수증 번호를 날짜순으로 1번부터 다시 매길까요?\n\n이미 제출한 일지의 비고 번호와 달라질 수 있습니다.${ph?`\n사진을 올린 영수증 ${ph}개는 사진에 찍힌 번호가 그대로라 '바꾸기'로 다시 올려야 맞습니다.`:""}`)) return;
+  renumberRno(); touch(); renderExp(); renderLog(); toast("번호를 날짜순으로 다시 매겼습니다"); };
 $("eTable").addEventListener("change",async e=>{ const t=e.target;
   const id=t.dataset.xpaid; if(id){ P.expenses.find(x=>x.id===id).paid=t.checked; touch(); renderLog(); return; }
   if(t.dataset.xpay){ const x=P.expenses.find(y=>y.id===t.dataset.xpay); x.pay=t.value;
-    if(x.pay==="법인카드"&&!x.rno) x.rno=nextRno(x.date);
+    if(x.pay==="법인카드"&&!x.rno) x.rno=takeRno();
     if(x.pay!=="법인카드") x.rno=0;
     if(x.pay!=="기타") x.payEtc="";
     touch(); renderExp(); renderLog(); if(x.photo) toast("이미 올린 파일 이름·번호 표시는 그대로입니다 — 필요하면 '바꾸기'로 다시 올리세요"); return; }
   if(t.dataset.xmove){ const x=P.expenses.find(y=>y.id===t.dataset.xmove), old=x.date;
     if(!/^\d{4}-\d{2}-\d{2}$/.test(t.value)) return renderExp();
-    if(moveExp(x,t.value)){ touch(); renderExp(); renderLog(); renderSum(); toast(`${dateSh(old)} → ${dateSh(x.date)}로 옮겼습니다${isCard(x)?` (영수증 ${x.rno}번)`:""}${x.photo?" — 올린 파일 번호 표시는 '바꾸기'로 다시":""}`); } return; }
+    if(moveExp(x,t.value)){ touch(); renderExp(); renderLog(); renderSum(); toast(`${dateSh(old)} → ${dateSh(x.date)}로 옮겼습니다${isCard(x)?` (영수증 ${x.rno}번 그대로)`:""}`); } return; }
   if(t.dataset.xpe){ const x=P.expenses.find(y=>y.id===t.dataset.xpe); x.payEtc=t.value.trim(); touch(); renderLog(); return; }
   const pid=t.dataset.xph; if(!pid) return; const x=P.expenses.find(y=>y.id===pid), f=t.files[0]; if(!x||!f) return;
   if(x.photo&&!confirm("올려둔 파일을 새 파일로 바꿀까요?")) return renderExp();
@@ -1614,7 +1623,7 @@ function demoCat(){
 function demoSeed(){
   HITS=[{id:"조용한청년들-AC26-0003",space:"유튜브 · 스트리밍 · 리딩방",name:"정문선 이사님 (세무지원닷컴)",staff:"김새롬",status:"시공완료"},
         {id:"조용한청년들-AC26-0006",space:"작업실",name:"최서경",staff:"김희숙",status:"계약완료"}];
-  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=10) return;
+  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=11) return;
   LS.set("co.demo",demoCommon()); LS.set("cat.demo",demoCat());
   const L=(item,spec,unit,qty,price,kind,date="",gong="")=>({date,gong,item,spec,unit,qty,price,amt:0,kind});
   const doc=(o,lines)=>({id:uid(),type:"용역",co:"",gong:"",date:"",payDate:"",paid:false,vat:"+10%",adj:0,note:"",note1:"",file:null,internal:false,...o,lines});
@@ -1670,7 +1679,7 @@ function demoSeed(){
   ];
   const v=(d,pays,extra={})=>({id:uid(),vid:"",gong:d.gong,co:d.co,supply:docSupply(d),vat:"10%",docId:d.id,note:d.note,direct:false,internal:false,
     pays:PAYK.map((k,i)=>({k,amt:pays[i]?pays[i][0]:0,date:pays[i]?pays[i][1]:"",paid:pays[i]?pays[i][2]:false})),...extra});
-  const D={ v:10,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
+  const D={ v:11,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
     start:"2026-10-02",end:"2026-10-14",off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}],stamp:"",
     docs, vendors:[],
