@@ -517,7 +517,7 @@ function blank(id, rec){
   const site=[d.sido,d.gu].filter(Boolean).join(" ");
   return { v:1, id, title:"", client:d.name||"", site, pm:"", estNo:"", start:today(), end:addD(today(),13), off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}], stamp:"",
-    vendors:[], expenses:[], gongs:[], crew:{}, logs:{}, docs:[], picks:{}, listMode:{}, lpays:[] };
+    vendors:[], expenses:[], gongs:[], crew:{}, logs:{}, docs:[], picks:{}, listMode:{}, lpays:[], equip:{}, wetc:{} };
 }
 function days(){ if(!P||!P.start||!P.end||P.end<P.start) return []; const a=[]; for(let s=P.start;s<=P.end;s=addD(s,1)){ a.push(s); if(a.length>400) break; } return a; }
 function workDays(){ const off=new Set(P.off||[]); return days().filter(d=>!off.has(d)); }
@@ -588,7 +588,7 @@ async function openProj(id){
   }
   if(!data) data=LS.get("log:"+id,null);
   P = data || blank(id,rec);
-  P.off=P.off||[]; P.gongs=P.gongs||[]; P.crew=P.crew||{}; P.logs=P.logs||{}; P.vendors=P.vendors||[]; P.expenses=P.expenses||[]; P.docs=P.docs||[]; P.picks=P.picks||{}; P.listMode=P.listMode||{}; P.lpays=P.lpays||[];
+  P.off=P.off||[]; P.gongs=P.gongs||[]; P.crew=P.crew||{}; P.logs=P.logs||{}; P.vendors=P.vendors||[]; P.expenses=P.expenses||[]; P.docs=P.docs||[]; P.picks=P.picks||{}; P.listMode=P.listMode||{}; P.lpays=P.lpays||[]; P.equip=P.equip||{}; P.wetc=P.wetc||{};
   LS.set("log.last",id);
   const h=HITS.find(x=>x.id===id);
   if(!P.title && h) P.title=(h.name||"")+" "+(h.space||"");
@@ -807,13 +807,37 @@ function gongList(){
   const sel=$("cPick"); if(sel) sel.innerHTML=`<option value="">공정 고르기 (${GONG_SRC})</option>`+GONG_STD.filter(g=>!P.gongs.includes(g)).map(g=>`<option>${esc(g)}</option>`).join("")+`<option value="__">직접 입력…</option>`;
 }
 
-/* ══════════ 노무비 — 노무명단(회사 공통) · 이 공사 노무비 · 지급 ══════════ */
+/* ══════════ 노무비 — 노무명단(회사 공통) · 이 공사 노무비 · 지급 ══════════
+   한 사람의 인건비 = 일당 × 일당 공수  +  장비료 × 장비 일수(일당과 따로 기록)  +  기타(식대·잡철물 등)
+   실지급 = 인건비 − 원천징수 (사업소득 3.3% / 일용근로 / 없음) */
 let SHOW_RRN=false;
+const TAXES=["사업소득 3.3%","일용근로","없음"];
 const maskRrn = s => { s=String(s||""); return s.length>8 ? s.slice(0,8)+"******" : s; };
+const fl10 = n => Math.floor(n/10)*10;
 function pickOf(d,g){ return ((P.picks[d]||{})[g])||{}; }
-function workerMan(wid){ return workDays().reduce((s,d)=>s+Object.values(P.picks[d]||{}).reduce((a,o)=>a+N(o[wid]),0),0); }
-function workerDays(wid){ return workDays().map(d=>{ const q=Object.values(P.picks[d]||{}).reduce((a,o)=>a+N(o[wid]),0); return q?`${pd(d).getDate()}${q===.5?"½":""}`:""; }).filter(Boolean); }
-function laborCost(g){ return workDays().reduce((s,d)=>{ const o=pickOf(d,g); return s+Object.keys(o).reduce((a,w)=>a+N(o[w])*N((coW(w)||{}).rate),0); },0); }
+function eqOf(d){ return P.equip[d]||{}; }
+function dayQ(d,wid){ return Object.values(P.picks[d]||{}).reduce((a,o)=>a+N(o[wid]),0); }
+function workerMan(wid){ return workDays().reduce((s,d)=>s+dayQ(d,wid),0); }
+function workerEq(wid){ return workDays().reduce((s,d)=>s+N(eqOf(d)[wid]),0); }
+const dayList = (fn) => workDays().map(d=>{ const q=fn(d); return q?`${pd(d).getDate()}${q===.5?"½":""}`:""; }).filter(Boolean);
+function workerDays(wid){ return dayList(d=>dayQ(d,wid)); }
+function workerEqDays(wid){ return dayList(d=>N(eqOf(d)[wid])); }
+function workerEtc(wid){ return (P.wetc[wid]||[]).reduce((s,x)=>s+N(x.amt),0); }
+/* 한 사람 정산 */
+function pay(w){
+  const man=workerMan(w.id), eq=workerEq(w.id), etc=workerEtc(w.id);
+  const wage=man*N(w.rate), equip=eq*N(w.mrate), gross=wage+equip+etc;
+  let itax=0, ltax=0; const t=w.tax||TAXES[0];
+  if(t===TAXES[0]){ itax=fl10(gross*.03); if(itax<1000) itax=0; ltax=fl10(itax*.1); }
+  else if(t===TAXES[1]){ /* 날마다 (일당−15만원) × 6% × 45%, 1,000원 미만 안 걷음 — 장비료·기타는 근로소득이 아님 */
+    workDays().forEach(d=>{ const q=dayQ(d,w.id); if(!q) return; let it=fl10(Math.max(0,N(w.rate)*q-150000)*.06*.45); if(it<1000) it=0; itax+=it; ltax+=fl10(it*.1); }); }
+  return {man,eq,etc,wage,equip,gross,itax,ltax,net:gross-itax-ltax};
+}
+function laborCost(g){ return CO.workers.filter(w=>w.gong===g||workDays().some(d=>pickOf(d,g)[w.id])).reduce((s,w)=>{
+    /* 일당은 체크한 공정으로, 장비·기타는 그 사람의 공정으로 */
+    const wage=workDays().reduce((a,d)=>a+N(pickOf(d,g)[w.id])*N(w.rate),0);
+    const extra=w.gong===g?workerEq(w.id)*N(w.mrate)+workerEtc(w.id):0;
+    return s+wage+extra; },0); }
 function laborPaid(g){ return P.lpays.filter(x=>x.gong===g&&x.paid).reduce((s,x)=>s+N(x.amt),0); }
 function laborSched(g){ return P.lpays.filter(x=>x.gong===g).reduce((s,x)=>s+N(x.amt),0); }
 function renderLabor(){
@@ -821,51 +845,69 @@ function renderLabor(){
   const gs=[...new Set(CO.workers.map(w=>w.gong).filter(Boolean))];
   $("wFilter").innerHTML=`<option value="">전체 공정</option>`+gs.map(g=>`<option${g===fg?" selected":""}>${esc(g)}</option>`).join("");
   const ws=CO.workers.filter(w=>!fg||w.gong===fg);
-  $("wT").innerHTML = ws.length ? `<thead><tr><th>공정</th><th>성명</th><th class="n">일당</th><th>주민등록번호</th><th>연락처</th><th>은행명</th><th>계좌번호</th><th class="n">이 공사 공수</th><th></th></tr></thead>
+  $("wT").innerHTML = ws.length ? `<thead><tr><th>공정</th><th>성명</th><th class="n">일당</th><th class="n">장비료 <span class="hint">1일</span></th><th>장비명</th><th>원천징수</th><th>주민등록번호</th><th>연락처</th><th>은행명</th><th>계좌번호</th><th></th></tr></thead>
     <tbody>${ws.map(w=>`<tr data-w="${w.id}">
       <td><select data-wf="gong" style="min-width:110px">${gongOpts(w.gong)}</select></td>
       <td><input data-wf="name" value="${esc(w.name)}" style="min-width:80px"></td>
-      <td class="n"><input data-wf="rate" value="${F(w.rate)}" inputmode="numeric" style="text-align:right;width:96px"></td>
+      <td class="n"><input data-wf="rate" value="${F(w.rate)}" inputmode="numeric" style="text-align:right;width:92px"></td>
+      <td class="n"><input data-wf="mrate" value="${F(w.mrate)}" inputmode="numeric" placeholder="—" style="text-align:right;width:88px"></td>
+      <td><input data-wf="mname" value="${esc(w.mname||"")}" placeholder="기계료" style="width:76px"></td>
+      <td><select data-wf="tax" style="min-width:108px">${TAXES.map(t=>`<option${t===(w.tax||TAXES[0])?" selected":""}>${t}</option>`).join("")}</select></td>
       <td>${SHOW_RRN?`<input data-wf="rrn" value="${esc(w.rrn||"")}" style="width:136px" autocomplete="off">`:`<span class="num">${w.rrn?esc(maskRrn(w.rrn)):'<span class="hint">—</span>'}</span>`}</td>
       <td><input data-wf="tel" value="${esc(w.tel||"")}" inputmode="tel" style="width:120px"></td>
       <td><input data-wf="bank" value="${esc(w.bank||"")}" style="width:72px"></td>
       <td>${SHOW_RRN?`<input data-wf="acct" value="${esc(w.acct||"")}" style="width:150px" autocomplete="off">`:`<span class="num">${w.acct?esc(String(w.acct).slice(0,4))+"…":'<span class="hint">—</span>'}</span>`}</td>
-      <td class="n num">${FQ(workerMan(w.id))}</td><td><button class="x" data-wdel="${w.id}">×</button></td></tr>`).join("")}</tbody>`
+      <td><button class="x" data-wdel="${w.id}">×</button></td></tr>`).join("")}</tbody>`
     : `<tr><td class="empty">＋ 사람으로 노무명단을 만드세요 — 한 번 넣으면 모든 공사에서 고를 수 있습니다</td></tr>`;
-  /* 이 공사 */
-  const rows=CO.workers.map(w=>({w,man:workerMan(w.id)})).filter(x=>x.man);
-  const T=rows.reduce((a,x)=>{ a.m+=x.man; a.c+=x.man*N(x.w.rate); return a; },{m:0,c:0});
-  $("lT").innerHTML = rows.length ? `<thead><tr><th>공정</th><th>성명</th><th>일한 날 (${pd(P.start).getMonth()+1}월~)</th><th class="n">공수</th><th class="n">일당</th><th class="n">노무비</th></tr></thead>
-    <tbody>${rows.map(x=>`<tr><td>${esc(x.w.gong)}</td><td>${esc(x.w.name)}</td><td class="num">${workerDays(x.w.id).join(", ")}</td><td class="n num">${FQ(x.man)}</td><td class="n num">${F(x.w.rate)}</td><td class="n num"><b>${F0(x.man*N(x.w.rate))}</b></td></tr>`).join("")}</tbody>
-    <tfoot><tr><td colspan="3">합계 ${rows.length}명</td><td class="n num">${FQ(T.m)}</td><td></td><td class="n num">${F0(T.c)}</td></tr></tfoot>`
+  /* 이 공사 정산 */
+  const rows=CO.workers.map(w=>({w,p:pay(w)})).filter(x=>x.p.man||x.p.eq||x.p.etc);
+  const T=rows.reduce((a,x)=>{ for(const k of ["man","eq","wage","equip","etc","gross","itax","ltax","net"]) a[k]+=x.p[k]; return a; },{man:0,eq:0,wage:0,equip:0,etc:0,gross:0,itax:0,ltax:0,net:0});
+  $("lT").innerHTML = rows.length ? `<thead><tr><th>공정</th><th>성명</th><th>일당 날짜</th><th class="n">공수</th><th class="n">인건비</th><th>장비 날짜</th><th class="n">일수</th><th class="n">장비료</th><th>기타 <span class="hint">식대·잡철물 등</span></th><th class="n">신고금액</th><th class="n">소득세</th><th class="n">지방세</th><th class="n">실지급</th><th>구분</th></tr></thead>
+    <tbody>${rows.map(({w,p})=>`<tr data-pw="${w.id}"><td>${esc(w.gong)}</td><td><b>${esc(w.name)}</b></td>
+      <td class="num hint">${workerDays(w.id).join(", ")}</td><td class="n num">${FQ(p.man)}</td><td class="n num">${F(p.wage)}</td>
+      <td class="num hint">${workerEqDays(w.id).join(", ")}${N(w.mrate)&&p.man&&!p.eq?`<button class="btn sm" data-eqsame="${w.id}">일당 날짜와 같게</button>`:""}</td><td class="n num">${FQ(p.eq)}</td><td class="n num">${F(p.equip)}</td>
+      <td>${(P.wetc[w.id]||[]).map(x=>`<span class="chip" style="margin:1px 2px">${esc(x.item)} ${F0(x.amt)} <button class="x" style="font-size:12px;padding:0 2px" data-etcdel="${w.id}:${x.id}">×</button></span>`).join("")}<button class="btn sm" data-etcadd="${w.id}">＋</button></td>
+      <td class="n num"><b>${F0(p.gross)}</b></td><td class="n num">${F(p.itax)}</td><td class="n num">${F(p.ltax)}</td><td class="n num"><b>${F0(p.net)}</b></td><td class="hint">${{"사업소득 3.3%":"3.3%","일용근로":"일용","없음":"없음"}[w.tax||TAXES[0]]}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td colspan="3">합계 ${rows.length}명</td><td class="n num">${FQ(T.man)}</td><td class="n num">${F0(T.wage)}</td><td></td><td class="n num">${FQ(T.eq)}</td><td class="n num">${F0(T.equip)}</td><td class="num">${F0(T.etc)}</td>
+      <td class="n num">${F0(T.gross)}</td><td class="n num">${F0(T.itax)}</td><td class="n num">${F0(T.ltax)}</td><td class="n num">${F0(T.net)}</td><td></td></tr></tfoot>`
     : `<tr><td class="empty">인원 탭에서 공정의 '일당'을 켜고 날짜를 눌러 사람을 고르면 여기에 모입니다</td></tr>`;
   /* 지급 */
-  $("lpT").innerHTML = P.lpays.length ? `<thead><tr><th>공정</th><th>지급일</th><th class="n">금액</th><th>지급</th><th>비고</th><th></th></tr></thead>
+  $("lpT").innerHTML = P.lpays.length ? `<thead><tr><th>공정</th><th>지급일</th><th class="n">금액 <span class="hint">신고금액 기준</span></th><th>지급</th><th>비고</th><th></th></tr></thead>
     <tbody>${P.lpays.map(x=>`<tr data-lp="${x.id}"><td><select data-lf="gong" style="min-width:110px">${gongOpts(x.gong)}</select></td>
       <td><input type="date" data-lf="date" value="${esc(x.date)}"></td>
       <td class="n"><input data-lf="amt" value="${F(x.amt)}" inputmode="numeric" style="text-align:right;width:110px"></td>
       <td><input type="checkbox" data-lf="paid" ${x.paid?"checked":""}></td>
       <td><input data-lf="note" value="${esc(x.note||"")}" placeholder="직영 노무비"></td><td><button class="x" data-lpdel="${x.id}">×</button></td></tr>`).join("")}</tbody>
-    <tfoot><tr><td colspan="6">${[...new Set([...P.lpays.map(x=>x.gong),...Object.keys(P.listMode).filter(g=>P.listMode[g])])].filter(Boolean).map(g=>`${esc(g)} 노무비 ${F0(laborCost(g))} · 지급 ${F0(laborPaid(g))} · 남음 <b>${F0(laborCost(g)-laborPaid(g))}</b>`).join("<br>")}</td></tr></tfoot>`
+    <tfoot><tr><td colspan="6">${laborGongs().map(g=>`${esc(g)} 노무비 ${F0(laborCost(g))} · 지급 ${F0(laborPaid(g))} · 남음 <b>${F0(laborCost(g)-laborPaid(g))}</b>`).join("<br>")}</td></tr></tfoot>`
     : `<tr><td class="empty">아직 지급 기록이 없습니다</td></tr>`;
 }
+function laborGongs(){ return [...new Set([...P.lpays.map(x=>x.gong),...Object.keys(P.listMode).filter(g=>P.listMode[g])])].filter(Boolean); }
 $("wFilter").onchange=renderLabor;
 $("wShow").onchange=e=>{ SHOW_RRN=e.target.checked; renderLabor(); };
-$("wAdd").onclick=()=>{ CO.workers.push({id:uid(),gong:$("wFilter").value||"",name:"",rate:0,rrn:"",tel:"",bank:"",acct:""}); saveCo("workers"); renderLabor(); };
+$("wAdd").onclick=()=>{ CO.workers.push({id:uid(),gong:$("wFilter").value||"",name:"",rate:0,mrate:0,mname:"",tax:TAXES[0],rrn:"",tel:"",bank:"",acct:""}); saveCo("workers"); renderLabor(); };
 $("wT").addEventListener("change",e=>{ const tr=e.target.closest("tr[data-w]"); if(!tr) return; const w=coW(tr.dataset.w), f=e.target.dataset.wf; if(!w||!f) return;
-  w[f]= f==="rate"?N(e.target.value):e.target.value.trim(); saveCo("workers"); renderLabor(); renderCrew(); renderSum(); });
+  w[f]= (f==="rate"||f==="mrate")?N(e.target.value):e.target.value.trim(); saveCo("workers"); renderLabor(); renderCrew(); renderSum(); });
 $("wT").addEventListener("click",e=>{ const id=e.target.dataset.wdel; if(!id) return; const w=coW(id);
-  if(workerMan(id)) return toast(`${w.name}님은 이 공사에 공수가 있어 지울 수 없습니다 — 인원 탭에서 먼저 빼주세요`);
+  if(workerMan(id)||workerEq(id)) return toast(`${w.name}님은 이 공사에 기록이 있어 지울 수 없습니다 — 인원 탭에서 먼저 빼주세요`);
   if(confirm(`${w.name||"이 사람"}을 노무명단에서 지울까요? (모든 공사 공통)`)){ CO.workers=CO.workers.filter(x=>x.id!==id); saveCo("workers"); renderLabor(); } });
-$("lpAdd").onclick=()=>{ P.lpays.push({id:uid(),gong:Object.keys(P.listMode).find(g=>P.listMode[g])||"",date:SEL,amt:0,paid:false,note:""}); touch(); renderLabor(); };
-$("lpFill").onclick=()=>{ const gs=Object.keys(P.listMode).filter(g=>P.listMode[g]&&laborCost(g)>laborSched(g)); if(!gs.length) return toast("채울 미지급 노무비가 없습니다");
+$("lT").addEventListener("click",e=>{ const t=e.target;
+  if(t.dataset.etcadd){ const it=(prompt("기타 항목 (예: 식대, 잡철물, 유류비)")||"").trim(); if(!it) return; const a=N(prompt(`${it} 금액`)||""); if(!a) return;
+    (P.wetc[t.dataset.etcadd]=P.wetc[t.dataset.etcadd]||[]).push({id:uid(),item:it,amt:a}); }
+  else if(t.dataset.etcdel){ const [w,id]=t.dataset.etcdel.split(":"); P.wetc[w]=(P.wetc[w]||[]).filter(x=>x.id!==id); }
+  else if(t.dataset.eqsame){ const w=t.dataset.eqsame; workDays().forEach(d=>{ const q=dayQ(d,w); if(q) setEq(d,w,q); }); }
+  else return;
+  touch(); renderLabor(); renderCrew(); renderSum(); });
+$("lpAdd").onclick=()=>{ P.lpays.push({id:uid(),gong:laborGongs()[0]||"",date:SEL,amt:0,paid:false,note:""}); touch(); renderLabor(); };
+$("lpFill").onclick=()=>{ const gs=laborGongs().filter(g=>laborCost(g)>laborSched(g)); if(!gs.length) return toast("채울 미지급 노무비가 없습니다");
   gs.forEach(g=>P.lpays.push({id:uid(),gong:g,date:SEL,amt:laborCost(g)-laborSched(g),paid:false,note:"직영 노무비"})); touch(); renderLabor(); renderLog(); };
 $("lpT").addEventListener("change",e=>{ const tr=e.target.closest("tr[data-lp]"); if(!tr) return; const x=P.lpays.find(y=>y.id===tr.dataset.lp), f=e.target.dataset.lf;
   x[f]= f==="paid"?e.target.checked : f==="amt"?N(e.target.value) : e.target.value; touch(); renderLabor(); renderLog(); });
 $("lpT").addEventListener("click",e=>{ const id=e.target.dataset.lpdel; if(id){ P.lpays=P.lpays.filter(x=>x.id!==id); touch(); renderLabor(); renderLog(); } });
 $("wCsv").onclick=()=>{
-  const rows=[["공정","성명","주민등록번호","연락처","은행명","계좌번호","일당","일한 날","공수","노무비","신청번호"]];
-  CO.workers.forEach(w=>{ const m=workerMan(w.id); if(m) rows.push([w.gong,w.name,w.rrn,w.tel,w.bank,w.acct,N(w.rate),workerDays(w.id).join(" "),m,m*N(w.rate),P.id]); });
+  const rows=[["공정","성명","주민등록번호","연락처","은행명","계좌번호","일당","일한 날","공수","인건비","장비명","장비료(1일)","장비 날","장비 일수","장비료","기타 내역","기타","신고금액","소득세","지방소득세","실지급금액","원천징수","신청번호"]];
+  CO.workers.forEach(w=>{ const p=pay(w); if(!(p.man||p.eq||p.etc)) return;
+    rows.push([w.gong,w.name,w.rrn,w.tel,w.bank,w.acct,N(w.rate),workerDays(w.id).join(" "),p.man,p.wage,w.mname||"",N(w.mrate),workerEqDays(w.id).join(" "),p.eq,p.equip,
+      (P.wetc[w.id]||[]).map(x=>`${x.item} ${x.amt}`).join(" / "),p.etc,p.gross,p.itax,p.ltax,p.net,w.tax||TAXES[0],P.id]); });
   if(rows.length<2) return toast("이 공사에 체크된 공수가 없습니다");
   csvDown(rows,`노무정산_${P.id}.csv`);
 };
@@ -1119,22 +1161,28 @@ function renderPick(){
   const mine=CO.workers.filter(w=>w.gong===g), extra=CO.workers.filter(w=>w.gong!==g&&o[w.id]);
   const others=CO.workers.filter(w=>w.gong!==g&&!o[w.id]);
   const chip=w=>{ const q=N(o[w.id]); return `<button class="wchip ${q===1?"q1":q===.5?"q05":""}" data-wk="${w.id}">${esc(w.name||"(이름)")}<small>${q===1?"1":q===.5?"0.5":F(w.rate)}</small></button>`; };
+  const eqW=[...mine,...extra].filter(w=>N(w.mrate)), eo=eqOf(d);
+  const echip=w=>{ const q=N(eo[w.id]); return `<button class="wchip ${q===1?"q1":q===.5?"q05":""}" data-we="${w.id}">${esc(w.name)} · ${esc(w.mname||"장비")}<small>${q===1?"1":q===.5?"0.5":F(w.mrate)}</small></button>`; };
   $("pickPane").innerHTML=`<div class="pickpane">
     <div class="row"><b>${dateKo(d)} · ${esc(g)}</b><span class="hint">이름을 누르면 1 → 0.5 → 빼기 · ${FQ(crewOn(d,g))||0}공</span>
       <span class="row" style="margin-left:auto"><button class="btn sm" data-pnav="-1">◀</button><button class="btn sm" data-pnav="1">▶</button>
       <button class="btn sm" data-pprev="1">전날과 같이</button><button class="btn sm" data-pclose="1">닫기</button></span></div>
     <div class="chips">${mine.length||extra.length?[...mine,...extra].map(chip).join(""):`<span class="hint">노무명단에 '${esc(g)}' 공정 사람이 없습니다 — 노무비 탭에서 ＋ 사람</span>`}</div>
+    ${eqW.length?`<div class="row" style="margin-top:12px"><b style="font-size:12px">장비·기계</b><span class="hint">일당과 따로 — 장비를 쓴 날만 누르세요</span></div><div class="chips" style="margin-top:6px">${eqW.map(echip).join("")}</div>`:""}
     ${others.length?`<div class="row" style="margin-top:10px"><span class="hint">다른 공정 명단에서</span><select data-pother="1"><option value="">사람 더하기</option>${others.map(w=>`<option value="${w.id}">${esc(w.name)} · ${esc(w.gong||"공정 없음")}</option>`).join("")}</select></div>`:""}
   </div>`;
 }
+function setEq(d,wid,q){ P.equip[d]=P.equip[d]||{}; if(q) P.equip[d][wid]=q; else delete P.equip[d][wid]; if(!Object.keys(P.equip[d]).length) delete P.equip[d]; }
 function setPick(d,g,wid,q){ P.picks[d]=P.picks[d]||{}; P.picks[d][g]=P.picks[d][g]||{}; if(q) P.picks[d][g][wid]=q; else delete P.picks[d][g][wid];
   if(!Object.keys(P.picks[d][g]).length) delete P.picks[d][g]; if(!Object.keys(P.picks[d]).length) delete P.picks[d]; }
 $("pickPane").addEventListener("click",e=>{ const t=e.target.closest("button"); if(!t||!PICK) return; const {d,g}=PICK;
   if(t.dataset.wk){ const q=N(pickOf(d,g)[t.dataset.wk]); setPick(d,g,t.dataset.wk, q===0?1:q===1?.5:0); }
+  else if(t.dataset.we){ const q=N(eqOf(d)[t.dataset.we]); setEq(d,t.dataset.we, q===0?1:q===1?.5:0); }
   else if(t.dataset.pclose){ PICK=null; }
   else if(t.dataset.pnav){ const w=workDays(); const i=w.indexOf(d)+(+t.dataset.pnav); if(w[i]) PICK={d:w[i],g}; }
   else if(t.dataset.pprev){ const prev=workDays().filter(x=>x<d).pop(); if(!prev) return toast("전날 기록이 없습니다"); const o=pickOf(prev,g); if(!Object.keys(o).length) return toast("전날 체크한 사람이 없습니다");
-    if(P.picks[d]) delete P.picks[d][g]; Object.entries(o).forEach(([w,q])=>setPick(d,g,w,q)); }
+    if(P.picks[d]) delete P.picks[d][g]; Object.entries(o).forEach(([w,q])=>setPick(d,g,w,q));
+    const eo=eqOf(prev); Object.keys(eqOf(d)).forEach(w=>{ if(coW(w)&&coW(w).gong===g) setEq(d,w,0); }); Object.entries(eo).forEach(([w,q])=>{ if(coW(w)&&coW(w).gong===g) setEq(d,w,q); }); }
   else return;
   touch(); renderCrew(); renderLog(); renderLabor();
 });
@@ -1300,7 +1348,7 @@ function demoCommon(){
   return { vendors:[V("썬앤문",["시트 공사"],{ceo:"김기현"}),V("청명전기",["전기 공사"],{ceo:"김용현"}),V("광일사",["도장 공사"],{ceo:"이상열"}),
       V("원크린",["준공청소"],{ceo:"윤창성"}),V("에스제이공조",["공조 공사"],{ceo:"이중광"}),V("용호소방",["소방공사"],{ceo:"최유림"}),
       V("○○전기",["전기 공사"]),V("○○도장",["도장 공사"])],
-    workers:[{id:"wA",gong:"목공사",name:"목수 A",rate:290000,rrn:"",tel:"",bank:"",acct:""},
+    workers:[{id:"wA",gong:"목공사",name:"반장 A",rate:290000,mrate:150000,mname:"기계료",tax:"사업소득 3.3%",rrn:"",tel:"",bank:"",acct:""},
              {id:"wB",gong:"목공사",name:"목수 B",rate:290000,rrn:"",tel:"",bank:"",acct:""},
              {id:"wC",gong:"목공사",name:"목수 C",rate:290000,rrn:"",tel:"",bank:"",acct:""},
              {id:"wD",gong:"목공사",name:"조공 D",rate:180000,rrn:"",tel:"",bank:"",acct:""},
@@ -1318,7 +1366,7 @@ function demoCat(){
 function demoSeed(){
   HITS=[{id:"조용한청년들-AC26-0003",space:"유튜브 · 스트리밍 · 리딩방",name:"정문선 이사님 (세무지원닷컴)",staff:"김새롬",status:"시공완료"},
         {id:"조용한청년들-AC26-0006",space:"작업실",name:"최서경",staff:"김희숙",status:"계약완료"}];
-  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=4) return;
+  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=5) return;
   LS.set("co.demo",demoCommon()); LS.set("cat.demo",demoCat());
   const L=(item,spec,unit,qty,price,kind,date="",gong="")=>({date,gong,item,spec,unit,qty,price,amt:0,kind});
   const doc=(o,lines)=>({id:uid(),type:"용역",co:"",gong:"",date:"",payDate:"",paid:false,vat:"+10%",adj:0,note:"",note1:"",file:null,internal:false,...o,lines});
@@ -1374,7 +1422,7 @@ function demoSeed(){
   ];
   const v=(d,pays,extra={})=>({id:uid(),vid:"",gong:d.gong,co:d.co,supply:docSupply(d),vat:"10%",docId:d.id,note:d.note,direct:false,internal:false,
     pays:PAYK.map((k,i)=>({k,amt:pays[i]?pays[i][0]:0,date:pays[i]?pays[i][1]:"",paid:pays[i]?pays[i][2]:false})),...extra});
-  const D={ v:4,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
+  const D={ v:5,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
     start:"2026-10-02",end:"2026-10-14",off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}],stamp:"",
     docs, vendors:[],
@@ -1382,13 +1430,13 @@ function demoSeed(){
       {id:uid(),date:"2026-10-03",type:"자재",gong:"목공사",payee:"쿠팡",amt:44700,use:"흡음재",paid:true,internal:false,photo:null},
       {id:uid(),date:"2026-10-03",type:"경비",gong:"",payee:"점심(디렉터)",amt:14500,use:"1번",paid:true,internal:false,photo:null},
       {id:uid(),date:"2026-10-03",type:"경비",gong:"",payee:"작업자(음료)",amt:5000,use:"2번",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-08",type:"경비",gong:"목공사",payee:"기계료",amt:825000,use:"150,000 × 5.5일",paid:true,internal:true,photo:null},
-      {id:uid(),date:"2026-10-08",type:"경비",gong:"목공사",payee:"작업자 식대",amt:160000,use:"10,000 × 16",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-08",type:"자재",gong:"목공사",payee:"잡철물",amt:190000,use:"목공 잡철물",paid:true,internal:false,photo:null}],
+],
     gongs:["목공사","전기 공사","소방공사","공조 공사"], listMode:{"목공사":true},
     crew:{"2026-10-03":{"전기 공사":1,"소방공사":2,"공조 공사":2}},
     picks:(()=>{ const o={}; ["2026-10-03","2026-10-04","2026-10-05","2026-10-06","2026-10-07"].forEach(d=>o[d]={"목공사":{wA:1,wB:1,wC:1}}); o["2026-10-08"]={"목공사":{wA:.5}}; return o; })(),
-    lpays:[{id:uid(),gong:"목공사",date:"2026-10-08",amt:4495000,paid:true,note:"목수 3명 · 15.5공"}],
+    equip:(()=>{ const o={}; ["2026-10-03","2026-10-04","2026-10-05","2026-10-06","2026-10-07"].forEach(d=>o[d]={wA:1}); o["2026-10-08"]={wA:.5}; return o; })(),
+    wetc:{wA:[{id:"e1",item:"식대",amt:160000},{id:"e2",item:"잡철물",amt:190000}]},
+    lpays:[{id:uid(),gong:"목공사",date:"2026-10-08",amt:5670000,paid:true,note:"목수 3명 · 3.3% 공제 후 실지급"}],
     logs:{"2026-10-03":{plan:"목공 : 자재양중, 보양, 벽체세우기, 천장벽면 작업\n전기 : 배선작업\n소방 : 스프링쿨러 헤드조정 및 위치 변경\n냉난방기 : 위치조정",
                          rep:"!냉난방기(60만원), 소방(25만원) 발주처에서 지급예정\n일용직 작업자 식사와 간식은 추후 경비로 청구 예정"}} };
   /* 용역 내역서 → 용역비 (지급일은 모르는 건 비워 둠) */
