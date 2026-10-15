@@ -165,6 +165,14 @@ table.apv{border-collapse:collapse}
 table.apv th{background:#F4D9C6;font-size:9pt;font-weight:600;padding:1.4mm 2mm;border:1px solid #5a5a5a;min-width:24mm;white-space:nowrap}
 table.apv td{height:19mm;border:1px solid #5a5a5a;text-align:center;vertical-align:middle;position:relative}
 table.apv td img{max-width:19mm;max-height:19mm;opacity:.95}
+table.apv td.slash{background:linear-gradient(to top right,transparent calc(50% - .6px),#5a5a5a calc(50% - .6px),#5a5a5a calc(50% + .6px),transparent calc(50% + .6px))}
+.jeon{display:inline-block;border:2px solid #C0392B;color:#C0392B;border-radius:50%;width:15mm;height:15mm;line-height:13mm;font-weight:700;font-size:11pt;letter-spacing:.05em}
+.apvbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.apvbar .ab{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:6px;padding:4px 8px;background:var(--surface-2);font-size:12px}
+.apvbar .ab b{font-size:12px}
+.apvbar .ab label{display:flex;gap:3px;align-items:center;color:var(--ink-2)}
+.stampmini{width:34px;height:34px;border:1px dashed var(--line);border-radius:4px;display:grid;place-items:center;overflow:hidden;background:var(--surface)}
+.stampmini img{max-width:100%;max-height:100%}
 table.dt{width:100%;border-collapse:collapse;table-layout:fixed}
 table.dt td,table.dt th{border:1px solid #5a5a5a;padding:.8mm 2mm;font-size:9.5pt;line-height:1.25;height:6.75mm;vertical-align:middle;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 table.dt td{border-top-style:dotted;border-bottom-style:dotted}
@@ -197,6 +205,8 @@ details.coinfo summary{cursor:pointer;font-size:12px;color:var(--ink-2);font-wei
 /* 인원 — 명단 체크 */
 button.pick{width:44px;height:28px;border:1px solid var(--line);border-radius:5px;background:var(--surface-2);font-family:"IBM Plex Mono",monospace;font-size:12px}
 button.pick:hover{border-color:var(--accent)}
+button.pick.pm{width:48px;font-size:11px}
+tr.pmrow td{background:color-mix(in srgb,var(--accent) 6%,var(--surface))}
 button.pick.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
 .pickpane{margin-top:12px;border:1px solid var(--accent);border-radius:8px;padding:12px;background:var(--accent-soft)}
 .pickpane .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
@@ -419,6 +429,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <input type="date" id="dDate">
       <button class="btn sm" id="dNext">▶</button>
       <span class="dd" id="dLabel"></span>
+      <span class="apvbar" id="dApv"></span>
       <span style="margin-left:auto" class="row">
         <button class="btn sm" id="dCopy">어제 계획 가져오기</button>
         <button class="btn pri" id="dPrint">인쇄 / PDF</button>
@@ -523,7 +534,7 @@ function blank(id, rec){
   const site=[d.sido,d.gu].filter(Boolean).join(" ");
   return { v:1, id, title:"", client:d.name||"", site, pm:"", estNo:"", start:today(), end:addD(today(),13), off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}], stamp:"",
-    vendors:[], expenses:[], gongs:[], crew:{}, logs:{}, docs:[], picks:{}, listMode:{}, lpays:[], equip:{}, wetc:{} };
+    vendors:[], expenses:[], gongs:[], crew:{}, logs:{}, docs:[], picks:{}, listMode:{}, lpays:[], equip:{}, wetc:{}, pmd:{} };
 }
 function days(){ if(!P||!P.start||!P.end||P.end<P.start) return []; const a=[]; for(let s=P.start;s<=P.end;s=addD(s,1)){ a.push(s); if(a.length>400) break; } return a; }
 function workDays(){ const off=new Set(P.off||[]); return days().filter(d=>!off.has(d)); }
@@ -594,7 +605,7 @@ async function openProj(id){
   }
   if(!data) data=LS.get("log:"+id,null);
   P = data || blank(id,rec);
-  P.off=P.off||[]; P.gongs=P.gongs||[]; P.crew=P.crew||{}; P.logs=P.logs||{}; P.vendors=P.vendors||[]; P.expenses=P.expenses||[]; P.docs=P.docs||[]; P.picks=P.picks||{}; P.listMode=P.listMode||{}; P.lpays=P.lpays||[]; P.equip=P.equip||{}; P.wetc=P.wetc||{};
+  P.off=P.off||[]; P.gongs=P.gongs||[]; P.crew=P.crew||{}; P.logs=P.logs||{}; P.vendors=P.vendors||[]; P.expenses=P.expenses||[]; P.docs=P.docs||[]; P.picks=P.picks||{}; P.listMode=P.listMode||{}; P.lpays=P.lpays||[]; P.equip=P.equip||{}; P.wetc=P.wetc||{}; P.pmd=P.pmd||{}; P.gongs=P.gongs.filter(g=>g!==PMG);
   P.expenses.forEach(x=>{ if(!x.rno) x.rno=nextRno(x.date); });
   LS.set("log.last",id);
   const h=HITS.find(x=>x.id===id);
@@ -631,15 +642,19 @@ function renderApv(){
   $("apvEd").innerHTML=P.apv.map((a,i)=>`<div class="a">
      <div class="row" style="justify-content:space-between"><span class="hint">${i+1}번 칸</span>${P.apv.length>1?`<button class="x" data-adel="${i}" title="칸 빼기">×</button>`:""}</div>
      <input value="${esc(a.t)}" data-at="${i}">
-     <label class="hint" style="display:flex;gap:4px;align-items:center"><input type="radio" name="apvStamp" data-as="${i}" ${a.stamp?"checked":""}> 도장 찍기</label>
+     <label class="hint" style="display:flex;gap:4px;align-items:center"><input type="radio" name="apvStamp" data-as="${i}" ${a.stamp?"checked":""}> 매일 기본으로 도장</label>
+     <div class="row" style="gap:6px"><span class="stampmini">${a.img?`<img src="${a.img}" alt="">`:`<span class="hint" style="font-size:10px">${a.stamp&&P.stamp?"회사":"—"}</span>`}</span>
+       <label class="btn sm">이 칸 도장<input type="file" accept="image/*" data-aimg="${i}" hidden></label>${a.img?`<button class="x" data-aimgdel="${i}" title="이 칸 도장 지우기">×</button>`:""}</div>
      <div class="row">${i>0?`<button class="btn sm" data-amv="${i},-1">◀</button>`:""}${i<P.apv.length-1?`<button class="btn sm" data-amv="${i},1">▶</button>`:""}</div>
    </div>`).join("");
   $("stampBox").innerHTML = P.stamp ? `<img src="${P.stamp}" alt="도장">` : `<span class="hint">없음</span>`;
 }
 $("apvEd").addEventListener("input",e=>{ const i=e.target.dataset.at; if(i!=null){ P.apv[i].t=e.target.value; touch(); } });
-$("apvEd").addEventListener("change",e=>{ const i=e.target.dataset.as; if(i!=null){ P.apv.forEach((a,j)=>a.stamp=(j==i)); touch(); } });
+$("apvEd").addEventListener("change",async e=>{ const i=e.target.dataset.as; if(i!=null){ P.apv.forEach((a,j)=>a.stamp=(j==i)); touch(); renderApv(); renderLog(); }
+  const k=e.target.dataset.aimg; if(k!=null&&e.target.files[0]){ P.apv[k].img=await shrink(e.target.files[0],300,"image/png"); touch(); renderApv(); renderLog(); } });
 $("apvEd").addEventListener("click",e=>{
-  const d=e.target.dataset.adel, m=e.target.dataset.amv;
+  const d=e.target.dataset.adel, m=e.target.dataset.amv, x=e.target.dataset.aimgdel;
+  if(x!=null){ delete P.apv[x].img; touch(); renderApv(); renderLog(); return; }
   if(d!=null){ P.apv.splice(+d,1); if(!P.apv.some(a=>a.stamp)) P.apv[0].stamp=true; touch(); renderApv(); }
   if(m){ const [i,n]=m.split(",").map(Number); const t=P.apv[i]; P.apv[i]=P.apv[i+n]; P.apv[i+n]=t; touch(); renderApv(); }
 });
@@ -1195,17 +1210,24 @@ $("eTable").addEventListener("change",async e=>{ const id=e.target.dataset.xpaid
 $("eTable").addEventListener("click",e=>{ const id=e.target.dataset.xdel; if(id&&confirm("이 지출을 지울까요? (드라이브 사진은 남습니다)")){ P.expenses=P.expenses.filter(x=>x.id!==id); touch(); renderExp(); renderLog(); } });
 
 /* ══════════ 인원 ══════════ */
+/* PM — 인원 표 맨 위 고정. 날마다 15만 / 20만(두 현장 이상) / FREE */
+const PMG="PM", PM_OPT=["15","20","F"], PM_AMT={"15":150000,"20":200000,"F":0};
+const pmLabel = v => v==="F"?"FREE":v?`${v}만`:"·";
+function pmCost(){ return days().reduce((s,d)=>s+(PM_AMT[P.pmd[d]]||0),0); }
 const isList = g => !!P.listMode[g];
-function crewOn(d,g){ if(isList(g)) return Object.values(pickOf(d,g)).reduce((s,q)=>s+N(q),0); return N((P.crew[d]||{})[g]); }
+function crewOn(d,g){ if(g===PMG) return P.pmd[d]?1:0; if(isList(g)) return Object.values(pickOf(d,g)).reduce((s,q)=>s+N(q),0); return N((P.crew[d]||{})[g]); }
 function manTot(g){ return days().reduce((s,d)=>s+crewOn(d,g),0); }
 function crewCum(d,g){ return days().filter(x=>x<=d).reduce((s,x)=>s+crewOn(x,g),0); }
 let PICK=null;
 function renderCrew(){
   const dd=days(), off=new Set(P.off);
-  if(!P.gongs.length) { $("crewT").innerHTML=`<tr><td class="empty">오른쪽 위에서 공정을 골라 시작하세요 (용역비·지출에 적은 공정은 자동으로 들어옵니다)</td></tr>`; $("pickPane").innerHTML=""; return; }
+  if(false) { $("crewT").innerHTML=`<tr><td class="empty">오른쪽 위에서 공정을 골라 시작하세요 (용역비·지출에 적은 공정은 자동으로 들어옵니다)</td></tr>`; $("pickPane").innerHTML=""; return; }
   $("crewT").innerHTML=`<thead><tr><th class="g">공정</th>${dd.map(d=>{ const n=dayNo(d);
       return `<th class="d${off.has(d)?" off":""}${d===SEL?" sel":""}" data-off="${d}" title="눌러서 휴무 표시 — 일차 계산에서만 빠지고 기록은 그대로 됩니다">${dateSh(d)}<br>${WK[pd(d).getDay()]}${off.has(d)?"·휴":n?`·${n}일`:""}</th>`; }).join("")}<th class="n">합계</th><th class="n">노무비</th><th>일당 <span class="hint">명단</span></th><th></th></tr></thead>
-   <tbody>${P.gongs.map((g,i)=>`<tr><td class="g"><input value="${esc(g)}" data-gn="${i}"></td>
+   <tbody><tr class="pmrow"><td class="g"><b>PM</b> <span class="hint">${esc(P.pm||"")}</span></td>
+      ${dd.map(d=>`<td><button class="pick pm${P.pmd[d]?" on":""}" data-pmd="${d}" title="누를 때마다 15만 → 20만(두 현장 이상) → FREE → 없음">${pmLabel(P.pmd[d])}</button></td>`).join("")}
+      <td class="n num"><b>${FQ(manTot(PMG))||"0"}</b></td><td class="n num">${F(pmCost())}</td><td class="hint" style="font-size:11px">PM비</td><td></td></tr>
+   ${P.gongs.map((g,i)=>`<tr><td class="g"><input value="${esc(g)}" data-gn="${i}"></td>
       ${dd.map(d=>isList(g)
         ? `<td><button class="pick${PICK&&PICK.d===d&&PICK.g===g?" on":""}" data-pk="${d}" data-pg="${esc(g)}">${FQ(crewOn(d,g))||"·"}</button></td>`
         : `<td><input inputmode="decimal" data-cd="${d}" data-cg="${esc(g)}" value="${crewOn(d,g)||""}"></td>`).join("")}
@@ -1213,8 +1235,8 @@ function renderCrew(){
       <td class="n num">${isList(g)?F(laborCost(g)):""}</td>
       <td><label class="lm"><input type="checkbox" data-lm="${esc(g)}" ${isList(g)?"checked":""}></label></td>
       <td><button class="x" data-gdel="${i}">×</button></td></tr>`).join("")}</tbody>
-   <tfoot><tr><td class="g">금일계</td>${dd.map(d=>`<td class="num">${FQ(P.gongs.reduce((s,g)=>s+crewOn(d,g),0))}</td>`).join("")}
-      <td class="n num">${FQ(P.gongs.reduce((s,g)=>s+manTot(g),0))}</td><td class="n num">${F0(P.gongs.reduce((s,g)=>s+(isList(g)?laborCost(g):0),0))}</td><td></td><td></td></tr></tfoot>`;
+   <tfoot><tr><td class="g">금일계</td>${dd.map(d=>`<td class="num">${FQ([PMG,...P.gongs].reduce((s,g)=>s+crewOn(d,g),0))}</td>`).join("")}
+      <td class="n num">${FQ([PMG,...P.gongs].reduce((s,g)=>s+manTot(g),0))}</td><td class="n num">${F0(pmCost()+P.gongs.reduce((s,g)=>s+(isList(g)?laborCost(g):0),0))}</td><td></td><td></td></tr></tfoot>`;
   renderPick();
 }
 function renderPick(){
@@ -1249,7 +1271,7 @@ $("pickPane").addEventListener("click",e=>{ const t=e.target.closest("button"); 
   touch(); renderCrew(); renderLog(); renderLabor();
 });
 $("pickPane").addEventListener("change",e=>{ if(e.target.dataset.pother&&e.target.value&&PICK){ setPick(PICK.d,PICK.g,e.target.value,1); touch(); renderCrew(); renderLog(); renderLabor(); } });
-$("cPick").onchange=e=>{ let g=e.target.value; e.target.value=""; if(g==="__") g=(prompt("공정 이름")||""); g=g.trim(); if(!g) return;
+$("cPick").onchange=e=>{ let g=e.target.value; e.target.value=""; if(g==="__") g=(prompt("공정 이름")||""); g=g.trim(); if(!g||g===PMG) return;
   if(!P.gongs.includes(g)) P.gongs.push(g); touch(); renderCrew(); gongList(); };
 $("crewT").addEventListener("change",e=>{ const t=e.target;
   if(t.dataset.lm!=null){ const g=t.dataset.lm;
@@ -1258,11 +1280,14 @@ $("crewT").addEventListener("change",e=>{ const t=e.target;
     touch(); renderCrew(); renderLog(); renderLabor(); renderSum(); return; }
   if(t.dataset.cd){ const d=t.dataset.cd, g=t.dataset.cg; P.crew[d]=P.crew[d]||{}; const n=N(t.value); if(n) P.crew[d][g]=n; else delete P.crew[d][g]; touch(); renderCrew(); renderLog(); }
   if(t.dataset.gn!=null){ const i=+t.dataset.gn, o=P.gongs[i], n=t.value.trim(); if(!n||P.gongs.includes(n)) return renderCrew();
+    if(n===PMG) return renderCrew();
     P.gongs[i]=n; for(const d in P.crew){ if(o in P.crew[d]){ P.crew[d][n]=P.crew[d][o]; delete P.crew[d][o]; } }
     for(const d in P.picks){ if(o in P.picks[d]){ P.picks[d][n]=P.picks[d][o]; delete P.picks[d][o]; } }
     if(P.listMode[o]){ P.listMode[n]=true; delete P.listMode[o]; } touch(); renderCrew(); renderLog(); }
 });
 $("crewT").addEventListener("click",e=>{
+  const pm=e.target.closest("[data-pmd]"); if(pm){ const d=pm.dataset.pmd, cur=P.pmd[d]||""; const seq=["",...PM_OPT]; const nx=seq[(seq.indexOf(cur)+1)%seq.length];
+    if(nx) P.pmd[d]=nx; else delete P.pmd[d]; touch(); renderCrew(); renderLog(); renderSum(); return; }
   const pk=e.target.closest("[data-pk]"); if(pk){ const d=pk.dataset.pk, g=pk.dataset.pg; PICK=(PICK&&PICK.d===d&&PICK.g===g)?null:{d,g}; renderCrew();
     if(PICK) $("pickPane").scrollIntoView({block:"nearest",behavior:"smooth"}); return; }
   const th=e.target.closest("[data-off]"); if(th){ const d=th.dataset.off; const s=new Set(P.off); s.has(d)?s.delete(d):s.add(d); P.off=[...s].sort(); touch(); renderAll(); return; }
@@ -1299,17 +1324,20 @@ function docHtml(d){
   const L=leftItems(d), R=rightItems(d), m=money(d);
   const rowsN=Math.max(6,plan.length,rep.length);
   const exN=Math.max(9,L.length,R.length);
-  const gs=P.gongs.filter(g=>crewOn(d,g)||crewCum(d,g));
+  const gs=[PMG,...P.gongs].filter(g=>crewOn(d,g)||crewCum(d,g));
   const half=Math.max(6,Math.ceil(gs.length/2));
   const crewCell=g=>g?`<td class="c">${esc(g)}</td><td class="n">${FQ(crewOn(d,g))||"–"}</td><td class="n">${FQ(crewCum(d,g))}</td>`:`<td></td><td></td><td></td>`;
   const red=s=>s.startsWith("!");
   const line=s=>esc(red(s)?s.slice(1).trim():s);
-  const st=P.apv.findIndex(a=>a.stamp);
+  const AM=apvModes(d);
   return `<div class="paper">
     <div class="dh">
       <div class="tt"><h1>공사일지</h1><span class="no">${esc(P.id)}${n?` · 공사 ${n}일차`:" · 휴무일 작업"}</span></div>
       <table class="apv"><tr>${P.apv.map(a=>`<th>${esc(a.t)}</th>`).join("")}</tr>
-        <tr>${P.apv.map((a,i)=>`<td>${i===st&&P.stamp?`<img src="${P.stamp}" alt="">`:""}</td>`).join("")}</tr></table>
+        <tr>${P.apv.map((a,i)=>{ const m=AM[i];
+          if(m==="stamp"){ const im=apvImg(i); return `<td>${im?`<img src="${im}" alt="">`:`<span style="font-size:9pt;color:#C0392B;font-weight:700">(인)</span>`}</td>`; }
+          if(m==="jeon") return `<td><span class="jeon">전결</span></td>`;
+          return `<td${AM.slice(0,i).includes("jeon")?' class="slash"':""}></td>`; }).join("")}</tr></table>
     </div>
     <table class="dt">
       <colgroup><col style="width:16%"><col style="width:34%"><col style="width:17%"><col style="width:33%"></colgroup>
@@ -1348,9 +1376,22 @@ function docHtml(d){
     <div class="df"><span>${esc(P.client||"")}${P.site?" · "+esc(P.site):""}</span><img src="${esc(P.ct&&P.ct.logo?P.ct.logo:DEF_LOGO)}" alt="${esc(P.ct?P.ct.name:"Grid-A 4U")}"></div>
   </div>`;
 }
+/* 결재 — 날마다 칸별로 도장 / 전결. 기록이 없는 날은 '매일 기본으로 도장' 칸만 도장 */
+function apvModes(d){ const o=(P.logs[d]||{}).apv; return P.apv.map((a,i)=> o&&o[i]!==undefined ? o[i] : (a.stamp?"stamp":"")); }
+function apvImg(i){ const a=P.apv[i]; return a.img || (a.stamp ? P.stamp : "") || ""; }
+function setApv(d,i,mode){ const cur=apvModes(d); cur[i]=mode; if(mode==="jeon") cur.forEach((m,j)=>{ if(j!==i&&m==="jeon") cur[j]=""; });
+  P.logs[d]=P.logs[d]||{}; P.logs[d].apv=Object.fromEntries(cur.map((m,j)=>[j,m])); }
+function renderApvBar(){ const AM=apvModes(SEL);
+  $("dApv").innerHTML=P.apv.map((a,i)=>`<span class="ab"><b>${esc(a.t||`${i+1}번 칸`)}</b>
+    <label><input type="checkbox" data-dap="${i}" data-m="stamp" ${AM[i]==="stamp"?"checked":""}> 도장</label>
+    <label><input type="checkbox" data-dap="${i}" data-m="jeon" ${AM[i]==="jeon"?"checked":""}> 전결</label></span>`).join("");
+}
+$("dApv").addEventListener("change",e=>{ const i=e.target.dataset.dap; if(i==null) return;
+  setApv(SEL,+i, e.target.checked?e.target.dataset.m:""); touch(); renderLog(); });
 function renderLog(){
   if(!P) return;
   $("dDate").value=SEL; $("dDate").min=P.start; $("dDate").max=P.end;
+  renderApvBar();
   const n=dayNo(SEL); $("dLabel").textContent = n?`공사 ${n}일차`:"휴무일 — 기록은 그대로 됩니다";
   const lg=P.logs[SEL]||{};
   if(document.activeElement!==$("dPlan")) $("dPlan").value=lg.plan||"";
@@ -1368,13 +1409,13 @@ $("dPrint").onclick=()=>{ document.body.classList.remove("print-sum"); const t=d
 /* ══════════ 총괄 ══════════ */
 function renderSum(){
   const dd=days(); const vs=P.vendors.filter(vis); const xs=P.expenses.filter(vis);
-  const gs=[...new Set([...P.gongs,...vs.map(v=>v.gong),...xs.map(x=>x.gong),...P.docs.filter(d=>d.type==="자재").map(d=>d.gong),...P.lpays.map(x=>x.gong)].filter(Boolean))];
+  const gs=[...new Set([...(pmCost()||manTot(PMG)?[PMG]:[]),...P.gongs,...vs.map(v=>v.gong),...xs.map(x=>x.gong),...P.docs.filter(d=>d.type==="자재").map(d=>d.gong),...P.lpays.map(x=>x.gong)].filter(Boolean))];
   const row=g=>{ const vv=vs.filter(v=>v.gong===g);
     const crew=dd.map(d=>crewOn(d,g)); const ct=vv.reduce((s,v)=>s+vAmt(v),0);
     const vp=vv.reduce((s,v)=>s+vPaid(v),0);
     const ds=P.docs.filter(d=>vis(d)&&d.gong===g);
     const mat=xs.filter(x=>x.gong===g&&x.type==="자재").reduce((s,x)=>s+x.amt,0)+ds.filter(d=>d.type==="자재").reduce((s,d)=>s+docTotal(d),0);
-    const lab=isList(g)?laborCost(g):P.lpays.filter(x=>x.gong===g).reduce((s,x)=>s+N(x.amt),0);
+    const lab=g===PMG?pmCost():isList(g)?laborCost(g):P.lpays.filter(x=>x.gong===g).reduce((s,x)=>s+N(x.amt),0);
     const ex=xs.filter(x=>x.gong===g&&x.type==="경비").reduce((s,x)=>s+x.amt,0);
     return {g,crew,man:crew.reduce((a,b)=>a+b,0),ct,vp,vu:ct-vp,mat,ex,lab,direct:vv.some(v=>v.direct),cos:vv.map(v=>v.co).filter(Boolean).join(", ")}; };
   const R=gs.map(row);
@@ -1383,7 +1424,7 @@ function renderSum(){
   const catRows=EXP_CATS.map(c=>({c,v:noG.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0)})).filter(r=>r.v);
   const blank=n=>"<td></td>".repeat(n);
   const money=r=>`<td class="n num"><b>${FQ(r.man)}</b></td><td class="n num">${F(r.ct)}</td><td class="n num">${F(r.vp)}</td><td class="n num">${F(r.vu)}</td><td class="n num">${F(r.lab)}</td><td class="n num">${F(r.mat)}</td><td class="n num">${F(r.ex)}</td><td class="n num"><b>${F(r.ct+r.lab+r.mat+r.ex)}</b></td>`;
-  $("sumT").innerHTML=`<thead><tr><th class="g">공정</th>${VIEW==="internal"?"<th>업체</th>":""}<th class="n">인원 합계</th><th class="n">용역비 <span class="hint">VAT포함</span></th><th class="n">지급</th><th class="n">미지급</th><th class="n">직영 노무</th><th class="n">자재</th><th class="n">경비</th><th class="n">합계</th>${dd.map((d,i)=>`<th class="n"${i===0?' style="border-left:1px solid var(--line)"':""}>${dateSh(d)}</th>`).join("")}</tr></thead>
+  $("sumT").innerHTML=`<thead><tr><th class="g">공정</th>${VIEW==="internal"?"<th>업체</th>":""}<th class="n">인원 합계</th><th class="n">용역비 <span class="hint">VAT포함</span></th><th class="n">지급</th><th class="n">미지급</th><th class="n">직영 노무·PM비</th><th class="n">자재</th><th class="n">경비</th><th class="n">합계</th>${dd.map((d,i)=>`<th class="n"${i===0?' style="border-left:1px solid var(--line)"':""}>${dateSh(d)}</th>`).join("")}</tr></thead>
   <tbody>${R.map(r=>`<tr><td class="g">${esc(r.g)}${r.direct?' <span class="chip lab">발주처 직접</span>':""}</td>${VIEW==="internal"?`<td>${esc(r.cos)}</td>`:""}${money(r)}
      ${r.crew.map((c,i)=>`<td class="n num"${i===0?' style="border-left:1px solid var(--line)"':""}>${FQ(c)}</td>`).join("")}</tr>`).join("")}
    ${ngM?`<tr><td class="g hint">공정 미지정 자재</td>${VIEW==="internal"?"<td></td>":""}${blank(5)}<td class="n num">${F(ngM)}</td><td></td><td class="n num">${F(ngM)}</td>${blank(dd.length)}</tr>`:""}
@@ -1437,7 +1478,7 @@ function demoCat(){
 function demoSeed(){
   HITS=[{id:"조용한청년들-AC26-0003",space:"유튜브 · 스트리밍 · 리딩방",name:"정문선 이사님 (세무지원닷컴)",staff:"김새롬",status:"시공완료"},
         {id:"조용한청년들-AC26-0006",space:"작업실",name:"최서경",staff:"김희숙",status:"계약완료"}];
-  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=7) return;
+  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=9) return;
   LS.set("co.demo",demoCommon()); LS.set("cat.demo",demoCat());
   const L=(item,spec,unit,qty,price,kind,date="",gong="")=>({date,gong,item,spec,unit,qty,price,amt:0,kind});
   const doc=(o,lines)=>({id:uid(),type:"용역",co:"",gong:"",date:"",payDate:"",paid:false,vat:"+10%",adj:0,note:"",note1:"",file:null,internal:false,...o,lines});
@@ -1493,7 +1534,7 @@ function demoSeed(){
   ];
   const v=(d,pays,extra={})=>({id:uid(),vid:"",gong:d.gong,co:d.co,supply:docSupply(d),vat:"10%",docId:d.id,note:d.note,direct:false,internal:false,
     pays:PAYK.map((k,i)=>({k,amt:pays[i]?pays[i][0]:0,date:pays[i]?pays[i][1]:"",paid:pays[i]?pays[i][2]:false})),...extra});
-  const D={ v:7,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
+  const D={ v:9,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
     start:"2026-10-02",end:"2026-10-14",off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}],stamp:"",
     docs, vendors:[],
@@ -1507,6 +1548,7 @@ function demoSeed(){
     picks:(()=>{ const o={}; ["2026-10-03","2026-10-04","2026-10-05","2026-10-06","2026-10-07"].forEach(d=>o[d]={"목공사":{wA:1,wB:1,wC:1}}); o["2026-10-08"]={"목공사":{wA:.5}}; return o; })(),
     equip:(()=>{ const o={}; ["2026-10-03","2026-10-04","2026-10-05","2026-10-06","2026-10-07"].forEach(d=>o[d]={wA:1}); o["2026-10-08"]={wA:.5}; return o; })(),
     wetc:{wA:[{id:"e1",item:"식대",amt:160000},{id:"e2",item:"잡철물",amt:190000}]},
+    pmd:{"2026-10-02":"15","2026-10-03":"15","2026-10-05":"20","2026-10-06":"20","2026-10-07":"15","2026-10-08":"F"},
     lpays:[{id:uid(),gong:"목공사",date:"2026-10-08",amt:5670000,paid:true,note:"목수 3명 · 3.3% 공제 후 실지급"}],
     logs:{"2026-10-03":{plan:"목공 : 자재양중, 보양, 벽체세우기, 천장벽면 작업\n전기 : 배선작업\n소방 : 스프링쿨러 헤드조정 및 위치 변경\n냉난방기 : 위치조정",
                          rep:"!냉난방기(60만원), 소방(25만원) 발주처에서 지급예정\n일용직 작업자 식사와 간식은 추후 경비로 청구 예정"}} };
