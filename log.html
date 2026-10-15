@@ -370,7 +370,8 @@ table.sum th.g{position:sticky;left:0;z-index:1}
     <div class="exform">
       <label class="f">날짜<input type="date" id="eDate"></label>
       <label class="f">구분<select id="eType"><option value="자재">자재</option><option value="경비">경비</option></select></label>
-      <label class="f">공정<input id="eGong" list="gongList" placeholder="목공사"></label>
+      <label class="f" id="eGongF">공정<input id="eGong" list="gongList" placeholder="목공사"></label>
+      <label class="f" id="eCatF" hidden>경비 항목<select id="eCat"></select></label>
       <label class="f">지불처<input id="ePayee" placeholder="쿠팡"></label>
       <label class="f">금액<input id="eAmt" type="text" inputmode="numeric" placeholder="0"></label>
     </div>
@@ -1089,12 +1090,18 @@ function csvActual(){
 }
 
 /* ══════════ 지출 ══════════ */
+const EXP_CATS=["식대","유류비","교통비","간식","기타"];
+$("eCat").innerHTML=EXP_CATS.map(c=>`<option>${c}</option>`).join("");
+function eTypeUI(){ const ex=$("eType").value==="경비"; $("eGongF").hidden=ex; $("eCatF").hidden=!ex;
+  $("ePayee").placeholder=ex?"점심(디렉터) · 주유소":"쿠팡"; $("eUse").placeholder=ex?"인원·내용":"흡음재"; }
+$("eType").onchange=eTypeUI;
+const xCat = x => x.type==="경비" ? (x.cat||"기타") : "";
 let PHOTO=null;
 $("ePhoto").onchange=async e=>{ const f=e.target.files[0]; PHOTO=null; $("ePrev").hidden=true; if(!f) return;
   PHOTO=await shrink(f,1600); $("ePrev").src=PHOTO; $("ePrev").hidden=false; };
 $("eAmt").addEventListener("input",e=>{ const n=N(e.target.value); e.target.value=n?F(n):""; });
 $("eAddBtn").onclick=async()=>{
-  const x={id:uid(),date:$("eDate").value||SEL,type:$("eType").value,gong:$("eGong").value.trim(),payee:$("ePayee").value.trim(),
+  const x={id:uid(),date:$("eDate").value||SEL,type:$("eType").value,gong:$("eType").value==="경비"?"":$("eGong").value.trim(),cat:$("eType").value==="경비"?$("eCat").value:"",payee:$("ePayee").value.trim(),
            amt:N($("eAmt").value),use:$("eUse").value.trim(),paid:$("ePaid").checked,internal:$("eIn").checked,photo:null};
   if(!x.payee||!x.amt) return toast("지불처와 금액을 넣어주세요");
   if(x.gong&&!P.gongs.includes(x.gong)) P.gongs.push(x.gong);
@@ -1114,17 +1121,18 @@ $("eAddBtn").onclick=async()=>{
 function renderExp(){
   $("cExp").textContent=P.expenses.length||"";
   if(!$("eDate").value) $("eDate").value=SEL;
+  eTypeUI();
   const ds_=[...new Set(P.expenses.map(x=>x.date))].sort();
   const cur=$("eFilter").value;
   $("eFilter").innerHTML=`<option value="">전체 날짜</option>`+ds_.map(d=>`<option value="${d}"${d===cur?" selected":""}>${dateKo(d)}</option>`).join("");
   const xs=P.expenses.filter(x=>!cur||x.date===cur);
   const sum=t=>xs.filter(x=>x.type===t).reduce((s,x)=>s+x.amt,0);
-  $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>구분</th><th>공정</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>사진</th><th>지급</th><th></th></tr></thead>
+  $("eTable").innerHTML = xs.length ? `<thead><tr><th>날짜</th><th>구분</th><th>공정 / 경비 항목</th><th>지불처</th><th class="n">금액</th><th>사용처 / 비고</th><th>사진</th><th>지급</th><th></th></tr></thead>
     <tbody>${xs.map(x=>`<tr><td class="num">${dateSh(x.date)}</td><td><span class="chip ${x.type==="자재"?"mat":"exp"}">${x.type}</span>${x.internal?' <span class="chip in">내부</span>':""}</td>
-      <td>${esc(x.gong)}</td><td>${esc(x.payee)}</td><td class="n num">${F(x.amt)}</td><td>${esc(x.use)}</td>
+      <td>${x.type==="경비"?`<span class="chip">${esc(xCat(x))}</span>`:esc(x.gong)}</td><td>${esc(x.payee)}</td><td class="n num">${F(x.amt)}</td><td>${esc(x.use)}</td>
       <td>${x.photo?`<a href="${esc(x.photo.url)}" target="_blank" rel="noopener">${/^data:/.test(x.photo.url)?`<img class="thumb" src="${x.photo.url}" alt="">`:"보기"}</a>`:'<span class="hint">—</span>'}</td>
       <td><input type="checkbox" data-xpaid="${x.id}" ${x.paid?"checked":""}></td><td><button class="x" data-xdel="${x.id}">×</button></td></tr>`).join("")}</tbody>
-    <tfoot><tr><td colspan="4">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}</td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
+    <tfoot><tr><td colspan="4">자재 ${F0(sum("자재"))} · 경비 ${F0(sum("경비"))}${sum("경비")?` <span class="hint">(${EXP_CATS.map(c=>{ const v=xs.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0); return v?c+" "+F0(v):""; }).filter(Boolean).join(" · ")})</span>`:""}</td><td class="n num">${F0(sum("자재")+sum("경비"))}</td><td colspan="4"></td></tr></tfoot>`
     : `<tr><td class="empty">지출 내역이 없습니다</td></tr>`;
   gongList();
 }
@@ -1318,11 +1326,14 @@ function renderSum(){
   const R=gs.map(row);
   const noG=xs.filter(x=>!x.gong); const tot=k=>R.reduce((s,r)=>s+r[k],0);
   const ngM=noG.filter(x=>x.type==="자재").reduce((s,x)=>s+x.amt,0), ngE=noG.filter(x=>x.type==="경비").reduce((s,x)=>s+x.amt,0);
+  const catRows=EXP_CATS.map(c=>({c,v:noG.filter(x=>x.type==="경비"&&xCat(x)===c).reduce((a,x)=>a+x.amt,0)})).filter(r=>r.v);
+  const blank=n=>"<td></td>".repeat(n);
   const money=r=>`<td class="n num"><b>${FQ(r.man)}</b></td><td class="n num">${F(r.ct)}</td><td class="n num">${F(r.vp)}</td><td class="n num">${F(r.vu)}</td><td class="n num">${F(r.lab)}</td><td class="n num">${F(r.mat)}</td><td class="n num">${F(r.ex)}</td><td class="n num"><b>${F(r.ct+r.lab+r.mat+r.ex)}</b></td>`;
   $("sumT").innerHTML=`<thead><tr><th class="g">공정</th>${VIEW==="internal"?"<th>업체</th>":""}<th class="n">인원 합계</th><th class="n">용역비 <span class="hint">VAT포함</span></th><th class="n">지급</th><th class="n">미지급</th><th class="n">직영 노무</th><th class="n">자재</th><th class="n">경비</th><th class="n">합계</th>${dd.map((d,i)=>`<th class="n"${i===0?' style="border-left:1px solid var(--line)"':""}>${dateSh(d)}</th>`).join("")}</tr></thead>
   <tbody>${R.map(r=>`<tr><td class="g">${esc(r.g)}${r.direct?' <span class="chip lab">발주처 직접</span>':""}</td>${VIEW==="internal"?`<td>${esc(r.cos)}</td>`:""}${money(r)}
      ${r.crew.map((c,i)=>`<td class="n num"${i===0?' style="border-left:1px solid var(--line)"':""}>${FQ(c)}</td>`).join("")}</tr>`).join("")}
-   ${noG.length?`<tr><td class="g hint">현장 공통 경비</td>${VIEW==="internal"?"<td></td>":""}<td></td><td></td><td></td><td></td><td></td><td class="n num">${F(ngM)}</td><td class="n num">${F(ngE)}</td><td class="n num">${F(ngM+ngE)}</td>${dd.map(()=>"<td></td>").join("")}</tr>`:""}</tbody>
+   ${ngM?`<tr><td class="g hint">공정 미지정 자재</td>${VIEW==="internal"?"<td></td>":""}${blank(5)}<td class="n num">${F(ngM)}</td><td></td><td class="n num">${F(ngM)}</td>${blank(dd.length)}</tr>`:""}
+   ${catRows.map(r=>`<tr><td class="g hint">현장 경비 · ${r.c}</td>${VIEW==="internal"?"<td></td>":""}${blank(6)}<td class="n num">${F(r.v)}</td><td class="n num">${F(r.v)}</td>${blank(dd.length)}</tr>`).join("")}</tbody>
   <tfoot><tr><td class="g">합계</td>${VIEW==="internal"?"<td></td>":""}<td class="n num">${FQ(tot("man"))}</td>
     <td class="n num">${F0(tot("ct"))}</td><td class="n num">${F0(tot("vp"))}</td><td class="n num">${F0(tot("vu"))}</td><td class="n num">${F0(tot("lab"))}</td><td class="n num">${F0(tot("mat")+ngM)}</td><td class="n num">${F0(tot("ex")+ngE)}</td><td class="n num">${F0(tot("ct")+tot("lab")+tot("mat")+tot("ex")+ngM+ngE)}</td>
     ${dd.map((d,i)=>`<td class="n num"${i===0?' style="border-left:1px solid var(--line)"':""}>${FQ(R.reduce((s,r)=>s+r.crew[i],0))}</td>`).join("")}</tr></tfoot>`;
@@ -1366,7 +1377,7 @@ function demoCat(){
 function demoSeed(){
   HITS=[{id:"조용한청년들-AC26-0003",space:"유튜브 · 스트리밍 · 리딩방",name:"정문선 이사님 (세무지원닷컴)",staff:"김새롬",status:"시공완료"},
         {id:"조용한청년들-AC26-0006",space:"작업실",name:"최서경",staff:"김희숙",status:"계약완료"}];
-  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=5) return;
+  const old=LS.get("log:조용한청년들-AC26-0003",null); if(old&&old.v>=6) return;
   LS.set("co.demo",demoCommon()); LS.set("cat.demo",demoCat());
   const L=(item,spec,unit,qty,price,kind,date="",gong="")=>({date,gong,item,spec,unit,qty,price,amt:0,kind});
   const doc=(o,lines)=>({id:uid(),type:"용역",co:"",gong:"",date:"",payDate:"",paid:false,vat:"+10%",adj:0,note:"",note1:"",file:null,internal:false,...o,lines});
@@ -1422,14 +1433,14 @@ function demoSeed(){
   ];
   const v=(d,pays,extra={})=>({id:uid(),vid:"",gong:d.gong,co:d.co,supply:docSupply(d),vat:"10%",docId:d.id,note:d.note,direct:false,internal:false,
     pays:PAYK.map((k,i)=>({k,amt:pays[i]?pays[i][0]:0,date:pays[i]?pays[i][1]:"",paid:pays[i]?pays[i][2]:false})),...extra});
-  const D={ v:5,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
+  const D={ v:6,id:"조용한청년들-AC26-0003",title:"세무지원닷컴 멀티룸 인테리어",client:"세무지원닷컴",site:"서울 서초구 반포대로 90 세환빌딩 6층",pm:"강방용 시니어디렉터",estNo:"",
     start:"2026-10-02",end:"2026-10-14",off:[],
     apv:[{t:"시니어디렉터",stamp:true},{t:"팀장",stamp:false},{t:"대표이사",stamp:false}],stamp:"",
     docs, vendors:[],
     expenses:[
       {id:uid(),date:"2026-10-03",type:"자재",gong:"목공사",payee:"쿠팡",amt:44700,use:"흡음재",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-03",type:"경비",gong:"",payee:"점심(디렉터)",amt:14500,use:"1번",paid:true,internal:false,photo:null},
-      {id:uid(),date:"2026-10-03",type:"경비",gong:"",payee:"작업자(음료)",amt:5000,use:"2번",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"경비",gong:"",cat:"식대",payee:"점심(디렉터)",amt:14500,use:"1번",paid:true,internal:false,photo:null},
+      {id:uid(),date:"2026-10-03",type:"경비",gong:"",cat:"간식",payee:"작업자(음료)",amt:5000,use:"2번",paid:true,internal:false,photo:null},
 ],
     gongs:["목공사","전기 공사","소방공사","공조 공사"], listMode:{"목공사":true},
     crew:{"2026-10-03":{"전기 공사":1,"소방공사":2,"공조 공사":2}},
