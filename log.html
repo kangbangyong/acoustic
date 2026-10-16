@@ -347,7 +347,7 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <button class="btn sm" data-shift="end,1">준공 하루 늘림</button>
       <span class="hint" id="pDays"></span>
     </div>
-    <label class="f" style="margin-top:10px">휴무일 <span class="hint">'공사 N일차' 계산에서만 빠지고, 인원·지출·일지 기록은 그날도 됩니다 · 인원 탭에서 날짜를 눌러도 바뀝니다</span>
+    <label class="f" style="margin-top:10px">휴무일 <span class="hint">공휴일·주말도 자동으로 쉬지 않습니다(365일 작업) · 쉬는 날만 직접 체크 — 일지 탭 '휴무' 체크나 인원 탭 날짜 머리로도 바뀝니다 · 일차 계산에서만 빠지고 기록은 됩니다</span>
       <input id="pOff" placeholder="예) 2026-10-05, 2026-10-12" data-k="offRaw"></label>
   </div>
 
@@ -459,6 +459,8 @@ table.sum th.g{position:sticky;left:0;z-index:1}
       <input type="date" id="dDate">
       <button class="btn sm" id="dNext">▶</button>
       <span class="dd" id="dLabel"></span>
+      <label class="hint" style="display:flex;gap:4px;align-items:center;font-size:12.5px" title="체크한 날만 휴무 — 일차 계산에서 빠짐 (공휴일·주말은 자동으로 쉬지 않음)"><input type="checkbox" id="dOff"> 휴무</label>
+      <button class="btn sm" id="dExt" hidden>공사 기간에 넣기</button>
       <span class="apvbar" id="dApv"></span>
       <span style="margin-left:auto" class="row">
         <button class="btn sm" id="dCopy">어제 계획 가져오기</button>
@@ -1504,7 +1506,7 @@ function docHtml(d){
   const AM=apvModes(d);
   return `<div class="paper">
     <div class="dh">
-      <div class="tt"><h1>공사일지</h1><span class="no">${esc(P.id)}${n?` · 공사 ${n}일차`:" · 휴무일 작업"}</span></div>
+      <div class="tt"><h1>공사일지</h1><span class="no">${esc(P.id)}${n?` · 공사 ${n}일차`:(d<P.start||d>P.end)?"":" · 휴무일 작업"}</span></div>
       <table class="apv"><tr>${P.apv.map(a=>`<th>${esc(a.t)}</th>`).join("")}</tr>
         <tr>${P.apv.map((a,i)=>{ const m=AM[i];
           if(m==="stamp"){ const im=apvImg(i); return `<td>${im?`<img src="${im}" alt="">`:`<span style="font-size:9pt;color:#C0392B;font-weight:700">(인)</span>`}</td>`; }
@@ -1573,15 +1575,19 @@ function startDay(){ const inR=d=>d&&d>=P.start&&d<=P.end;
 function renderLog(){
   if(P) LS.set("log.sel:"+P.id, SEL);
   if(!P) return;
-  $("dDate").value=SEL; $("dDate").min=P.start; $("dDate").max=P.end;
+  $("dDate").value=SEL;
   renderApvBar();
-  const n=dayNo(SEL); $("dLabel").textContent = n?`공사 ${n}일차`:"휴무일 — 기록은 그대로 됩니다";
+  const n=dayNo(SEL), out=SEL<P.start||SEL>P.end, off=(P.off||[]).includes(SEL);
+  $("dLabel").textContent = out ? (SEL<P.start?"착공일 전":"준공일 후") : off ? "휴무 (일차에서 빠짐)" : `공사 ${n}일차`;
+  $("dOff").checked=off; $("dOff").disabled=out; $("dExt").hidden=!out;
   const lg=P.logs[SEL]||{};
   if(document.activeElement!==$("dPlan")) $("dPlan").value=lg.plan||"";
   if(document.activeElement!==$("dRep")) $("dRep").value=lg.rep||"";
   $("paperWrap").innerHTML=docHtml(SEL);
 }
-function go(n){ const dd=days(); const i=dd.indexOf(SEL); const j=Math.max(0,Math.min(dd.length-1,(i<0?0:i)+n)); SEL=dd[j]||SEL; renderLog(); renderCrew(); }
+$("dOff").onchange=e=>{ const st=new Set(P.off||[]); e.target.checked?st.add(SEL):st.delete(SEL); P.off=[...st].sort(); touch(); renderAll(); };
+$("dExt").onclick=()=>{ if(SEL<P.start) P.start=SEL; if(SEL>P.end) P.end=SEL; touch(); renderAll(); toast(`공사 기간을 ${dateSh(P.start)}~${dateSh(P.end)}로 늘렸습니다`); };
+function go(n){ SEL=addD(SEL,n); renderLog(); renderCrew(); }
 $("dPrev").onclick=()=>go(-1); $("dNext").onclick=()=>go(1);
 $("dDate").onchange=e=>{ if(e.target.value){ SEL=e.target.value; renderLog(); renderCrew(); } };
 ["dPlan","dRep"].forEach(id=>$(id).addEventListener("input",e=>{ P.logs[SEL]=P.logs[SEL]||{}; P.logs[SEL][id==="dPlan"?"plan":"rep"]=e.target.value; touch(); clearTimeout(window._lt); window._lt=setTimeout(()=>{ $("paperWrap").innerHTML=docHtml(SEL); },250); }));
