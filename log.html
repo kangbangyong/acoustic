@@ -117,6 +117,11 @@ table.t tfoot td{font-weight:600;background:var(--surface-2);border-top:1px soli
 .vend .flags{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--ink-2);flex-wrap:wrap}
 .vend .sumline{font-size:11.5px;color:var(--ink-3);margin-top:6px}
 .vend .sumline b{color:var(--ink)}
+.vend.editing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.vend .vbtns{display:flex;gap:8px;margin-top:12px;align-items:center}
+#vSum tbody tr{cursor:pointer}
+#vSum tbody tr:hover td{background:var(--surface-2)}
+#vSum tbody tr.on td{background:var(--surface-3)}
 .warnline{color:var(--warn)!important}
 @media (max-width:760px){
   .vend .top{grid-template-columns:1fr 1fr}
@@ -368,9 +373,9 @@ table.sum th.g{position:sticky;left:0;z-index:1}
 <!-- ===== 용역비 ===== -->
 <section data-pane="vend" hidden>
   <div class="card">
-    <h2>용역비 <span class="hint">계약금·중도금·잔금마다 지급일을 넣어야 그날 일지로 내려갑니다 · ✓지급하면 기지급분으로 잡힙니다</span>
-      <button class="btn sm pri" id="vAdd" style="margin-left:auto">＋ 업체 추가</button></h2>
+    <h2><span id="vTitle">용역비 넣기</span> <span class="hint">계약금·중도금·잔금마다 지급일을 넣어야 그날 일지로 내려갑니다 · ✓지급하면 기지급분으로 잡힙니다</span></h2>
     <div id="vList"></div>
+    <h2 style="margin-top:18px">저장된 용역비 <span class="hint">줄을 누르면 위로 불러와 고칠 수 있습니다</span></h2>
     <div class="tw"><table class="t" id="vSum"></table></div>
   </div>
 </section>
@@ -808,17 +813,33 @@ function linkCoVendor(v){
   v.vid=c.id; if(v.gong&&!c.gongs.includes(v.gong)) c.gongs.push(v.gong); saveCo("vendors");
 }
 const OPEN_CO=new Set();
+/* 위 칸은 항상 한 장짜리 양식 — 새로 쓰기(VID 없음) 또는 아래 줄을 눌러 불러온 사본(VID) */
+let VW=null, VID="", VDIRTY=false, VPID="", vRT=0;
+function vReset(){ VW=newVendor(); VID=""; VDIRTY=false; VPID=P?P.id:""; }
+function vOpen(id){ const v=P.vendors.find(x=>x.id===id); if(!v) return;
+  if(VDIRTY&&!confirm("작성 중인 내용이 저장되지 않았습니다. 버리고 이 업체를 불러올까요?")) return;
+  VW=JSON.parse(JSON.stringify(v)); VID=id; VDIRTY=false; renderVend();
+  $("vTitle").scrollIntoView({behavior:"smooth",block:"start"}); }
+function vSave(){ clearTimeout(vRT); const v=VW;
+  if(!v.gong&&!v.vid&&!N(v.supply)) return toast("공정·업체·금액을 넣어주세요");
+  if(v.gong&&!P.gongs.includes(v.gong)) P.gongs.push(v.gong);
+  const i=P.vendors.findIndex(x=>x.id===VID);
+  if(VID&&i>=0) P.vendors[i]=v; else P.vendors.push(v);
+  linkCoVendor(v); touch(); toast(VID?"수정했습니다":"저장했습니다"); vReset(); renderVend(); renderLog(); }
 function renderVend(){
   const vs=P.vendors; vs.forEach(v=>{ migrateVendor(v); linkCoVendor(v); balance(v); });
+  if(!VW||VPID!==P.id) vReset(); migrateVendor(VW); balance(VW);
+  if(VID&&!vs.some(x=>x.id===VID)) vReset();
+  $("vTitle").textContent = VID ? `용역비 고치기 — ${[VW.gong,VW.co].filter(Boolean).join(" · ")||"이름 없음"}` : "용역비 넣기";
   $("cVend").textContent=vs.length||"";
   /* 최근 날짜가 위로 — 계약금·중도금·잔금 중 가장 늦은 날짜, 날짜가 없으면 맨 아래 */
   const lastDate = v => v.pays.map(p=>p.date).filter(Boolean).sort().pop()||"";
   const ord = vs.map((v,i)=>i).sort((a,b)=>{ const x=lastDate(vs[a]), y=lastDate(vs[b]); return x===y?b-a : !x?1 : !y?-1 : x>y?-1:1; });
-  $("vList").innerHTML = vs.length ? ord.map(i=>[vs[i],i]).map(([v,i])=>{
+  $("vList").innerHTML = [[VW,"w"]].map(([v,i])=>{
     const c=coV(v.vid), sch=vSched(v), paid=vPaid(v), amt=vAmt(v), diff=payBase(v)-sch;
     const cands=CO.vendors.filter(x=>x.id===v.vid||(v.gong&&x.gongs.includes(v.gong)));
     const others=CO.vendors.filter(x=>!cands.includes(x));
-    return `<div class="vend" data-v="${i}">
+    return `<div class="vend${VID?" editing":""}" data-v="${i}">
       <div class="top">
         <label class="f"><span>공정${v.docId?' <span class="hint">· 내역서 연결</span>':""}</span><select data-f="gong">${gongOpts(v.gong)}</select></label>
         <label class="f">공사업체<select data-f="vid"><option value="">${v.gong?"업체 고르기":"공정을 먼저 고르세요"}</option>
@@ -826,7 +847,6 @@ function renderVend(){
           ${others.length?`<optgroup label="다른 공정 업체">${others.map(x=>`<option value="${x.id}">${esc(x.co)} · ${esc(x.gongs.join(", "))}</option>`).join("")}</optgroup>`:""}
           <option value="__new">＋ 새 업체…</option></select></label>
         <label class="f">공급가액 (VAT 별도)<input data-f="supply" value="${F(v.supply)}" inputmode="numeric" class="num"></label>
-        <button class="x" data-vdel="${i}" title="삭제">×</button>
       </div>
       <div class="money3">
         <label class="f">부가세<select data-f="vat"><option${v.vat!=="없음"?" selected":""}>10%</option><option${v.vat==="없음"?" selected":""}>없음</option></select></label>
@@ -863,19 +883,22 @@ function renderVend(){
         <label><input type="checkbox" data-f="internal" ${v.internal?"checked":""}> 내부용만</label>
       </div>
       <div class="sumline">나눠 적은 합 <b class="num">${F0(sch)}</b> · 지급 <b class="num">${F0(paid)}</b> · 남음 <b class="num">${F0(payBase(v)-paid)}</b>${diff?` — ${v.payVat!==false?"총합계":"공급가액"}와 ${F0(Math.abs(diff))} 차이`:""}</div>
-    </div>`; }).join("") : `<div class="empty">아직 업체가 없습니다</div>`;
+      <div class="vbtns"><button class="btn pri" data-vact="save">${VID?"수정 저장":"저장"}</button>
+        <button class="btn" data-vact="reset">${VID?"취소":"비우기"}</button>
+        ${VID?`<button class="btn" data-vact="del" style="margin-left:auto;color:var(--danger,#b42318)">이 업체 빼기</button>`:""}</div>
+    </div>`; }).join("");
   const T=vs.reduce((a,v)=>{ a.s+=N(v.supply); a.v+=vVat(v); a.p+=vPaid(v); a.b+=payBase(v); return a; },{s:0,v:0,p:0,b:0});
   $("vSum").innerHTML = vs.length ? `<thead><tr><th>공정</th><th>공사업체</th><th class="n">공급가액</th><th class="n">VAT</th><th class="n">총합계</th>${PAYK.map(k=>`<th class="n">${k}</th>`).join("")}<th class="n">지급</th><th class="n">미지급</th><th>비고</th></tr></thead>
-    <tbody>${ord.map(i=>vs[i]).map(v=>`<tr><td>${esc(v.gong)}</td><td>${esc(v.co)}${v.direct?' <span class="chip lab">발주처 직접</span>':""}</td>
+    <tbody>${ord.map(i=>vs[i]).map(v=>`<tr data-vid="${v.id}"${v.id===VID?' class="on"':""} title="눌러서 고치기"><td>${esc(v.gong)}</td><td>${esc(v.co)}${v.direct?' <span class="chip lab">발주처 직접</span>':""}</td>
       <td class="n num">${F(v.supply)}</td><td class="n num">${F(vVat(v))}</td><td class="n num"><b>${F(vAmt(v))}</b></td>
       ${v.pays.map(p=>`<td class="n num">${F(p.amt)}${p.date?`<br><span class="hint">${dateSh(p.date)}${p.paid?" ✓":""}</span>`:""}</td>`).join("")}
       <td class="n num">${F(vPaid(v))}</td><td class="n num">${F(payBase(v)-vPaid(v))}</td><td>${esc(v.note)}</td></tr>`).join("")}</tbody>
-    <tfoot><tr><td colspan="2">합계</td><td class="n num">${F0(T.s)}</td><td class="n num">${F0(T.v)}</td><td class="n num">${F0(T.s+T.v)}</td><td colspan="3"></td><td class="n num">${F0(T.p)}</td><td class="n num">${F0(T.b-T.p)}</td><td></td></tr></tfoot>` : "";
+    <tfoot><tr><td colspan="2">합계</td><td class="n num">${F0(T.s)}</td><td class="n num">${F0(T.v)}</td><td class="n num">${F0(T.s+T.v)}</td><td colspan="3"></td><td class="n num">${F0(T.p)}</td><td class="n num">${F0(T.b-T.p)}</td><td></td></tr></tfoot>` : `<tbody><tr><td class="empty">아직 저장된 업체가 없습니다</td></tr></tbody>`;
   gongList();
 }
-$("vAdd").onclick=()=>{ P.vendors.push(newVendor()); touch(); renderVend(); };
+$("vSum").addEventListener("click",e=>{ const tr=e.target.closest("tr[data-vid]"); if(tr) vOpen(tr.dataset.vid); });
 $("vList").addEventListener("change",async e=>{
-  const card=e.target.closest(".vend"); if(!card) return; const v=P.vendors[card.dataset.v], t=e.target;
+  const card=e.target.closest(".vend"); if(!card) return; const v=VW, t=e.target;
   if(t.dataset.f==="vid"){
     if(t.value==="__new"){ const nm=(prompt("새 업체 이름 (상호)")||"").trim(); if(!nm) return renderVend();
       let c=CO.vendors.find(x=>x.co===nm); if(!c){ c={id:uid(),co:nm,gongs:[],bizno:"",ceo:"",mgr:"",tel:"",bank:"",acct:"",biz:null}; CO.vendors.push(c); }
@@ -899,13 +922,18 @@ $("vList").addEventListener("change",async e=>{
       catch(err){ return toast("저장 실패"); } }
     saveCo("vendors"); OPEN_CO.add(v.id);
   }
-  touch(); renderVend(); renderLog();
+  VDIRTY=true; clearTimeout(vRT); vRT=setTimeout(renderVend,0);   /* 저장 버튼 누르면서 생기는 change와 겹치지 않게 한 박자 늦춤 */
 });
 $("vList").addEventListener("click",e=>{
-  const rp=e.target.closest("[data-rp]"); if(rp){ const v=P.vendors[rp.closest(".vend").dataset.v]; const r=rp.dataset.rp.split(",").map(Number);
-    [0,1].forEach(i=>{ v.pays[i].rate=r[i]||0; if(!r[i]) v.pays[i].amt=0; }); splitByRate(v); touch(); renderVend(); renderLog(); return; }
+  const rp=e.target.closest("[data-rp]"); if(rp){ const v=VW; const r=rp.dataset.rp.split(",").map(Number);
+    [0,1].forEach(i=>{ v.pays[i].rate=r[i]||0; if(!r[i]) v.pays[i].amt=0; }); splitByRate(v); VDIRTY=true; renderVend(); return; }
+  const act=e.target.closest("[data-vact]"); if(act){ const a=act.dataset.vact;
+    if(a==="save") return vSave();
+    if(a==="reset"){ if(VDIRTY&&!confirm("작성 중인 내용을 지울까요?")) return; vReset(); return renderVend(); }
+    if(a==="del"&&confirm("이 공사에서 이 업체를 뺄까요? (회사 업체 목록에는 남습니다)")){ P.vendors=P.vendors.filter(x=>x.id!==VID); touch(); vReset(); renderVend(); renderLog(); }
+    return; }
   const sm=e.target.closest("summary[data-co]"); if(sm){ const id=sm.dataset.co; setTimeout(()=>{ const d=sm.parentElement; d.open?OPEN_CO.add(id):OPEN_CO.delete(id); },0); return; }
-  const i=e.target.dataset.vdel; if(i!=null&&confirm("이 공사에서 이 업체를 뺄까요? (회사 업체 목록에는 남습니다)")){ P.vendors.splice(+i,1); touch(); renderVend(); renderLog(); } });
+});
 function gongList(){
   const mine=new Set([...P.gongs,...(P.lpays||[]).map(x=>x.gong),...P.docs.map(d=>d.gong),...P.vendors.map(v=>v.gong),...P.expenses.map(x=>x.gong)].filter(Boolean));
   const all=[...mine,...GONG_STD.filter(g=>!mine.has(g))];
