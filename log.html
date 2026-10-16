@@ -788,10 +788,12 @@ function vSched(v){ return v.pays.reduce((s,p)=>s+N(p.amt),0); }
 /* 지급 기준 — 'VAT 포함해서 지급' 체크면 총합계, 끄면 공급가액 */
 const payBase = v => v.payVat===false ? N(v.supply) : vAmt(v);
 /* 비율(%)로 금액 나누기 — 마지막 비율 칸이 끝전을 맡는다 */
-function splitByRate(v){ const B=payBase(v), on=v.pays.map((p,i)=>N(p.rate)?i:-1).filter(i=>i>=0); if(!on.length) return;
-  let used=0; on.forEach((i,k)=>{ const p=v.pays[i]; const sumR=on.reduce((s,j)=>s+N(v.pays[j].rate),0);
-    p.amt = (k===on.length-1 && Math.abs(sumR-100)<.001) ? B-used : Math.round(B*N(p.rate)/100); used+=p.amt; }); }
-const RATE_PRESETS=[[30,40,30],[50,0,50],[30,0,70],[0,0,100]];
+/* 계약금·중도금만 정하고, 잔금은 항상 나머지 (기준 − 계약금 − 중도금). 아무것도 안 넣으면 잔금 100% */
+function balance(v){ const B=payBase(v), r=v.pays[2], used=N(v.pays[0].amt)+N(v.pays[1].amt);
+  r.amt=Math.max(0,B-used); r.rate=B?Math.round(r.amt/B*1000)/10:0; }
+/* 기준 금액이 바뀌면 비율로 정한 계약금·중도금을 다시 계산하고 잔금을 맞춘다 */
+function splitByRate(v){ const B=payBase(v); [0,1].forEach(i=>{ const p=v.pays[i]; if(N(p.rate)) p.amt=Math.round(B*N(p.rate)/100); }); balance(v); }
+const RATE_PRESETS=[[30,40,30],[50,0,50],[30,0,70],[0,0,100]];   /* 잔금 칸은 자동이라 앞의 두 숫자만 쓴다 */
 function migrateVendor(v){ if(v.payVat===undefined) v.payVat=true;
   if(!v._r){ const B=payBase(v); v.pays.forEach(p=>{ if(p.rate===undefined) p.rate = B&&N(p.amt) ? Math.round(N(p.amt)/B*1000)/10 : 0; }); v._r=1; } if(v.supply==null){ v.supply=Math.round(N(v.amt)/1.1); v.vat="10%"; } if(v.vid==null) v.vid=""; return v; }
 /* 예전 데이터·내역서에서 온 업체를 공통 목록에 잇는다 */
@@ -804,7 +806,7 @@ function linkCoVendor(v){
 }
 const OPEN_CO=new Set();
 function renderVend(){
-  const vs=P.vendors; vs.forEach(v=>{ migrateVendor(v); linkCoVendor(v); });
+  const vs=P.vendors; vs.forEach(v=>{ migrateVendor(v); linkCoVendor(v); balance(v); });
   $("cVend").textContent=vs.length||"";
   /* 최근 날짜가 위로 — 계약금·중도금·잔금 중 가장 늦은 날짜, 날짜가 없으면 맨 아래 */
   const lastDate = v => v.pays.map(p=>p.date).filter(Boolean).sort().pop()||"";
@@ -836,8 +838,8 @@ function renderVend(){
       </div>
       <div class="pays">${v.pays.map((p,j)=>`<div class="pay">
           <div class="h"><span>${p.k} <span class="hint" style="font-weight:400">${v.payVat!==false?"VAT 포함":"VAT 별도"}</span></span>
-            <span class="rate"><input data-p="${j}" data-pf="rate" value="${N(p.rate)?+(+p.rate).toFixed(1):""}" inputmode="decimal" placeholder="—">%</span></div>
-          <input data-p="${j}" data-pf="amt" value="${F(p.amt)}" placeholder="금액" inputmode="numeric" class="num">
+            <span class="rate">${j===2?`<b class="num">${+(+N(p.rate)).toFixed(1)}</b>% <span class="hint">자동</span>`:`<input data-p="${j}" data-pf="rate" value="${N(p.rate)?+(+p.rate).toFixed(1):""}" inputmode="decimal" placeholder="—">%`}</span></div>
+          <input data-p="${j}" data-pf="amt" value="${F(p.amt)}" placeholder="${j===2?"":"예) 금액"}" inputmode="numeric" class="num"${j===2?' readonly tabindex="-1" style="background:var(--surface-3)" title="잔금 = 기준 − 계약금 − 중도금"':""}>
           <input data-p="${j}" data-pf="date" type="date" value="${esc(p.date)}">
           <label><input type="checkbox" data-p="${j}" data-pf="paid" ${p.paid?"checked":""}> 지급 완료</label>
         </div>`).join("")}</div>
@@ -857,7 +859,7 @@ function renderVend(){
         <label><input type="checkbox" data-f="direct" ${v.direct?"checked":""}> 발주처 직접 지급 <span class="hint">(일지엔 보이고 우리 지급액엔 안 들어감)</span></label>
         <label><input type="checkbox" data-f="internal" ${v.internal?"checked":""}> 내부용만</label>
       </div>
-      <div class="sumline ${diff?"warnline":""}">나눠 적은 합 <b class="num">${F0(sch)}</b> · 지급 <b class="num">${F0(paid)}</b> · 남음 <b class="num">${F0(payBase(v)-paid)}</b>${diff?` — ${v.payVat!==false?"총합계":"공급가액"}와 ${F0(Math.abs(diff))} 차이`:""}</div>
+      <div class="sumline">나눠 적은 합 <b class="num">${F0(sch)}</b> · 지급 <b class="num">${F0(paid)}</b> · 남음 <b class="num">${F0(payBase(v)-paid)}</b>${diff?` — ${v.payVat!==false?"총합계":"공급가액"}와 ${F0(Math.abs(diff))} 차이`:""}</div>
     </div>`; }).join("") : `<div class="empty">아직 업체가 없습니다</div>`;
   const T=vs.reduce((a,v)=>{ a.s+=N(v.supply); a.v+=vVat(v); a.p+=vPaid(v); a.b+=payBase(v); return a; },{s:0,v:0,p:0,b:0});
   $("vSum").innerHTML = vs.length ? `<thead><tr><th>공정</th><th>공사업체</th><th class="n">공급가액</th><th class="n">VAT</th><th class="n">총합계</th>${PAYK.map(k=>`<th class="n">${k}</th>`).join("")}<th class="n">지급</th><th class="n">미지급</th><th>비고</th></tr></thead>
@@ -881,8 +883,8 @@ $("vList").addEventListener("change",async e=>{
     if(f==="gong"&&v.gong&&!P.gongs.includes(v.gong)) P.gongs.push(v.gong);
     if(f==="supply"||f==="vat"||f==="payVat") splitByRate(v); }
   if(t.dataset.p!=null){ const p=v.pays[t.dataset.p], f=t.dataset.pf; const B=payBase(v);
-    if(f==="rate"){ p.rate=N(t.value); splitByRate(v); if(!N(p.rate)) p.amt=0; }
-    else if(f==="amt"){ p.amt=N(t.value); p.rate = B&&p.amt ? Math.round(p.amt/B*1000)/10 : 0; }
+    if(f==="rate"){ p.rate=N(t.value); p.amt=Math.round(B*p.rate/100); balance(v); }
+    else if(f==="amt"){ p.amt=N(t.value); p.rate = B&&p.amt ? Math.round(p.amt/B*1000)/10 : 0; balance(v); }
     else p[f]= f==="paid"?t.checked : t.value; }
   if(t.dataset.c){ const c=coV(v.vid); if(c){ c[t.dataset.c]=t.value.trim(); saveCo("vendors"); } return; }
   if(t.dataset.biz){ const c=coV(t.dataset.biz), f=t.files[0]; if(!c||!f) return;
@@ -898,7 +900,7 @@ $("vList").addEventListener("change",async e=>{
 });
 $("vList").addEventListener("click",e=>{
   const rp=e.target.closest("[data-rp]"); if(rp){ const v=P.vendors[rp.closest(".vend").dataset.v]; const r=rp.dataset.rp.split(",").map(Number);
-    v.pays.forEach((p,i)=>{ p.rate=r[i]||0; if(!p.rate) p.amt=0; }); splitByRate(v); touch(); renderVend(); renderLog(); return; }
+    [0,1].forEach(i=>{ v.pays[i].rate=r[i]||0; if(!r[i]) v.pays[i].amt=0; }); splitByRate(v); touch(); renderVend(); renderLog(); return; }
   const sm=e.target.closest("summary[data-co]"); if(sm){ const id=sm.dataset.co; setTimeout(()=>{ const d=sm.parentElement; d.open?OPEN_CO.add(id):OPEN_CO.delete(id); },0); return; }
   const i=e.target.dataset.vdel; if(i!=null&&confirm("이 공사에서 이 업체를 뺄까요? (회사 업체 목록에는 남습니다)")){ P.vendors.splice(+i,1); touch(); renderVend(); renderLog(); } });
 function gongList(){
