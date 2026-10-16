@@ -648,9 +648,10 @@ async function openProj(id){
   LS.set("log.last",id);
   const h=HITS.find(x=>x.id===id);
   if(!P.title && h) P.title=(h.name||"")+" "+(h.space||"");
-  SEL = (today()>=P.start && today()<=P.end) ? today() : P.start;
+  SEL = startDay();
   setSave("ok", data?"불러옴":"새 일지");
   renderAll(); drawList();
+  const lt=LS.get("log.tab",""); if(lt) showTab(lt);
 }
 
 /* ══════════ 공사 정보 ══════════ */
@@ -1559,7 +1560,18 @@ function renderApvBar(){ const AM=apvModes(SEL);
 }
 $("dApv").addEventListener("change",e=>{ const i=e.target.dataset.dap; if(i==null) return;
   setApv(SEL,+i, e.target.checked?e.target.dataset.m:""); touch(); renderLog(); });
+/* 다시 열 때 — 이 기기에서 마지막으로 보던 날 → 없으면 기록이 있는 마지막 날 → 오늘(공사 기간 안) → 착공일 */
+function lastDataDay(){ const ds=new Set();
+  Object.keys(P.logs||{}).forEach(d=>{ const l=P.logs[d]; if(l&&(l.plan||l.rep)) ds.add(d); });
+  P.expenses.forEach(x=>ds.add(x.date)); Object.keys(P.crew||{}).forEach(d=>{ if(Object.keys(P.crew[d]||{}).length) ds.add(d); });
+  Object.keys(P.picks||{}).forEach(d=>ds.add(d)); Object.keys(P.pmd||{}).forEach(d=>ds.add(d));
+  return [...ds].filter(d=>d>=P.start&&d<=P.end).sort().pop()||""; }
+function startDay(){ const inR=d=>d&&d>=P.start&&d<=P.end;
+  const s=LS.get("log.sel:"+P.id,""); if(inR(s)) return s;
+  const l=lastDataDay(); if(l) return l;
+  return inR(today())?today():P.start; }
 function renderLog(){
+  if(P) LS.set("log.sel:"+P.id, SEL);
   if(!P) return;
   $("dDate").value=SEL; $("dDate").min=P.start; $("dDate").max=P.end;
   renderApvBar();
@@ -1608,10 +1620,12 @@ $("sPrint").onclick=()=>{ document.body.classList.add("print-sum"); window.print
 
 /* ══════════ 탭 · 보기 ══════════ */
 function renderAll(){ if(!P) return; renderProj(); renderDocs(); renderVend(); renderLabor(); renderExp(); renderCrew(); renderLog(); renderSum(); }
+function showTab(name){ const t=document.querySelector(`.tab[data-tab="${name}"]`); if(t&&P) t.click(); }
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
   if(!P&&t.dataset.tab!=="proj") return toast("먼저 접수 건을 고르세요");
   document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));
   document.querySelectorAll("[data-pane]").forEach(p=>p.hidden=p.dataset.pane!==t.dataset.tab);
+  LS.set("log.tab", t.dataset.tab);
   if(t.dataset.tab==="sum") renderSum();
   if(t.dataset.tab==="labor") renderLabor();
 });
